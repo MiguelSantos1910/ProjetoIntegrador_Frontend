@@ -1,0 +1,456 @@
+/* =========================================
+   FORMULÁRIO
+========================================= */
+
+.form {
+  width: 100%;
+  max-width: 850px;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 18px;
+
+  padding: 24px;
+
+  box-sizing: border-box;
+
+  background-color: #ffffff;
+
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+}
+
+
+/* =========================================
+   CAMPOS
+========================================= */
+
+.form-field {
+  width: 100%;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 6px;
+}
+
+
+/* =========================================
+   LABEL
+========================================= */
+
+.form-field label {
+  color: #334155;
+
+  font-size: 12px;
+  font-weight: 600;
+
+  line-height: 1.4;
+}
+
+
+/* =========================================
+   INPUT / SELECT / TEXTAREA
+========================================= */
+
+.form-field input,
+.form-field select,
+.form-field textarea {
+  width: 100%;
+  min-width: 0;
+
+  box-sizing: border-box;
+
+  padding: 10px 12px;
+
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+
+  outline: none;
+
+  background-color: #ffffff;
+
+  color: #0f172a;
+
+  font-family: inherit;
+  font-size: 12px;
+
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease,
+    background-color 0.15s ease;
+}
+
+
+/* =========================================
+   INPUT
+========================================= */
+
+.form-field input {
+  height: 38px;
+}
+
+
+/* =========================================
+   PLACEHOLDER
+========================================= */
+
+.form-field input::placeholder,
+.form-field textarea::placeholder {
+  color: #94a3b8;
+}
+
+
+/* =========================================
+   HOVER
+========================================= */
+
+.form-field input:hover,
+.form-field select:hover,
+.form-field textarea:hover {
+  border-color: #94a3b8;
+}
+
+
+/* =========================================
+   FOCO
+========================================= */
+
+.form-field input:focus,
+.form-field select:focus,
+.form-field textarea:focus {
+  border-color: #0d9488;
+
+  box-shadow:
+    0 0 0 2px rgba(13, 148, 136, 0.10);
+
+  background-color: #ffffff;
+}
+
+.form-title {
+  margin: 0;
+
+  color: #0f172a;
+
+  font-size: 14px;
+  font-weight: 600;
+}
+
+
+/* =========================================
+   SELECT
+========================================= */
+
+.form-field select {
+  height: 38px;
+
+  cursor: pointer;
+
+  appearance: auto;
+}
+
+
+/* =========================================
+   TEXTAREA
+========================================= */
+
+.form-field textarea {
+  min-height: 110px;
+
+  line-height: 1.5;
+
+  resize: vertical;
+}
+
+
+/* =========================================
+   FILE UPLOAD
+========================================= */
+
+.file-upload {
+  width: 100%;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 8px;
+}
+
+
+/* Esconde o input original */
+
+.file-upload input[type="file"] {
+  display: none;
+}
+
+
+/* Botão de selecionar arquivo */
+
+.file-label {
+  width: fit-content;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  min-height: 36px;
+
+  padding: 0 14px;
+
+  box-sizing: border-box;
+
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+
+  background-color: #ffffff;
+
+  color: #475569;
+
+  font-size: 11px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.file-label:hover {
+  background-color: #f8fafc;
+
+  border-color: #94a3b8;
+}
+
+
+/* Nome do arquivo */
+
+.file-name {
+  color: #64748b;
+
+  font-size: 11px;
+
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+
+  white-space: nowrap;
+}
+
+
+/* =========================================
+   AÇÕES
+========================================= */
+
+.form-actions {
+  display: flex;
+
+  justify-content: flex-end;
+  align-items: center;
+
+  gap: 8px;
+
+  margin-top: 6px;
+
+  padding-top: 18px;
+
+  border-top: 1px solid #f1f5f9;
+}
+
+
+/* =========================================
+   BOTÃO CANCELAR
+========================================= */
+
+.btn-cancel {
+  height: 36px;
+
+  padding: 0 16px;
+
+  box-sizing: border-box;
+
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+
+  background-color: #ffffff;
+
+  color: #475569;
+
+  font-size: 11px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.btn-cancel:hover {
+  background-color: #f8fafc;
+
+  border-color: #94a3b8;
+
+  color: #334155;
+}
+
+
+/* =========================================
+   BOTÃO SALVAR
+========================================= */
+
+.btn-submit {
+  height: 36px;
+
+  padding: 0 18px;
+
+  box-sizing: border-box;
+
+  border: 1px solid #0d9488;
+  border-radius: 6px;
+
+  background-color: #0d9488;
+
+  color: #ffffff;
+
+  font-size: 11px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.btn-submit:hover {
+  background-color: #0f766e;
+
+  border-color: #0f766e;
+
+  box-shadow: 0 1px 2px rgba(15, 118, 110, 0.15);
+}
+
+
+/* =========================================
+   DESABILITADO
+========================================= */
+
+.btn-submit:disabled,
+.btn-cancel:disabled {
+  opacity: 0.6;
+
+  cursor: not-allowed;
+
+  box-shadow: none;
+}
+
+
+/* =========================================
+   GRID PARA FORMULÁRIOS MAIORES
+========================================= */
+
+.form-grid {
+  display: grid;
+
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+
+  gap: 18px;
+}
+
+
+/* Campo ocupando duas colunas */
+
+.form-field.full {
+  grid-column: 1 / -1;
+}
+
+
+/* =========================================
+   RESPONSIVIDADE
+========================================= */
+
+@media (max-width: 768px) {
+
+  .form {
+    max-width: 100%;
+
+    padding: 20px;
+
+    gap: 16px;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+
+    gap: 16px;
+  }
+
+  .form-field.full {
+    grid-column: auto;
+  }
+}
+
+
+/* =========================================
+   CELULAR
+========================================= */
+
+@media (max-width: 600px) {
+
+  .form {
+    padding: 16px;
+
+    gap: 14px;
+
+    border-radius: 6px;
+  }
+
+  .form-field input,
+  .form-field select {
+    height: 40px;
+
+    font-size: 12px;
+  }
+
+  .form-field textarea {
+    min-height: 100px;
+  }
+
+  .form-actions {
+    flex-direction: column-reverse;
+
+    align-items: stretch;
+
+    gap: 8px;
+  }
+
+  .btn-cancel,
+  .btn-submit {
+    width: 100%;
+
+    height: 38px;
+  }
+
+  .file-label {
+    width: 100%;
+  }
+}
+
+
+/* =========================================
+   CELULAR PEQUENO
+========================================= */
+
+@media (max-width: 400px) {
+
+  .form {
+    padding: 12px;
+  }
+
+}

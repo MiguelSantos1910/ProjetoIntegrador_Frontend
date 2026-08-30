@@ -1,0 +1,141 @@
+/* =========================
+   DASHBOARD
+   ========================= */
+
+.dashboard {
+  width: 100%;
+  min-height: 100vh;
+
+  padding: 24px;
+
+  box-sizing: border-box;
+
+  background-color: #f8fafc;
+
+  color: #0f172a;
+}
+
+
+/* =========================
+   CARDS
+   ========================= */
+
+.card-grid {
+  display: grid;
+
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+
+  gap: 18px;
+
+  width: 100%;
+
+  margin-bottom: 20px;
+}
+
+
+/* =========================
+   GRÁFICO
+   ========================= */
+
+.chart-section {
+  width: 100%;
+
+  margin-bottom: 20px;
+
+  padding: 20px;
+
+  box-sizing: border-box;
+
+  background-color: #ffffff;
+
+  border: 1px solid #e2e8f0;
+
+  border-radius: 8px;
+
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.03);
+}
+
+
+/* =========================
+   HISTÓRICO
+   ========================= */
+
+.history-section {
+  width: 100%;
+
+  padding: 20px;
+
+  box-sizing: border-box;
+
+  background-color: #ffffff;
+
+  border: 1px solid #e2e8f0;
+
+  border-radius: 8px;
+
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.03);
+
+  overflow-x: auto;
+}
+
+
+/* =========================
+   TABLET
+   ========================= */
+
+@media (max-width: 1100px) {
+
+  .card-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+}
+
+
+/* =========================
+   CELULAR
+   ========================= */
+
+@media (max-width: 650px) {
+
+  .dashboard {
+    padding: 16px;
+  }
+
+
+  .card-grid {
+    grid-template-columns: 1fr;
+
+    gap: 12px;
+
+    margin-bottom: 16px;
+  }
+
+
+  .chart-section,
+  .history-section {
+    padding: 16px;
+
+    margin-bottom: 16px;
+  }
+
+}
+
+
+/* =========================
+   CELULAR PEQUENO
+   ========================= */
+
+@media (max-width: 400px) {
+
+  .dashboard {
+    padding: 12px;
+  }
+
+
+  .chart-section,
+  .history-section {
+    padding: 12px;
+  }
+
+}

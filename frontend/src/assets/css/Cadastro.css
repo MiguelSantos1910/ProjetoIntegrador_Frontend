@@ -1,0 +1,99 @@
+/* =========================================
+   PÁGINA DE CADASTRO
+========================================= */
+
+.cadastro-ativos {
+  width: 100%;
+  min-height: 100vh;
+
+  box-sizing: border-box;
+
+  padding: 30px;
+
+  background-color: #f8fafc;
+  color: #0f172a;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+
+/* =========================================
+   TÍTULO
+========================================= */
+
+.cadastro-ativos h1 {
+  width: 100%;
+  max-width: 850px;
+
+  margin: 0 0 24px;
+
+  color: #0f172a;
+
+  font-size: 24px;
+  font-weight: 700;
+
+  text-align: center;
+}
+
+
+/* =========================================
+   FORMULÁRIO
+========================================= */
+
+.cadastro-ativos .form {
+  width: 100%;
+  max-width: 850px;
+
+  margin: 0 auto;
+}
+
+
+/* =========================================
+   TABLET
+========================================= */
+
+@media (max-width: 900px) {
+
+  .cadastro-ativos {
+    padding: 24px;
+  }
+
+}
+
+
+/* =========================================
+   CELULAR
+========================================= */
+
+@media (max-width: 600px) {
+
+  .cadastro-ativos {
+    padding: 16px;
+  }
+
+  .cadastro-ativos h1 {
+    margin-bottom: 18px;
+
+    font-size: 20px;
+  }
+
+}
+
+
+/* =========================================
+   CELULAR PEQUENO
+========================================= */
+
+@media (max-width: 400px) {
+
+  .cadastro-ativos {
+    padding: 12px;
+  }
+
+  .cadastro-ativos h1 {
+    font-size: 18px;
+  }
+
+}
