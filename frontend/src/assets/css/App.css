@@ -1,0 +1,60 @@
+/* =========================================
+   CONTEÚDO PRINCIPAL
+========================================= */
+
+.main-content {
+  width: calc(100% - 191px);
+
+  min-height: 100vh;
+
+  margin-left: 191px;
+
+  box-sizing: border-box;
+}
+
+
+/* =========================================
+   LOGIN
+========================================= */
+
+.main-content.login-content {
+  width: 100%;
+
+  margin-left: 0;
+}
+
+
+/* =========================================
+   TABLET
+========================================= */
+
+@media (max-width: 900px) {
+
+  .main-content {
+    width: calc(100% - 70px);
+
+    margin-left: 70px;
+  }
+
+  .main-content.login-content {
+    width: 100%;
+
+    margin-left: 0;
+  }
+
+}
+
+
+/* =========================================
+   CELULAR
+========================================= */
+
+@media (max-width: 600px) {
+
+  .main-content {
+    width: 100%;
+
+    margin-left: 0;
+  }
+
+}

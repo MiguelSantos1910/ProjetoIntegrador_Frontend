@@ -1,0 +1,291 @@
+/* =========================
+   CONTAINER DA TABELA
+   ========================= */
+
+.table-container {
+  width: 100%;
+
+  box-sizing: border-box;
+
+  background-color: #ffffff;
+
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+
+  overflow: hidden;
+}
+
+
+/* =========================
+   CABEÇALHO
+   ========================= */
+
+.table-header {
+  display: flex;
+
+  align-items: center;
+
+  min-height: 52px;
+
+  padding: 0 18px;
+
+  box-sizing: border-box;
+
+  border-bottom: 1px solid #e2e8f0;
+}
+
+
+.table-title {
+  margin: 0;
+
+  color: #0f172a;
+
+  font-size: 14px;
+  font-weight: 600;
+}
+
+
+/* =========================
+   ÁREA RESPONSIVA
+   ========================= */
+
+.table-wrapper {
+  width: 100%;
+
+  overflow-x: auto;
+
+  -webkit-overflow-scrolling: touch;
+}
+
+
+/* =========================
+   TABELA
+   ========================= */
+
+.table-wrapper table {
+  width: 100%;
+
+  min-width: 600px;
+
+  border-collapse: collapse;
+
+  background-color: #ffffff;
+
+  color: #334155;
+
+  font-size: 11px;
+}
+
+
+/* =========================
+   CABEÇALHO DA TABELA
+   ========================= */
+
+.table-wrapper thead {
+  background-color: #f8fafc;
+}
+
+
+.table-wrapper th {
+  height: 42px;
+
+  padding: 0 14px;
+
+  box-sizing: border-box;
+
+  border-bottom: 1px solid #e2e8f0;
+
+  color: #64748b;
+
+  font-size: 10px;
+  font-weight: 600;
+
+  text-align: left;
+
+  white-space: nowrap;
+}
+
+
+/* =========================
+   CÉLULAS
+   ========================= */
+
+.table-wrapper td {
+  height: 46px;
+
+  padding: 0 14px;
+
+  box-sizing: border-box;
+
+  border-bottom: 1px solid #f1f5f9;
+
+  color: #475569;
+
+  font-size: 11px;
+
+  white-space: nowrap;
+}
+
+
+/* =========================
+   ÚLTIMA LINHA
+   ========================= */
+
+.table-wrapper tbody tr:last-child td {
+  border-bottom: none;
+}
+
+
+/* =========================
+   HOVER
+   ========================= */
+
+.table-wrapper tbody tr {
+  transition: background-color 0.15s ease;
+}
+
+
+.table-wrapper tbody tr:hover {
+  background-color: #f8fafc;
+}
+
+
+/* =========================
+   AÇÕES
+   ========================= */
+
+.actions {
+  width: 90px;
+
+  text-align: center;
+
+  white-space: nowrap;
+}
+
+
+.actions button {
+  display: inline-flex;
+
+  align-items: center;
+  justify-content: center;
+
+  width: 30px;
+  height: 30px;
+
+  margin: 0 2px;
+
+  padding: 0;
+
+  border: 1px solid transparent;
+
+  border-radius: 5px;
+
+  background-color: transparent;
+
+  cursor: pointer;
+
+  transition: 0.15s ease;
+}
+
+
+/* Editar */
+
+.actions .btn-edit {
+  color: #64748b;
+}
+
+
+.actions .btn-edit:hover {
+  background-color: #f1f5f9;
+
+  color: #0f766e;
+
+  border-color: #cbd5e1;
+}
+
+
+/* Excluir */
+
+.actions .btn-delete {
+  color: #94a3b8;
+}
+
+
+.actions .btn-delete:hover {
+  background-color: #fef2f2;
+
+  color: #dc2626;
+
+  border-color: #fecaca;
+}
+
+
+/* =========================
+   RESPONSIVIDADE
+   ========================= */
+
+@media (max-width: 768px) {
+
+  .table-header {
+    min-height: 48px;
+
+    padding: 0 14px;
+  }
+
+
+  .table-title {
+    font-size: 13px;
+  }
+
+
+  .table-wrapper table {
+    min-width: 550px;
+  }
+
+
+  .table-wrapper th {
+    height: 40px;
+
+    padding: 0 12px;
+  }
+
+
+  .table-wrapper td {
+    height: 44px;
+
+    padding: 0 12px;
+  }
+
+}
+
+
+/* =========================
+   CELULAR
+   ========================= */
+
+@media (max-width: 500px) {
+
+  .table-header {
+    padding: 0 12px;
+  }
+
+
+  .table-wrapper table {
+    min-width: 500px;
+  }
+
+
+  .table-wrapper th,
+  .table-wrapper td {
+    padding-left: 10px;
+
+    padding-right: 10px;
+  }
+
+
+  .actions button {
+    width: 28px;
+    height: 28px;
+  }
+
+}

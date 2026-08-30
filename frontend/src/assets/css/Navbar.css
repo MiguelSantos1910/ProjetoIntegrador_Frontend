@@ -1,0 +1,395 @@
+/* =========================================
+   SIDEBAR
+========================================= */
+
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+
+  width: 191px;
+  height: 100vh;
+
+  box-sizing: border-box;
+
+  padding: 19px 15px 16px 19px;
+
+  background-color: #0d1628;
+  color: #ffffff;
+
+  border-right: 1px solid #1b2940;
+
+  z-index: 1000;
+}
+
+
+/* =========================================
+   CONTAINER
+========================================= */
+
+.navbar-container {
+  width: 100%;
+  height: 100%;
+
+  display: flex;
+  flex-direction: column;
+}
+
+
+/* =========================================
+   LOGO
+========================================= */
+
+.logo {
+  display: flex;
+  align-items: center;
+
+  gap: 8px;
+
+  height: 24px;
+
+  margin-bottom: 23px;
+
+  color: #f8fafc;
+
+  text-decoration: none;
+
+  font-size: 15px;
+  font-weight: 700;
+
+  white-space: nowrap;
+}
+
+.logo-icon {
+  width: 23px;
+  height: 23px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  flex-shrink: 0;
+
+  border-radius: 6px;
+
+  background-color: #0d9488;
+
+  color: white;
+}
+
+.logo-text {
+  white-space: nowrap;
+}
+
+
+/* =========================================
+   MENU
+========================================= */
+
+.nav-links {
+  display: flex;
+  flex-direction: column;
+
+  gap: 3px;
+
+  margin: 0;
+  padding: 0;
+
+  list-style: none;
+}
+
+
+/* =========================================
+   ITEM
+========================================= */
+
+.nav-links li {
+  width: 100%;
+}
+
+
+/* =========================================
+   LINK
+========================================= */
+
+.nav-links a {
+  display: flex !important;
+
+  flex-direction: row !important;
+
+  align-items: center !important;
+
+  justify-content: flex-start !important;
+
+  flex-wrap: nowrap !important;
+
+  width: 157px;
+  height: 32px;
+
+  padding: 0 11px;
+
+  box-sizing: border-box;
+
+  gap: 10px;
+
+  border-radius: 6px;
+
+  color: #94a3b8;
+
+  text-decoration: none;
+
+  font-size: 11px;
+
+  font-weight: 500;
+
+  line-height: 1;
+
+  white-space: nowrap !important;
+
+  overflow: hidden;
+}
+
+
+/* =========================================
+   ÍCONE LUCIDE
+========================================= */
+
+.nav-links a svg.nav-icon {
+  display: block !important;
+
+  flex-shrink: 0 !important;
+
+  width: 15px !important;
+  height: 15px !important;
+
+  min-width: 15px !important;
+  min-height: 15px !important;
+
+  max-width: 15px !important;
+  max-height: 15px !important;
+
+  color: #8192aa;
+
+  margin: 0 !important;
+}
+
+
+/* =========================================
+   TEXTO
+========================================= */
+
+.nav-links a span {
+  display: inline-block !important;
+
+  width: auto !important;
+
+  margin: 0 !important;
+  padding: 0 !important;
+
+  white-space: nowrap !important;
+
+  line-height: 1 !important;
+}
+
+
+/* =========================================
+   HOVER
+========================================= */
+
+.nav-links a:hover {
+  background-color: #172238;
+
+  color: #e2e8f0;
+}
+
+.nav-links a:hover svg {
+  color: #cbd5e1;
+}
+
+
+/* =========================================
+   ATIVO
+========================================= */
+
+.nav-links a.router-link-active {
+  background-color: #0d9f95;
+
+  color: white;
+
+  font-weight: 600;
+}
+
+.nav-links a.router-link-active svg {
+  color: white;
+}
+
+
+/* =========================================
+   USUÁRIO
+========================================= */
+
+.user-menu {
+  margin-top: auto;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 9px;
+}
+
+
+/* Avatar */
+
+.user-avatar {
+  width: 26px;
+  height: 26px;
+
+  flex-shrink: 0;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background-color: white;
+
+  color: #111827;
+
+  font-size: 10px;
+  font-weight: 700;
+}
+
+
+/* Informações */
+
+.user-info {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 2px;
+}
+
+.user-name {
+  color: #f8fafc;
+
+  font-size: 11px;
+  font-weight: 600;
+
+  white-space: nowrap;
+}
+
+.user-role {
+  color: #64748b;
+
+  font-size: 9px;
+
+  white-space: nowrap;
+}
+
+
+/* =========================================
+   TABLET
+========================================= */
+
+@media (max-width: 900px) {
+
+  .navbar {
+    width: 70px;
+
+    padding: 19px 10px;
+  }
+
+  .logo {
+    justify-content: center;
+  }
+
+  .logo-text {
+    display: none;
+  }
+
+  .nav-links {
+    align-items: center;
+  }
+
+  .nav-links a {
+    width: 50px;
+
+    justify-content: center !important;
+
+    padding: 0;
+
+    gap: 0;
+  }
+
+  .nav-links a span {
+    display: none !important;
+  }
+
+  .user-menu {
+    justify-content: center;
+  }
+
+  .user-info {
+    display: none;
+  }
+}
+
+
+/* =========================================
+   CELULAR
+========================================= */
+
+@media (max-width: 600px) {
+
+  .navbar {
+    width: 191px;
+
+    transform: translateX(-100%);
+
+    transition: transform 0.25s ease;
+
+    padding: 19px 15px 16px 19px;
+  }
+
+  .navbar.open {
+    transform: translateX(0);
+  }
+
+  .logo {
+    justify-content: flex-start;
+  }
+
+  .logo-text {
+    display: inline;
+  }
+
+  .nav-links {
+    align-items: flex-start;
+  }
+
+  .nav-links a {
+    width: 157px;
+
+    justify-content: flex-start !important;
+
+    padding: 0 11px;
+
+    gap: 10px;
+  }
+
+  .nav-links a span {
+    display: inline-block !important;
+  }
+
+  .user-menu {
+    justify-content: flex-start;
+  }
+
+  .user-info {
+    display: flex;
+  }
+}

@@ -1,0 +1,300 @@
+/* =========================
+   PÁGINA DE ATIVOS
+   ========================= */
+
+.ativos-page {
+  width: 100%;
+  min-height: 100vh;
+
+  padding: 24px;
+
+  box-sizing: border-box;
+
+  background-color: #f8fafc;
+}
+
+
+/* =========================
+   CABEÇALHO
+   ========================= */
+
+.ativos-header {
+  display: flex;
+
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 20px;
+
+  margin-bottom: 20px;
+}
+
+.ativos-title {
+  margin: 0;
+
+  color: #0f172a;
+
+  font-size: 18px;
+  font-weight: 700;
+}
+
+
+/* =========================
+   AÇÕES DO CABEÇALHO
+   ========================= */
+
+.ativos-actions {
+  display: flex;
+
+  align-items: center;
+
+  gap: 10px;
+}
+
+
+/* =========================
+   PESQUISA
+   ========================= */
+
+.search-container {
+  position: relative;
+
+  width: 250px;
+}
+
+.search-input {
+  width: 100%;
+
+  height: 34px;
+
+  padding: 0 12px 0 34px;
+
+  box-sizing: border-box;
+
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+
+  outline: none;
+
+  background-color: #ffffff;
+
+  color: #334155;
+
+  font-size: 11px;
+}
+
+.search-input::placeholder {
+  color: #94a3b8;
+}
+
+.search-input:focus {
+  border-color: #0d9488;
+}
+
+
+/* =========================
+   BOTÃO NOVO ATIVO
+   ========================= */
+
+.btn-new-asset {
+  height: 34px;
+
+  padding: 0 14px;
+
+  border: none;
+  border-radius: 6px;
+
+  background-color: #0d9488;
+
+  color: #ffffff;
+
+  font-size: 11px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  white-space: nowrap;
+}
+
+.btn-new-asset:hover {
+  background-color: #0f766e;
+}
+
+
+/* =========================
+   FILTROS
+   ========================= */
+
+.filters {
+  display: flex;
+
+  align-items: center;
+
+  gap: 8px;
+
+  margin-bottom: 14px;
+}
+
+.filter-select {
+  height: 32px;
+
+  padding: 0 30px 0 10px;
+
+  border: 1px solid #e2e8f0;
+  border-radius: 5px;
+
+  outline: none;
+
+  background-color: #ffffff;
+
+  color: #475569;
+
+  font-size: 10px;
+
+  cursor: pointer;
+}
+
+.filter-select:focus {
+  border-color: #0d9488;
+}
+
+
+/* =========================
+   TABELA
+   ========================= */
+
+.assets-table {
+  width: 100%;
+
+  background-color: #ffffff;
+
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+
+  overflow: hidden;
+}
+
+
+/* =========================
+   PAGINAÇÃO
+   ========================= */
+
+.pagination {
+  display: flex;
+
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 10px 12px;
+
+  background-color: #ffffff;
+
+  border-top: 1px solid #e2e8f0;
+}
+
+.pagination-info {
+  color: #64748b;
+
+  font-size: 10px;
+}
+
+.pagination-buttons {
+  display: flex;
+
+  gap: 6px;
+}
+
+.pagination-button {
+  height: 28px;
+
+  padding: 0 10px;
+
+  border: 1px solid #e2e8f0;
+  border-radius: 5px;
+
+  background-color: #ffffff;
+
+  color: #475569;
+
+  font-size: 10px;
+
+  cursor: pointer;
+}
+
+.pagination-button:hover {
+  background-color: #f8fafc;
+}
+
+.pagination-button.active {
+  background-color: #0d9488;
+
+  border-color: #0d9488;
+
+  color: #ffffff;
+}
+
+
+/* =========================
+   RESPONSIVIDADE
+   ========================= */
+
+@media (max-width: 900px) {
+
+  .ativos-header {
+    align-items: flex-start;
+
+    flex-direction: column;
+  }
+
+  .ativos-actions {
+    width: 100%;
+  }
+
+  .search-container {
+    flex: 1;
+
+    width: auto;
+  }
+
+}
+
+
+@media (max-width: 600px) {
+
+  .ativos-page {
+    padding: 16px;
+  }
+
+  .ativos-actions {
+    flex-direction: column;
+
+    align-items: stretch;
+  }
+
+  .search-container {
+    width: 100%;
+  }
+
+  .btn-new-asset {
+    width: 100%;
+  }
+
+  .filters {
+    flex-wrap: wrap;
+  }
+
+  .filter-select {
+    flex: 1;
+
+    min-width: 140px;
+  }
+
+  .pagination {
+    flex-direction: column;
+
+    align-items: flex-start;
+
+    gap: 10px;
+  }
+
+}

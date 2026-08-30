@@ -1,0 +1,99 @@
+/* =========================================
+   LOGIN
+========================================= */
+
+.login-view {
+  width: 100%;
+  min-height: 100vh;
+
+  box-sizing: border-box;
+
+  display: flex;
+  flex-direction: column;
+
+  align-items: center;
+  justify-content: center;
+
+  padding: 24px;
+
+  background-color: #f8fafc;
+
+  color: #0f172a;
+}
+
+
+/* =========================================
+   FORMULÁRIO
+========================================= */
+
+.login-view .form {
+  width: 100%;
+  max-width: 400px;
+
+  margin: 0 auto;
+}
+
+
+/* =========================================
+   TÍTULO DO FORMULÁRIO
+========================================= */
+
+.login-view .form-title {
+  margin-bottom: 24px;
+
+  color: #0f172a;
+
+  font-size: 24px;
+  font-weight: 700;
+
+  text-align: center;
+}
+
+
+/* =========================================
+   LINK DE CADASTRO
+========================================= */
+
+.register-link {
+  display: block;
+
+  margin-top: 16px;
+
+  color: #0d9488;
+
+  font-size: 12px;
+  font-weight: 500;
+
+  text-align: center;
+
+  text-decoration: none;
+
+  transition: color 0.15s ease;
+}
+
+.register-link:hover {
+  color: #0f766e;
+
+  text-decoration: underline;
+}
+
+
+/* =========================================
+   CELULAR
+========================================= */
+
+@media (max-width: 600px) {
+
+  .login-view {
+    padding: 16px;
+  }
+
+  .login-view .form {
+    max-width: 100%;
+  }
+
+  .login-view .form-title {
+    font-size: 22px;
+  }
+
+}
