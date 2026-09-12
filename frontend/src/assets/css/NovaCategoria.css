@@ -1,0 +1,384 @@
+/* =========================
+   PÁGINA
+========================= */
+
+.nova-categoria {
+  width: 100%;
+  min-height: 100vh;
+
+  box-sizing: border-box;
+
+  background-color: #f8fafc;
+  color: #0f172a;
+}
+
+
+/* =========================
+   CABEÇALHO
+========================= */
+
+.nova-categoria-header {
+  min-height: 64px;
+
+  display: flex;
+  align-items: center;
+
+  padding: 12px 24px;
+
+  box-sizing: border-box;
+
+  background-color: #ffffff;
+
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.title-area h1 {
+  margin: 0;
+
+  color: #1e293b;
+
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.title-area span {
+  display: block;
+
+  margin-top: 4px;
+
+  color: #94a3b8;
+
+  font-size: 10px;
+}
+
+
+/* =========================
+   CONTEÚDO
+========================= */
+
+.nova-categoria-content {
+  width: 100%;
+  max-width: 900px;
+
+  margin: 0 auto;
+
+  padding: 24px;
+
+  box-sizing: border-box;
+}
+
+
+/* =========================
+   BREADCRUMB
+========================= */
+
+.breadcrumb {
+  display: flex;
+  align-items: center;
+
+  gap: 7px;
+
+  margin-bottom: 16px;
+
+  color: #94a3b8;
+
+  font-size: 10px;
+}
+
+.breadcrumb strong {
+  color: #475569;
+
+  font-weight: 600;
+}
+
+.breadcrumb-separator {
+  color: #cbd5e1;
+}
+
+
+/* =========================
+   FORMULÁRIO
+========================= */
+
+.nova-categoria .form {
+  width: 100%;
+  max-width: 700px;
+
+  margin: 0 auto;
+
+  padding: 24px;
+
+  box-sizing: border-box;
+
+  background-color: #ffffff;
+
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+
+  box-shadow:
+    0 1px 3px rgba(15, 23, 42, 0.04);
+}
+
+
+/* =========================
+   TÍTULO DO FORMULÁRIO
+========================= */
+
+.nova-categoria .form-title {
+  margin: 0;
+
+  color: #0f172a;
+
+  font-size: 16px;
+  font-weight: 700;
+}
+
+
+/* =========================
+   CAMPOS
+========================= */
+
+.nova-categoria .form-fields {
+  display: grid;
+
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+
+  gap: 18px;
+}
+
+.nova-categoria .form-field {
+  min-width: 0;
+}
+
+.nova-categoria .form-field.full {
+  grid-column: 1 / -1;
+}
+
+
+/* =========================
+   LABELS
+========================= */
+
+.nova-categoria .form-field label {
+  color: #334155;
+
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.nova-categoria .required {
+  color: #dc2626;
+}
+
+
+/* =========================
+   INPUTS
+========================= */
+
+.nova-categoria .form-field input,
+.nova-categoria .form-field select,
+.nova-categoria .form-field textarea {
+  width: 100%;
+
+  box-sizing: border-box;
+
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+
+  outline: none;
+
+  background-color: #ffffff;
+  color: #0f172a;
+
+  font-family: inherit;
+  font-size: 12px;
+
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.nova-categoria .form-field input,
+.nova-categoria .form-field select {
+  height: 38px;
+
+  padding: 0 12px;
+}
+
+.nova-categoria .form-field textarea {
+  min-height: 110px;
+
+  padding: 10px 12px;
+
+  line-height: 1.5;
+
+  resize: vertical;
+}
+
+
+/* =========================
+   PLACEHOLDER
+========================= */
+
+.nova-categoria .form-field input::placeholder,
+.nova-categoria .form-field textarea::placeholder {
+  color: #94a3b8;
+}
+
+
+/* =========================
+   HOVER
+========================= */
+
+.nova-categoria .form-field input:hover,
+.nova-categoria .form-field select:hover,
+.nova-categoria .form-field textarea:hover {
+  border-color: #94a3b8;
+}
+
+
+/* =========================
+   FOCUS
+========================= */
+
+.nova-categoria .form-field input:focus,
+.nova-categoria .form-field select:focus,
+.nova-categoria .form-field textarea:focus {
+  border-color: #0d9488;
+
+  box-shadow:
+    0 0 0 2px rgba(13, 148, 136, 0.10);
+}
+
+
+/* =========================
+   AÇÕES
+========================= */
+
+.nova-categoria .form-actions {
+  margin-top: 8px;
+
+  padding-top: 18px;
+
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+
+  gap: 8px;
+
+  border-top: 1px solid #f1f5f9;
+}
+
+.nova-categoria .btn-cancel,
+.nova-categoria .btn-submit {
+  height: 36px;
+
+  padding: 0 18px;
+
+  box-sizing: border-box;
+
+  border-radius: 6px;
+
+  font-family: inherit;
+
+  font-size: 11px;
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+
+/* =========================
+   CANCELAR
+========================= */
+
+.nova-categoria .btn-cancel {
+  border: 1px solid #cbd5e1;
+
+  background-color: #ffffff;
+
+  color: #475569;
+}
+
+.nova-categoria .btn-cancel:hover {
+  background-color: #f8fafc;
+
+  border-color: #94a3b8;
+}
+
+
+/* =========================
+   CADASTRAR
+========================= */
+
+.nova-categoria .btn-submit {
+  border: 1px solid #0d9488;
+
+  background-color: #0d9488;
+
+  color: #ffffff;
+}
+
+.nova-categoria .btn-submit:hover {
+  border-color: #0f766e;
+
+  background-color: #0f766e;
+}
+
+
+/* =========================
+   RESPONSIVO
+========================= */
+
+@media (max-width: 700px) {
+
+  .nova-categoria-header {
+    padding: 12px 20px;
+  }
+
+  .nova-categoria-content {
+    padding: 20px;
+  }
+
+  .nova-categoria .form {
+    max-width: 100%;
+
+    padding: 20px;
+  }
+
+}
+
+
+@media (max-width: 600px) {
+
+  .nova-categoria-content {
+    padding: 16px 12px;
+  }
+
+  .nova-categoria .form {
+    padding: 16px;
+  }
+
+  .nova-categoria .form-fields {
+    grid-template-columns: 1fr;
+
+    gap: 14px;
+  }
+
+  .nova-categoria .form-field.full {
+    grid-column: auto;
+  }
+
+  .nova-categoria .form-actions {
+    flex-direction: column-reverse;
+
+    align-items: stretch;
+  }
+
+  .nova-categoria .btn-cancel,
+  .nova-categoria .btn-submit {
+    width: 100%;
+  }
+
+}

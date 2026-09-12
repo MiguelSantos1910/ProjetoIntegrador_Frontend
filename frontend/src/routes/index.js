@@ -6,6 +6,11 @@ import CadastroAtivo from '../views/CadastroAtivos.vue'
 import ManutencaoAtivo from '../views/Manutencao.vue'
 import Login from '../views/Login.vue'
 import CadastroUsuario from '../views/CadastroUsuario.vue'
+import DetalheAtivo from '../views/DetalheAtivo.vue'
+import Relatorios from '../views/Relatorios.vue'
+import Categorias from '../views/Categorias.vue'
+import Configuracoes from "../views/Configuracoes.vue"
+import NovaCategoria from '../views/NovaCategoria.vue'
 
 const routes = [
   {
@@ -34,9 +39,34 @@ const routes = [
     component: CadastroAtivo
   },
   {
+    path: '/ativos/detalhe',
+    name: 'detalhe',
+    component: DetalheAtivo
+  },
+  {
+    path: '/relatorios',
+    name: 'relatorios',
+    component: Relatorios
+  },
+  {
+    path: '/categorias',
+    name: 'categorias',
+    component: Categorias
+  },
+  {
+    path: '/categorias/nova',
+    name: 'nova-categoria',
+    component: NovaCategoria
+  },
+  {
     path: '/manutencao',
     name: 'manutencao-ativo',
     component: ManutencaoAtivo
+  },
+  {
+    path: '/configuracoes',
+    name: 'configuracoes',
+    component: Configuracoes
   }
 ]
 

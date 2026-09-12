@@ -3,7 +3,7 @@
 
   <main
     class="main-content"
-    :class="{ 'login-content': hideNavbar }"
+    :class="contentClass"
   >
     <RouterView />
   </main>
@@ -18,7 +18,13 @@ import Navbar from './components/Navbar.vue'
 const route = useRoute()
 
 const hideNavbar = computed(() => {
-  return ['login', 'cadastro'].includes(route.name)
+  return ['login', 'cadastro-usuario'].includes(route.name)
+})
+
+const contentClass = computed(() => {
+  if (route.name === 'login') return 'login-content'
+  if (route.name === 'cadastro-usuario') return 'cadastro-content'
+  return ''
 })
 </script>
 
