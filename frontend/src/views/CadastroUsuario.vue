@@ -1,5 +1,5 @@
 <template>
-  <div class="login-view">
+  <div class="auth-view">
     <Form
       title="Cadastro de Usuário"
       :fields="formFields"

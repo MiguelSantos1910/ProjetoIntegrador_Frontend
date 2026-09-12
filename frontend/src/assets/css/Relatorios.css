@@ -1,0 +1,525 @@
+/* ========================================
+   RELATÓRIOS
+   ======================================== */
+
+.relatorios {
+  width: 100%;
+  min-height: 100vh;
+  box-sizing: border-box;
+  background-color: #f8fafc;
+  color: #0f172a;
+}
+
+
+/* ========================================
+   CABEÇALHO
+   ======================================== */
+
+.relatorios-header {
+  width: 100%;
+  min-height: 72px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 18px 24px;
+  box-sizing: border-box;
+  background-color: #ffffff;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.relatorios-header h1 {
+  margin: 0;
+  color: #0f172a;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+
+/* ========================================
+   AÇÕES DO CABEÇALHO
+   ======================================== */
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.search-box {
+  width: 250px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 11px;
+  box-sizing: border-box;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  background-color: #ffffff;
+  color: #64748b;
+}
+
+.search-box:focus-within {
+  border-color: #0d9488;
+  box-shadow: 0 0 0 2px rgba(13, 148, 136, 0.10);
+}
+
+.search-box input {
+  width: 100%;
+  min-width: 0;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  outline: none;
+  background-color: transparent;
+  color: #0f172a;
+  font-family: inherit;
+  font-size: 11px;
+}
+
+.search-box input::placeholder {
+  color: #94a3b8;
+}
+
+.notification-button {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  background-color: #ffffff;
+  color: #475569;
+  cursor: pointer;
+}
+
+.notification-button:hover {
+  border-color: #94a3b8;
+  background-color: #f8fafc;
+}
+
+
+/* ========================================
+   CONTEÚDO
+   ======================================== */
+
+.relatorios-content {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 24px;
+  box-sizing: border-box;
+}
+
+
+/* ========================================
+   CARDS DE RELATÓRIO
+   ======================================== */
+
+.report-card {
+  width: 100%;
+  box-sizing: border-box;
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.03);
+}
+
+
+/* ========================================
+   FILTROS
+   ======================================== */
+
+.filters-card {
+  padding: 20px;
+}
+
+.filters-card h2 {
+  margin: 0 0 18px;
+  color: #0f172a;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.filters-grid {
+  width: 100%;
+  display: grid;
+  grid-template-columns:
+    minmax(150px, 1fr)
+    minmax(150px, 1fr)
+    minmax(180px, 1fr)
+    minmax(180px, 1fr)
+    auto;
+  align-items: end;
+  gap: 14px;
+}
+
+.filter-field {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.filter-field label {
+  color: #334155;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.filter-field input,
+.filter-field select {
+  width: 100%;
+  height: 38px;
+  min-width: 0;
+  padding: 0 10px;
+  box-sizing: border-box;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  outline: none;
+  background-color: #ffffff;
+  color: #0f172a;
+  font-family: inherit;
+  font-size: 11px;
+}
+
+.filter-field input:hover,
+.filter-field select:hover {
+  border-color: #94a3b8;
+}
+
+.filter-field input:focus,
+.filter-field select:focus {
+  border-color: #0d9488;
+  box-shadow: 0 0 0 2px rgba(13, 148, 136, 0.10);
+}
+
+.filter-field select {
+  cursor: pointer;
+}
+
+.generate-button {
+  height: 38px;
+  padding: 0 16px;
+  box-sizing: border-box;
+  border: 1px solid #0d9488;
+  border-radius: 6px;
+  background-color: #0d9488;
+  color: #ffffff;
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.generate-button:hover {
+  background-color: #0f766e;
+  border-color: #0f766e;
+}
+
+
+/* ========================================
+   INDICADORES
+   ======================================== */
+
+.indicators-grid {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 18px;
+}
+
+
+/*
+ * O conteúdo dos indicadores agora pertence
+ * ao Card.vue. Aqui controlamos somente
+ * o posicionamento dos cards.
+ */
+
+.indicators-grid > * {
+  min-width: 0;
+}
+
+
+/* ========================================
+   GRÁFICOS
+   ======================================== */
+
+.charts-grid {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.chart-card {
+  min-width: 0;
+  padding: 20px;
+  overflow: hidden;
+}
+
+
+/* ========================================
+   TABELA
+   ======================================== */
+
+.table-card {
+  overflow: hidden;
+}
+
+.table-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 20px 20px 0;
+}
+
+.table-header h2 {
+  margin: 0;
+  color: #0f172a;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.export-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.export-button {
+  height: 34px;
+  padding: 0 12px;
+  box-sizing: border-box;
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: 10px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.export-button.excel {
+  border: 1px solid #0d9488;
+  background-color: #ffffff;
+  color: #0d9488;
+}
+
+.export-button.excel:hover {
+  background-color: #f0fdfa;
+}
+
+.export-button.pdf {
+  border: 1px solid #e2e8f0;
+  background-color: #ffffff;
+  color: #475569;
+}
+
+.export-button.pdf:hover {
+  border-color: #cbd5e1;
+  background-color: #f8fafc;
+}
+
+
+/*
+ * O Table.vue já possui seu próprio
+ * container e estilos.
+ *
+ * Ajustamos apenas o espaço externo
+ * dentro do card do relatório.
+ */
+
+.table-card > .table-container {
+  margin-top: 16px;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+
+/* ========================================
+   RODAPÉ DA TABELA
+   ======================================== */
+
+.table-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 20px 20px;
+  border-top: 1px solid #f1f5f9;
+}
+
+.table-footer > span {
+  color: #64748b;
+  font-size: 10px;
+}
+
+.pagination {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.page-button {
+  height: 30px;
+  padding: 0 10px;
+  box-sizing: border-box;
+  border: 1px solid #cbd5e1;
+  border-radius: 5px;
+  background-color: #ffffff;
+  color: #475569;
+  font-family: inherit;
+  font-size: 10px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.page-button:hover {
+  background-color: #f8fafc;
+  border-color: #94a3b8;
+}
+
+.page-button.active {
+  border-color: #0d9488;
+  background-color: #0d9488;
+  color: #ffffff;
+}
+
+
+/* ========================================
+   RESPONSIVIDADE
+   ======================================== */
+
+@media (max-width: 1200px) {
+  .indicators-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .filters-grid {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  }
+
+  .generate-button {
+    width: 100%;
+  }
+}
+
+
+@media (max-width: 900px) {
+  .relatorios-header {
+    padding: 18px 20px;
+  }
+
+  .relatorios-content {
+    padding: 20px;
+  }
+
+  .charts-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+@media (max-width: 650px) {
+  .relatorios-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 14px;
+  }
+
+  .relatorios-header h1 {
+    font-size: 18px;
+  }
+
+  .header-actions {
+    width: 100%;
+  }
+
+  .search-box {
+    flex: 1;
+    width: auto;
+  }
+
+  .relatorios-content {
+    padding: 16px;
+    gap: 16px;
+  }
+
+  .filters-card {
+    padding: 16px;
+  }
+
+  .filters-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .indicators-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .chart-card {
+    padding: 16px;
+  }
+
+  .table-header {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 16px 16px 0;
+  }
+
+  .export-actions {
+    width: 100%;
+  }
+
+  .export-button {
+    flex: 1;
+  }
+
+  .table-footer {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 14px 16px 16px;
+  }
+
+  .pagination {
+    justify-content: flex-end;
+  }
+}
+
+
+@media (max-width: 400px) {
+  .relatorios-content {
+    padding: 12px;
+  }
+
+  .filters-card {
+    padding: 12px;
+  }
+
+  .chart-card {
+    padding: 12px;
+  }
+
+  .notification-button {
+    width: 34px;
+    height: 34px;
+  }
+
+  .export-actions {
+    flex-direction: column;
+  }
+
+  .export-button {
+    width: 100%;
+  }
+}

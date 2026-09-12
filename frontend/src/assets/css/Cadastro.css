@@ -1,40 +1,13 @@
 /* =========================================
-   PÁGINA DE CADASTRO
+   CADASTRO DE ATIVOS
 ========================================= */
 
 .cadastro-ativos {
   width: 100%;
-  min-height: 100vh;
 
   box-sizing: border-box;
 
-  padding: 30px;
-
-  background-color: #f8fafc;
-  color: #0f172a;
-
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-
-/* =========================================
-   TÍTULO
-========================================= */
-
-.cadastro-ativos h1 {
-  width: 100%;
-  max-width: 850px;
-
-  margin: 0 0 24px;
-
-  color: #0f172a;
-
-  font-size: 24px;
-  font-weight: 700;
-
-  text-align: center;
+  padding: 24px;
 }
 
 
@@ -44,56 +17,398 @@
 
 .cadastro-ativos .form {
   width: 100%;
-  max-width: 850px;
 
-  margin: 0 auto;
+  max-width: 100%;
+
+  padding: 30px;
+
+  gap: 24px;
+
+  border-radius: 10px;
+
+  box-shadow:
+    0 2px 6px rgba(15, 23, 42, 0.04);
 }
 
 
 /* =========================================
-   TABLET
+   TÍTULO
 ========================================= */
 
-@media (max-width: 900px) {
+.cadastro-ativos .form-title {
+  color: #0f172a;
 
-  .cadastro-ativos {
-    padding: 24px;
-  }
+  font-size: 20px;
 
+  font-weight: 700;
+
+  line-height: 1.2;
 }
 
 
 /* =========================================
-   CELULAR
+   GRID
 ========================================= */
 
-@media (max-width: 600px) {
+.cadastro-ativos .form-fields {
+  display: grid;
+
+  grid-template-columns:
+    minmax(0, 1fr)
+    minmax(0, 1fr);
+
+  column-gap: 24px;
+
+  row-gap: 20px;
+}
+
+
+/* =========================================
+   CAMPOS
+========================================= */
+
+.cadastro-ativos .form-field {
+  width: 100%;
+
+  min-width: 0;
+
+  gap: 7px;
+}
+
+
+/* =========================================
+   CAMPOS COMPLETOS
+   Textarea e Foto
+========================================= */
+
+.cadastro-ativos .form-field.full {
+  grid-column: 1 / -1;
+}
+
+
+/* =========================================
+   LABEL
+========================================= */
+
+.cadastro-ativos .form-field label {
+  color: #1e293b;
+
+  font-size: 13px;
+
+  font-weight: 600;
+}
+
+
+/* =========================================
+   CAMPOS DE TEXTO
+========================================= */
+
+.cadastro-ativos .form-field input,
+.cadastro-ativos .form-field select,
+.cadastro-ativos .form-field textarea {
+  border-color: #dbe3ed;
+
+  border-radius: 8px;
+
+  font-size: 13px;
+}
+
+
+/* =========================================
+   INPUT
+========================================= */
+
+.cadastro-ativos .form-field input {
+  height: 38px;
+
+  padding: 0 14px;
+}
+
+
+/* =========================================
+   SELECT
+========================================= */
+
+.cadastro-ativos .form-field select {
+  height: 38px;
+
+  padding: 0 14px;
+}
+
+
+/* =========================================
+   TEXTAREA
+========================================= */
+
+.cadastro-ativos .form-field textarea {
+  min-height: 80px;
+
+  padding: 10px 14px;
+
+  line-height: 1.4;
+}
+
+
+/* =========================================
+   FOCO
+========================================= */
+
+.cadastro-ativos .form-field input:focus,
+.cadastro-ativos .form-field select:focus,
+.cadastro-ativos .form-field textarea:focus {
+  border-color: #0d9f95;
+
+  box-shadow:
+    0 0 0 3px rgba(13, 159, 149, 0.10);
+}
+
+
+/* =========================================
+   UPLOAD
+========================================= */
+
+.cadastro-ativos .file-upload {
+  width: 100%;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  gap: 8px;
+}
+
+
+.cadastro-ativos .file-upload input[type="file"] {
+  display: none;
+}
+
+
+/* =========================================
+   ÁREA DE UPLOAD
+========================================= */
+
+.cadastro-ativos .file-label {
+  width: 100%;
+
+  min-height: 118px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 6px;
+
+  box-sizing: border-box;
+
+  padding: 20px;
+
+  border: 1px dashed #d5dee9;
+
+  border-radius: 8px;
+
+  background-color: #f8fafc;
+
+  color: #0d9f95;
+
+  text-align: center;
+
+  cursor: pointer;
+
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease;
+}
+
+
+.cadastro-ativos .file-label:hover {
+  background-color: #f0fdfa;
+
+  border-color: #0d9f95;
+}
+
+
+/* =========================================
+   ÍCONE
+========================================= */
+
+.cadastro-ativos .file-icon {
+  display: block;
+
+  width: 28px;
+
+  height: 28px;
+
+  margin: 0 auto 4px;
+
+  color: #0d9f95;
+
+  flex-shrink: 0;
+}
+
+
+/* =========================================
+   TEXTO DO UPLOAD
+========================================= */
+
+.cadastro-ativos .file-upload-text {
+  display: block;
+
+  width: 100%;
+
+  color: #0d9f95;
+
+  font-size: 13px;
+
+  font-weight: 600;
+
+  line-height: 1.4;
+
+  text-align: center;
+}
+
+
+/* =========================================
+   INFORMAÇÕES
+========================================= */
+
+.cadastro-ativos .file-upload-info {
+  display: block;
+
+  width: 100%;
+
+  color: #64748b;
+
+  font-size: 11px;
+
+  font-weight: 400;
+
+  line-height: 1.4;
+
+  text-align: center;
+}
+
+
+/* =========================================
+   NOME DO ARQUIVO
+========================================= */
+
+.cadastro-ativos .file-name {
+  max-width: 100%;
+
+  color: #64748b;
+
+  font-size: 11px;
+
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+
+  white-space: nowrap;
+}
+
+
+/* =========================================
+   AÇÕES
+========================================= */
+
+.cadastro-ativos .form-actions {
+  gap: 12px;
+
+  margin-top: 6px;
+
+  padding-top: 20px;
+}
+
+
+/* =========================================
+   BOTÕES
+========================================= */
+
+.cadastro-ativos .btn-cancel,
+.cadastro-ativos .btn-submit {
+  height: 38px;
+
+  border-radius: 8px;
+
+  font-size: 13px;
+}
+
+
+.cadastro-ativos .btn-submit {
+  padding: 0 20px;
+
+  border-color: #0d9f95;
+
+  background-color: #0d9f95;
+}
+
+
+.cadastro-ativos .btn-submit:hover {
+  background-color: #0b8f86;
+
+  border-color: #0b8f86;
+
+  box-shadow:
+    0 2px 5px rgba(13, 159, 149, 0.20);
+}
+
+
+/* =========================================
+   RESPONSIVIDADE
+========================================= */
+
+@media (max-width: 768px) {
 
   .cadastro-ativos {
     padding: 16px;
   }
 
-  .cadastro-ativos h1 {
-    margin-bottom: 18px;
-
-    font-size: 20px;
+  .cadastro-ativos .form {
+    padding: 24px;
   }
 
+  .cadastro-ativos .form-fields {
+    grid-template-columns: 1fr;
+  }
+
+  .cadastro-ativos .form-field.full {
+    grid-column: auto;
+  }
 }
 
 
-/* =========================================
-   CELULAR PEQUENO
-========================================= */
-
-@media (max-width: 400px) {
+@media (max-width: 600px) {
 
   .cadastro-ativos {
     padding: 12px;
   }
 
-  .cadastro-ativos h1 {
+  .cadastro-ativos .form {
+    padding: 18px;
+  }
+
+  .cadastro-ativos .form-title {
     font-size: 18px;
   }
 
+  .cadastro-ativos .form-actions {
+    flex-direction: column-reverse;
+
+    align-items: stretch;
+  }
+
+  .cadastro-ativos .btn-cancel,
+  .cadastro-ativos .btn-submit {
+    width: 100%;
+  }
+
+  .cadastro-ativos .file-label {
+    min-height: 100px;
+  }
 }

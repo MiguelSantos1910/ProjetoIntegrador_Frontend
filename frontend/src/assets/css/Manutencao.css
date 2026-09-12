@@ -1,98 +1,730 @@
-/* =========================================
-   PÁGINA DE CADASTRO
-========================================= */
+/* ========================================
+   PÁGINA DE MANUTENÇÃO
+   ======================================== */
 
 .manutencao {
   width: 100%;
   min-height: 100vh;
-
+  padding: 24px;
   box-sizing: border-box;
-
-  padding: 30px;
-
   background-color: #f8fafc;
-
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  color: #0f172a;
 }
 
 
-/* =========================================
-   TÍTULO
-========================================= */
+/* ========================================
+   FORMULÁRIO
+   ======================================== */
 
-.manutencao h1 {
+.manutencao .form {
   width: 100%;
-  max-width: 850px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0;
+  box-sizing: border-box;
 
-  margin: 0 0 24px;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 18px;
 
-  text-align: center;
+  background-color: transparent;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+
+/* ========================================
+   CABEÇALHO
+   ======================================== */
+
+.manutencao .form-header {
+  width: 100%;
+  margin-bottom: 2px;
+}
+
+.manutencao .form-title {
+  margin: 0;
 
   color: #0f172a;
 
-  font-size: 24px;
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+
+/* ========================================
+   ÁREA DAS SEÇÕES
+   ======================================== */
+
+.manutencao .form-sections {
+  grid-column: 1 / -1;
+
+  width: 100%;
+
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 280px;
+
+  gap: 18px;
+
+  align-items: start;
+}
+
+
+/* ========================================
+   COLUNA PRINCIPAL
+   ======================================== */
+
+.manutencao .form-main-sections {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 18px;
+}
+
+
+/* ========================================
+   COLUNA LATERAL
+   ======================================== */
+
+.manutencao .form-sidebar-sections {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 18px;
+}
+
+
+/* ========================================
+   CARDS DAS SEÇÕES
+   ======================================== */
+
+.manutencao .form-section {
+  width: 100%;
+
+  padding: 20px;
+
+  box-sizing: border-box;
+
+  background-color: #ffffff;
+
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+
+  box-shadow:
+    0 1px 3px rgba(15, 23, 42, 0.04);
+}
+
+
+/* ========================================
+   CABEÇALHO DA SEÇÃO
+   ======================================== */
+
+.manutencao .form-section-header {
+  width: 100%;
+
+  min-height: 24px;
+
+  margin-bottom: 18px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 12px;
+}
+
+.manutencao .form-section-title {
+  margin: 0;
+
+  display: flex;
+  align-items: center;
+
+  gap: 8px;
+
+  color: #0f172a;
+
+  font-size: 13px;
+  font-weight: 700;
+
+  line-height: 1.4;
+}
+
+.manutencao .form-section-icon {
+  flex-shrink: 0;
+
+  color: #0d9488;
+}
+
+.manutencao .form-section-badge {
+  padding: 4px 8px;
+
+  box-sizing: border-box;
+
+  border-radius: 999px;
+
+  background-color: #f0fdfa;
+  color: #0f766e;
+
+  font-size: 10px;
+  font-weight: 600;
+}
+
+
+/* ========================================
+   CAMPOS DA SEÇÃO
+   ======================================== */
+
+.manutencao .form-section-fields {
+  width: 100%;
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+
+  gap: 18px;
+}
+
+.manutencao .form-section-fields.three-columns {
+  grid-template-columns:
+    repeat(3, minmax(0, 1fr));
+}
+
+
+/* ========================================
+   CAMPOS
+   ======================================== */
+
+.manutencao .form-field {
+  width: 100%;
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 6px;
+}
+
+.manutencao .form-field.full {
+  grid-column: 1 / -1;
+}
+
+.manutencao .form-field label {
+  color: #334155;
+
+  font-size: 11px;
+  font-weight: 600;
+
+  line-height: 1.4;
+}
+
+.manutencao .required {
+  color: #dc2626;
+}
+
+
+/* ========================================
+   INPUTS E SELECTS
+   ======================================== */
+
+.manutencao .form-field input,
+.manutencao .form-field select,
+.manutencao .form-field textarea {
+  width: 100%;
+  min-width: 0;
+
+  box-sizing: border-box;
+
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+
+  outline: none;
+
+  background-color: #ffffff;
+  color: #0f172a;
+
+  font-family: inherit;
+  font-size: 12px;
+
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.manutencao .form-field input,
+.manutencao .form-field select {
+  height: 38px;
+
+  padding: 0 12px;
+}
+
+.manutencao .form-field textarea {
+  min-height: 105px;
+
+  padding: 10px 12px;
+
+  line-height: 1.5;
+
+  resize: vertical;
+}
+
+
+/* ========================================
+   PLACEHOLDER
+   ======================================== */
+
+.manutencao .form-field input::placeholder,
+.manutencao .form-field textarea::placeholder {
+  color: #94a3b8;
+}
+
+
+/* ========================================
+   HOVER
+   ======================================== */
+
+.manutencao .form-field input:hover,
+.manutencao .form-field select:hover,
+.manutencao .form-field textarea:hover {
+  border-color: #94a3b8;
+}
+
+
+/* ========================================
+   FOCUS
+   ======================================== */
+
+.manutencao .form-field input:focus,
+.manutencao .form-field select:focus,
+.manutencao .form-field textarea:focus {
+  border-color: #0d9488;
+
+  box-shadow:
+    0 0 0 2px rgba(13, 148, 136, 0.10);
+}
+
+
+/* ========================================
+   UPLOAD DE DOCUMENTOS
+   ======================================== */
+
+.manutencao .file-upload {
+  width: 100%;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 8px;
+}
+
+.manutencao .file-upload input[type="file"] {
+  display: none;
+}
+
+.manutencao .file-label {
+  width: 100%;
+
+  min-height: 110px;
+
+  padding: 18px;
+
+  box-sizing: border-box;
+
+  display: flex;
+  flex-direction: column;
+
+  align-items: center;
+  justify-content: center;
+
+  gap: 8px;
+
+  border: 1px dashed #cbd5e1;
+  border-radius: 7px;
+
+  background-color: #f8fafc;
+
+  color: #475569;
+
+  text-align: center;
+
+  cursor: pointer;
+
+  transition:
+    border-color 0.15s ease,
+    background-color 0.15s ease;
+}
+
+.manutencao .file-label:hover {
+  border-color: #0d9488;
+
+  background-color: #f0fdfa;
+}
+
+.manutencao .file-icon {
+  color: #0d9488;
+}
+
+.manutencao .file-upload-text {
+  color: #334155;
+
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.manutencao .file-upload-info {
+  color: #94a3b8;
+
+  font-size: 9px;
+}
+
+.manutencao .file-name {
+  color: #64748b;
+
+  font-size: 10px;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+
+/* ========================================
+   CONTEÚDO CUSTOMIZADO
+   ======================================== */
+
+.manutencao .form-section-content {
+  width: 100%;
+}
+
+
+/* ========================================
+   RESUMO PATRIMONIAL
+   ======================================== */
+
+.manutencao .summary-content {
+  width: 100%;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 12px;
+}
+
+.manutencao .summary-item {
+  display: flex;
+  flex-direction: column;
+
+  gap: 4px;
+
+  padding-bottom: 12px;
+
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.manutencao .summary-item:last-of-type {
+  border-bottom: none;
+}
+
+.manutencao .summary-label {
+  color: #64748b;
+
+  font-size: 10px;
+  font-weight: 500;
+}
+
+.manutencao .summary-value {
+  color: #0f172a;
+
+  font-size: 13px;
   font-weight: 700;
 }
 
 
-/* =========================================
-   FORMULÁRIO
-========================================= */
+/* ========================================
+   STATUS DO ATIVO
+   ======================================== */
 
-.manutencao .form {
+.manutencao .summary-status {
   width: 100%;
-  max-width: 850px;
 
-  margin: 0 auto;
+  padding: 11px;
+
+  box-sizing: border-box;
+
+  display: flex;
+  align-items: flex-start;
+
+  gap: 9px;
+
+  border: 1px solid #ccfbf1;
+  border-radius: 7px;
+
+  background-color: #f0fdfa;
+}
+
+.manutencao .status-dot {
+  width: 8px;
+  height: 8px;
+
+  flex-shrink: 0;
+
+  margin-top: 4px;
+
+  border-radius: 50%;
+
+  background-color: #0d9488;
+}
+
+.manutencao .summary-status strong {
+  display: block;
+
+  margin-bottom: 2px;
+
+  color: #115e59;
+
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.manutencao .summary-status span:not(.status-dot) {
+  display: block;
+
+  color: #5f766f;
+
+  font-size: 9px;
 }
 
 
-/* =========================================
-   TABLET
-========================================= */
+/* ========================================
+   AVISO
+   ======================================== */
 
-@media (max-width: 900px) {
+.manutencao .summary-warning {
+  width: 100%;
 
+  padding: 10px;
+
+  box-sizing: border-box;
+
+  display: flex;
+  align-items: flex-start;
+
+  gap: 7px;
+
+  border: 1px solid #fde68a;
+  border-radius: 7px;
+
+  background-color: #fffbeb;
+}
+
+.manutencao .summary-warning > span {
+  flex-shrink: 0;
+
+  color: #d97706;
+
+  font-size: 13px;
+
+  line-height: 1;
+}
+
+.manutencao .summary-warning p {
+  margin: 0;
+
+  color: #92400e;
+
+  font-size: 9px;
+
+  line-height: 1.5;
+}
+
+
+/* ========================================
+   AÇÕES
+   ======================================== */
+
+.manutencao .form-actions {
+  grid-column: 1 / -1;
+
+  width: 100%;
+
+  margin-top: 0;
+
+  padding-top: 18px;
+
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+
+  gap: 8px;
+
+  border-top: 1px solid #e2e8f0;
+}
+
+.manutencao .btn-cancel,
+.manutencao .btn-submit {
+  height: 36px;
+
+  padding: 0 18px;
+
+  box-sizing: border-box;
+
+  border-radius: 6px;
+
+  font-size: 11px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease;
+}
+
+
+/* ========================================
+   BOTÃO CANCELAR
+   ======================================== */
+
+.manutencao .btn-cancel {
+  border: 1px solid #cbd5e1;
+
+  background-color: #ffffff;
+
+  color: #475569;
+}
+
+.manutencao .btn-cancel:hover {
+  border-color: #94a3b8;
+
+  background-color: #f8fafc;
+}
+
+
+/* ========================================
+   BOTÃO CADASTRAR
+   ======================================== */
+
+.manutencao .btn-submit {
+  border: 1px solid #0d9488;
+
+  background-color: #0d9488;
+
+  color: #ffffff;
+}
+
+.manutencao .btn-submit:hover {
+  border-color: #0f766e;
+
+  background-color: #0f766e;
+}
+
+
+/* ========================================
+   RESPONSIVIDADE
+   ======================================== */
+
+@media (max-width: 1050px) {
   .manutencao {
-    padding: 24px;
+    padding: 20px;
   }
 
+  .manutencao .form {
+    max-width: 100%;
+  }
+
+  .manutencao .form-sections {
+    grid-template-columns:
+      minmax(0, 1fr) 260px;
+
+    gap: 16px;
+  }
+
+  .manutencao .form-section {
+    padding: 18px;
+  }
 }
 
 
-/* =========================================
-   CELULAR
-========================================= */
+/* ========================================
+   TABLET
+   ======================================== */
 
-@media (max-width: 600px) {
+@media (max-width: 850px) {
+  .manutencao .form-sections {
+    grid-template-columns: 1fr;
+  }
 
+  .manutencao .form-sidebar-sections {
+    width: 100%;
+  }
+
+  .manutencao .form-section-fields.three-columns {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  }
+}
+
+
+/* ========================================
+   MOBILE
+   ======================================== */
+
+@media (max-width: 650px) {
   .manutencao {
     padding: 16px;
   }
 
-  .manutencao h1 {
+  .manutencao .form-title {
     font-size: 20px;
-
-    margin-bottom: 18px;
   }
 
+  .manutencao .form-section {
+    padding: 16px;
+  }
+
+  .manutencao .form-section-fields,
+  .manutencao .form-section-fields.three-columns {
+    grid-template-columns: 1fr;
+
+    gap: 14px;
+  }
+
+  .manutencao .form-field.full {
+    grid-column: auto;
+  }
+
+  .manutencao .form-actions {
+    flex-direction: column-reverse;
+    align-items: stretch;
+  }
+
+  .manutencao .btn-cancel,
+  .manutencao .btn-submit {
+    width: 100%;
+  }
 }
 
 
-/* =========================================
-   CELULAR PEQUENO
-========================================= */
+/* ========================================
+   TELAS MUITO PEQUENAS
+   ======================================== */
 
 @media (max-width: 400px) {
-
   .manutencao {
     padding: 12px;
   }
 
-  .manutencao h1 {
-    font-size: 18px;
+  .manutencao .form-section {
+    padding: 14px;
   }
 
+  .manutencao .form-section-title {
+    font-size: 12px;
+  }
 }

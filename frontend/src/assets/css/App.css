@@ -14,10 +14,11 @@
 
 
 /* =========================================
-   LOGIN
+   TELAS SEM NAVBAR
 ========================================= */
 
-.main-content.login-content {
+.main-content.login-content,
+.main-content.cadastro-content {
   width: 100%;
 
   margin-left: 0;
@@ -36,7 +37,8 @@
     margin-left: 70px;
   }
 
-  .main-content.login-content {
+  .main-content.login-content,
+  .main-content.cadastro-content {
     width: 100%;
 
     margin-left: 0;
