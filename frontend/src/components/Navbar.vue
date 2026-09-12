@@ -6,16 +6,11 @@
         to="/dashboard"
         class="logo"
       >
-        <span class="logo-icon">
-          <Settings
-            :size="14"
-            :stroke-width="2"
-          />
-        </span>
-
-        <span class="logo-text">
-          Easy Asset
-        </span>
+        <img
+          src="../assets/easy-asset-logo-verde.svg"
+          alt="Easy Asset"
+          class="logo-img"
+        >
       </router-link>
 
 

@@ -60,6 +60,12 @@
   white-space: nowrap;
 }
 
+.logo-img {
+  height: 44px;  
+  width: auto;
+  display: block;
+}
+
 .logo-icon {
   width: 23px;
   height: 23px;

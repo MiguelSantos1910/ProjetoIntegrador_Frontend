@@ -1,39 +1,87 @@
 .card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
   width: 100%;
   min-width: 0;
+  min-height: 124px;
+  box-sizing: border-box;
 
   background-color: #ffffff;
-
   border: 1px solid #e2e8f0;
   border-radius: 10px;
 
   padding: 20px 22px;
 
-  box-sizing: border-box;
-
-  min-height: 124px;
-
   box-shadow: 0 2px 6px rgba(15, 23, 42, 0.04);
+
+  transition:
+    box-shadow 0.15s ease,
+    border-color 0.15s ease,
+    transform 0.15s ease;
+}
+
+.card:hover {
+  border-color: #cbd5e1;
+
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08);
+
+  transform: translateY(-1px);
 }
 
 
-/* Título */
+/* =========================
+   CABEÇALHO DO CARD
+========================= */
+
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  width: 100%;
+  height: 100%;
+
+  gap: 16px;
+}
+
+
+/* =========================
+   ÁREA DO TEXTO
+========================= */
+
+.card-header > div:first-child {
+  display: flex;
+  flex-direction: column;
+
+  min-width: 0;
+  flex: 1;
+}
+
+
+/* =========================
+   TÍTULO
+========================= */
 
 .card-header-title {
   display: block;
 
-  margin: 0 0 10px 0;
+  margin: 0 0 8px 0;
 
   color: #475569;
 
   font-size: 11px;
   font-weight: 600;
 
+  letter-spacing: 0.05em;
   text-transform: uppercase;
 }
 
 
-/* Valor */
+/* =========================
+   VALOR
+========================= */
 
 .card-value {
   display: block;
@@ -43,9 +91,11 @@
   color: #0f172a;
 
   font-size: 27px;
+  font-weight: 700;
+
   line-height: 1.1;
 
-  font-weight: 700;
+  font-variant-numeric: tabular-nums;
 
   overflow: hidden;
   text-overflow: ellipsis;
@@ -53,15 +103,79 @@
 }
 
 
-/* Descrição */
+/* =========================
+   ÍCONE
+========================= */
 
-.card-footer {
-  display: block;
+.card-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
-  margin-top: 8px;
+  width: 48px;
+  height: 48px;
 
-  color: #64748b;
+  flex-shrink: 0;
 
-  font-size: 11px;
-  line-height: 1.4;
+  margin-left: 18px;
+
+  border-radius: 10px;
+
+  /* Cor principal do Easy Asset */
+  color: #0d9f95;
+
+  /* Fundo suave */
+  background-color: #e6f7f5;
+
+  transition:
+    background-color 0.15s ease,
+    transform 0.15s ease;
+}
+
+
+/* Tamanho do SVG */
+
+.card-icon svg {
+  width: 24px;
+  height: 24px;
+}
+
+
+/* =========================
+   HOVER DO ÍCONE
+========================= */
+
+.card:hover .card-icon {
+  background-color: #d5f2ef;
+
+  transform: scale(1.04);
+}
+
+
+/* =========================
+   RESPONSIVIDADE
+========================= */
+
+@media (max-width: 600px) {
+  .card {
+    min-height: 110px;
+
+    padding: 16px 18px;
+  }
+
+  .card-icon {
+    width: 42px;
+    height: 42px;
+
+    margin-left: 12px;
+  }
+
+  .card-icon svg {
+    width: 21px;
+    height: 21px;
+  }
+
+  .card-value {
+    font-size: 24px;
+  }
 }

@@ -1,7 +1,7 @@
 <template>
   <div class="cadastro-ativos">
     <Form
-      title="Cadastro de Ativos"
+      title="Cadastrar de Ativo"
       :fields="formFields"
       :initial-data="initialData"
       submit-button-text="Cadastrar"
@@ -15,6 +15,7 @@
 import { ref } from 'vue'
 import Form from '../components/Form.vue'
 import '../assets/css/Cadastro.css'
+import { FileUp } from 'lucide-vue-next'
 
 const formFields = ref([
   {
@@ -24,6 +25,7 @@ const formFields = ref([
     placeholder: 'Digite o nome do ativo',
     required: true
   },
+
   {
     name: 'categoria',
     label: 'Categoria',
@@ -31,11 +33,21 @@ const formFields = ref([
     placeholder: 'Selecione a categoria',
     required: true,
     options: [
-      { value: 'eletronico', label: 'Eletrônico' },
-      { value: 'movel', label: 'Móvel' },
-      { value: 'imovel', label: 'Imóvel' }
+      {
+        value: 'eletronico',
+        label: 'Eletrônico'
+      },
+      {
+        value: 'movel',
+        label: 'Móvel'
+      },
+      {
+        value: 'imovel',
+        label: 'Imóvel'
+      }
     ]
   },
+
   {
     name: 'numero_serie',
     label: 'Número de Série',
@@ -43,6 +55,7 @@ const formFields = ref([
     placeholder: 'Digite o número de série do ativo',
     required: true
   },
+
   {
     name: 'data_aquisicao',
     label: 'Data de Aquisição',
@@ -50,6 +63,7 @@ const formFields = ref([
     placeholder: 'Selecione a data de aquisição',
     required: true
   },
+
   {
     name: 'valor',
     label: 'Valor',
@@ -57,6 +71,7 @@ const formFields = ref([
     placeholder: 'Digite o valor do ativo',
     required: true
   },
+
   {
     name: 'responsavel',
     label: 'Responsável',
@@ -64,6 +79,7 @@ const formFields = ref([
     placeholder: 'Digite o nome do responsável pelo ativo',
     required: true
   },
+
   {
     name: 'descricao',
     label: 'Descrição',
@@ -71,19 +87,28 @@ const formFields = ref([
     placeholder: 'Digite a descrição do ativo',
     required: false
   },
+
   {
     name: 'foto',
     label: 'Foto',
     type: 'file',
+    icon: FileUp,
     placeholder: 'Selecione uma foto do ativo',
+    info: 'PNG, JPG de até 5MB',
+    accept: 'image/png,image/jpeg',
     required: false
   }
 ])
 
 const initialData = ref({
   nome: '',
+  categoria: '',
+  numero_serie: '',
+  data_aquisicao: '',
+  valor: '',
+  responsavel: '',
   descricao: '',
-  categoria: ''
+  foto: null
 })
 
 const handleFormSubmit = (data) => {
