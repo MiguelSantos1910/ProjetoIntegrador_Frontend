@@ -1,0 +1,409 @@
+/* =========================
+   PÁGINA
+========================= */
+
+.categorias {
+  width: 100%;
+  min-height: 100vh;
+
+  box-sizing: border-box;
+
+  background-color: #f8fafc;
+  color: #0f172a;
+}
+
+
+/* =========================
+   CABEÇALHO
+========================= */
+
+.categorias-header {
+  min-height: 64px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 20px;
+
+  padding: 12px 24px;
+
+  box-sizing: border-box;
+
+  background-color: #ffffff;
+
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.categorias-title-area h1 {
+  margin: 0;
+
+  color: #1e293b;
+
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.categorias-title-area span {
+  display: block;
+
+  margin-top: 4px;
+
+  color: #94a3b8;
+
+  font-size: 10px;
+}
+
+
+/* =========================
+   HEADER ACTIONS
+========================= */
+
+.header-actions {
+  display: flex;
+  align-items: center;
+
+  gap: 10px;
+}
+
+.search-box {
+  width: 220px;
+  height: 36px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 8px;
+
+  padding: 0 11px;
+
+  box-sizing: border-box;
+
+  border: 1px solid #dbe3ed;
+  border-radius: 6px;
+
+  background-color: #ffffff;
+
+  color: #64748b;
+}
+
+.search-box input {
+  width: 100%;
+
+  border: none;
+  outline: none;
+
+  background: transparent;
+
+  color: #334155;
+
+  font-family: inherit;
+  font-size: 11px;
+}
+
+.search-box input::placeholder {
+  color: #94a3b8;
+}
+
+.notification-button {
+  width: 36px;
+  height: 36px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid #dbe3ed;
+  border-radius: 6px;
+
+  background-color: #ffffff;
+
+  color: #64748b;
+
+  cursor: pointer;
+
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.notification-button:hover {
+  border-color: #cbd5e1;
+
+  background-color: #f8fafc;
+}
+
+
+/* =========================
+   CONTEÚDO
+========================= */
+
+.categorias-content {
+  width: 100%;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 18px;
+
+  padding: 24px;
+
+  box-sizing: border-box;
+}
+
+
+/* =========================
+   AÇÕES DA PÁGINA
+========================= */
+
+.page-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 20px;
+}
+
+.page-actions h2 {
+  margin: 0;
+
+  color: #1e293b;
+
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.page-actions span {
+  display: block;
+
+  margin-top: 4px;
+
+  color: #94a3b8;
+
+  font-size: 10px;
+}
+
+.new-category-button {
+  height: 38px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 7px;
+
+  padding: 0 15px;
+
+  border: 1px solid #0d9f95;
+  border-radius: 6px;
+
+  background-color: #0d9f95;
+
+  color: #ffffff;
+
+  font-family: inherit;
+
+  font-size: 11px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.new-category-button:hover {
+  border-color: #0b8f86;
+
+  background-color: #0b8f86;
+}
+
+
+/* =========================
+   CARDS DE RESUMO
+========================= */
+
+.summary-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(3, minmax(0, 1fr));
+
+  gap: 14px;
+}
+
+.summary-card {
+  min-height: 82px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 12px;
+
+  padding: 15px;
+
+  box-sizing: border-box;
+
+  background-color: #ffffff;
+
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+
+  box-shadow:
+    0 1px 3px rgba(15, 23, 42, 0.04);
+}
+
+.summary-icon {
+  width: 40px;
+  height: 40px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  flex-shrink: 0;
+
+  border-radius: 8px;
+
+  background-color: #e6fffb;
+
+  color: #0d9f95;
+}
+
+.summary-info {
+  min-width: 0;
+}
+
+.summary-info span {
+  display: block;
+
+  color: #64748b;
+
+  font-size: 9px;
+  font-weight: 600;
+}
+
+.summary-info strong {
+  display: block;
+
+  margin-top: 4px;
+
+  color: #0f172a;
+
+  font-size: 18px;
+  font-weight: 700;
+}
+
+
+/* =========================
+   TABELA
+========================= */
+
+.categories-table {
+  width: 100%;
+
+  min-width: 0;
+}
+
+
+/*
+ * O componente Table.vue já possui:
+ *
+ * .table-container
+ * .table-header
+ * .table-title
+ * .table-wrapper
+ * table
+ * th
+ * td
+ * .actions
+ * .btn-edit
+ * .btn-delete
+ *
+ * Portanto, não recriamos esses estilos aqui.
+ */
+
+
+/* =========================
+   RESPONSIVO
+========================= */
+
+@media (max-width: 900px) {
+
+  .categorias-content {
+    padding: 20px;
+  }
+
+  .summary-grid {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  }
+
+}
+
+
+/* =========================
+   TABLET
+========================= */
+
+@media (max-width: 700px) {
+
+  .categorias-header {
+    align-items: flex-start;
+
+    flex-direction: column;
+
+    padding: 14px 20px;
+  }
+
+  .header-actions {
+    width: 100%;
+  }
+
+  .search-box {
+    flex: 1;
+
+    width: auto;
+  }
+
+  .page-actions {
+    align-items: flex-start;
+
+    flex-direction: column;
+  }
+
+  .new-category-button {
+    width: 100%;
+  }
+
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 550px) {
+
+  .categorias-content {
+    padding: 16px 12px 20px;
+  }
+
+  .categorias-header {
+    padding: 12px;
+  }
+
+  .summary-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .categorias-title-area h1 {
+    font-size: 16px;
+  }
+
+  .page-actions h2 {
+    font-size: 12px;
+  }
+
+}

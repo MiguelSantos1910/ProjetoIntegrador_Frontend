@@ -17,6 +17,17 @@
 
 
 /* =========================
+   CARD DE SAUDAÇÃO
+   ========================= */
+
+.saudacao {
+  width: 100%;
+
+  margin-bottom: 24px;
+}
+
+
+/* =========================
    CARDS
    ========================= */
 
@@ -103,6 +114,11 @@
   }
 
 
+  .saudacao {
+    margin-bottom: 20px;
+  }
+
+
   .card-grid {
     grid-template-columns: 1fr;
 
@@ -130,6 +146,11 @@
 
   .dashboard {
     padding: 12px;
+  }
+
+
+  .saudacao {
+    margin-bottom: 16px;
   }
 
 
