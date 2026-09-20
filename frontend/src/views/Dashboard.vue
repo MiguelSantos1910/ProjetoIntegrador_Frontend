@@ -3,9 +3,9 @@
     <!-- Card Saudação -->
     <div class="saudacao">
       <Card
-        title="INFO"
-        value="Seja bem-vindo Usuário"
-        :icon="Info"
+        title="Boas vindas ao EASY ASSET"
+        :value="saudacao"
+        :icon="User"
       />
     </div>
 
@@ -65,16 +65,24 @@
 import Card from '../components/Card.vue'
 import Chart from '../components/Chart.vue'
 import Table from '../components/Table.vue'
-
+import { useAuthStore } from '../stores/auth'
+import { computed } from 'vue' 
+import '../assets/css/Dashboard.css'
 import {
   Package,
   Wrench,
   CheckCircle,
   AlertTriangle,
-  Info
+  Info,
+  User
 } from 'lucide-vue-next'
 
-import '../assets/css/Dashboard.css'
+const authStore = useAuthStore()
+
+const saudacao = computed(() => {
+  const nome = authStore.usuario?.username || 'Usuário'
+  return `Bem vindo, ${nome}!`
+})
 
 const chartLabels = [
   'Categoria A',
