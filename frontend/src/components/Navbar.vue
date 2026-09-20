@@ -13,7 +13,6 @@
         >
       </router-link>
 
-
       <!-- Menu -->
       <ul class="nav-links">
         <!-- Dashboard -->
@@ -24,11 +23,9 @@
               :size="15"
               :stroke-width="1.8"
             />
-
             <span>Dashboard</span>
           </router-link>
         </li>
-
 
         <!-- Ativos -->
         <li>
@@ -38,11 +35,9 @@
               :size="15"
               :stroke-width="1.8"
             />
-
             <span>Ativos</span>
           </router-link>
         </li>
-
 
         <!-- Manutenção -->
         <li>
@@ -52,11 +47,9 @@
               :size="15"
               :stroke-width="1.8"
             />
-
             <span>Manutenção</span>
           </router-link>
         </li>
-
 
         <!-- Categorias -->
         <li>
@@ -66,11 +59,9 @@
               :size="15"
               :stroke-width="1.8"
             />
-
             <span>Categorias</span>
           </router-link>
         </li>
-
 
         <!-- Relatórios -->
         <li>
@@ -80,11 +71,9 @@
               :size="15"
               :stroke-width="1.8"
             />
-
             <span>Relatórios</span>
           </router-link>
         </li>
-
 
         <!-- Configurações -->
         <li>
@@ -94,35 +83,46 @@
               :size="15"
               :stroke-width="1.8"
             />
-
             <span>Configurações</span>
           </router-link>
         </li>
       </ul>
 
-
       <!-- Usuário -->
       <div class="user-menu">
+        <!-- Avatar -->
         <div class="user-avatar">
-          <span>A</span>
+          <span>
+            {{ primeiraLetra }}
+          </span>
         </div>
 
+        <!-- Informações -->
         <div class="user-info">
           <span class="user-name">
-            Admin
+            {{ nomeUsuario }}
           </span>
 
           <span class="user-role">
-            Admin
+            {{ papelUsuario }}
           </span>
+
+          <button
+            type="button"
+            class="logout-button"
+            @click="handleLogout"
+          >
+            Sair
+          </button>
         </div>
       </div>
     </div>
   </nav>
 </template>
 
-
 <script setup>
+import { computed } from 'vue'
+
 import {
   Settings,
   LayoutDashboard,
@@ -132,5 +132,46 @@ import {
   ChartNoAxesColumnIncreasing
 } from 'lucide-vue-next'
 
+import { useRouter } from 'vue-router'
+import { useAuthStore } from '../stores/auth'
+
 import '../assets/css/Navbar.css'
+
+const router = useRouter()
+const authStore = useAuthStore()
+
+/*
+ * Nome do usuário
+ */
+const nomeUsuario = computed(() => {
+  return (
+    authStore.usuario?.first_name ||
+    authStore.usuario?.username ||
+    'Usuário'
+  )
+})
+
+/*
+ * Papel do usuário
+ */
+const papelUsuario = computed(() => {
+  return authStore.usuario?.papel || 'Usuário'
+})
+
+/*
+ * Primeira letra para o avatar
+ */
+const primeiraLetra = computed(() => {
+  return nomeUsuario.value
+    .charAt(0)
+    .toUpperCase()
+})
+
+/*
+ * Logout
+ */
+const handleLogout = () => {
+  authStore.logout()
+  router.push('/login')
+}
 </script>

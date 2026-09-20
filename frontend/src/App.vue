@@ -12,10 +12,10 @@
 <script setup>
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
-
 import Navbar from './components/Navbar.vue'
 
 const route = useRoute()
+
 
 const hideNavbar = computed(() => {
   return ['login', 'cadastro-usuario'].includes(route.name)

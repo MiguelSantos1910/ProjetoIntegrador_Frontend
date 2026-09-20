@@ -113,8 +113,7 @@
           </div>
         </div>
       </section>
-
-
+      
       <!-- Preferências -->
       <section class="config-card">
         <div class="config-card-header">
