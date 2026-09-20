@@ -9,70 +9,138 @@ import CadastroUsuario from '../views/CadastroUsuario.vue'
 import DetalheAtivo from '../views/DetalheAtivo.vue'
 import Relatorios from '../views/Relatorios.vue'
 import Categorias from '../views/Categorias.vue'
-import Configuracoes from "../views/Configuracoes.vue"
+import Configuracoes from '../views/Configuracoes.vue'
 import NovaCategoria from '../views/NovaCategoria.vue'
 
 const routes = [
   {
     path: '/',
-    name: 'login',
-    component: Login
+    redirect: '/login'
   },
+
+  {
+    path: '/login',
+    name: 'login',
+    component: Login,
+    meta: {
+      requiresAuth: false
+    }
+  },
+
   {
     path: '/cadastro',
     name: 'cadastro-usuario',
-    component: CadastroUsuario
+    component: CadastroUsuario,
+    meta: {
+      requiresAuth: false
+    }
   },
+
   {
     path: '/dashboard',
     name: 'dashboard',
-    component: Dashboard
+    component: Dashboard,
+    meta: {
+      requiresAuth: true
+    }
   },
+
   {
     path: '/ativos',
     name: 'ativos',
-    component: Ativos
+    component: Ativos,
+    meta: {
+      requiresAuth: true
+    }
   },
+
   {
     path: '/ativos/novo',
     name: 'novo-ativo',
-    component: CadastroAtivo
+    component: CadastroAtivo,
+    meta: {
+      requiresAuth: true
+    }
   },
+
   {
     path: '/ativos/detalhe',
     name: 'detalhe',
-    component: DetalheAtivo
+    component: DetalheAtivo,
+    meta: {
+      requiresAuth: true
+    }
   },
+
   {
     path: '/relatorios',
     name: 'relatorios',
-    component: Relatorios
+    component: Relatorios,
+    meta: {
+      requiresAuth: true
+    }
   },
+
   {
     path: '/categorias',
     name: 'categorias',
-    component: Categorias
+    component: Categorias,
+    meta: {
+      requiresAuth: true
+    }
   },
+
   {
     path: '/categorias/nova',
     name: 'nova-categoria',
-    component: NovaCategoria
+    component: NovaCategoria,
+    meta: {
+      requiresAuth: true
+    }
   },
+
   {
     path: '/manutencao',
     name: 'manutencao-ativo',
-    component: ManutencaoAtivo
+    component: ManutencaoAtivo,
+    meta: {
+      requiresAuth: true
+    }
   },
+
   {
     path: '/configuracoes',
     name: 'configuracoes',
-    component: Configuracoes
+    component: Configuracoes,
+    meta: {
+      requiresAuth: true
+    }
   }
 ]
 
 const router = createRouter({
   history: createWebHistory(),
   routes
+})
+
+router.beforeEach((to) => {
+  const isAuthenticated = !!localStorage.getItem('access_token')
+
+  // Página protegida sem login
+  if (to.meta.requiresAuth && !isAuthenticated) {
+    return '/login'
+  }
+
+  // Usuário já logado tentando acessar login/cadastro
+  if (
+    (to.name === 'login' || to.name === 'cadastro-usuario') &&
+    isAuthenticated
+  ) {
+    return '/dashboard'
+  }
+
+  // Permite a navegação
+  return true
 })
 
 export default router

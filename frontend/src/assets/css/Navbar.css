@@ -296,6 +296,40 @@
   white-space: nowrap;
 }
 
+/* =========================================
+   BOTÃO SAIR
+========================================= */
+
+.logout-button {
+  margin: 2px 0 0;
+  padding: 0;
+
+  border: none;
+  background: transparent;
+
+  color: #64748b;
+
+  font-family: inherit;
+  font-size: 9px;
+  font-weight: 500;
+
+  text-align: left;
+
+  cursor: pointer;
+
+  transition: color 0.15s ease;
+}
+
+.logout-button:hover {
+  color: #f8fafc;
+}
+
+.logout-button:focus-visible {
+  outline: 1px solid #0d9488;
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
 
 /* =========================================
    TABLET
