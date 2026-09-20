@@ -19,7 +19,11 @@
 <script setup>
 import { ref } from 'vue'
 import Form from '../components/Form.vue'
+import {useRouter} from 'vue-router'
+import { useAuthStore } from '../stores/auth'
 
+const router = useRouter()
+const authStore = useAuthStore()
 const formFields = ref([
   {
     name: 'nome',
@@ -51,8 +55,14 @@ const formFields = ref([
   }
 ])
 
-const handleFormSubmit = (formData) => {
-  console.log('Formulário enviado:', formData)
+const handleFormSubmit = async (formData) => {
+  const sucesso = await authStore.register(formData.nome, formData.email, formData.senha)
+  if (sucesso) {
+    router.push('/login')
+  } else {
+    alert('Falha no cadastro. Verifique suas informações.')
+    console.error('Erro no cadastro:', authStore.erro)
+  }
 }
 </script>
 

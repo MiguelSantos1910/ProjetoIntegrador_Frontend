@@ -18,14 +18,26 @@
 
 <script setup>
 import { ref } from 'vue'
+import { useAuthStore } from '../stores/auth'
+import { useRouter } from 'vue-router'
 import Form from '../components/Form.vue'
 
+const router = useRouter()
+const authStore = useAuthStore()
 const formFields = ref([
-  {
+ /*{
     name: 'email',
     label: 'Email',
     type: 'email',
     placeholder: 'Digite seu email',
+    required: true
+  },
+  */
+  {
+    name:'username',
+    label: 'Nome de usuário',
+    type: 'text',
+    placeholder: 'Digite seu nome de usuário',
     required: true
   },
   {
@@ -36,9 +48,14 @@ const formFields = ref([
     required: true
   }
 ])
-
-const handleFormSubmit = (formData) => {
-  console.log('Formulário enviado:', formData)
+const handleFormSubmit = async (formData) => {
+  const sucesso = await authStore.login(formData.username, formData.senha)
+  if (sucesso) {
+    router.push('/dashboard')
+  } else {
+    alert('Falha no login. Verifique suas credenciais.')
+    console.error('Erro no login:', authStore.erro)   
+}
 }
 </script>
 
