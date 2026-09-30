@@ -62,7 +62,7 @@ const formFields = ref([
   },
   {
     name: 'confirmar_senha',
-    label: 'Confirmar_Senha',
+    label: 'Confirmar Senha',
     type: 'password',
     placeholder: 'Confirme sua senha',
     required: true
