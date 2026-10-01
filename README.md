@@ -310,13 +310,12 @@ A stack pode ser organizada da seguinte forma:
 
 ### Backend
 
-* Node.js
-* Express
+*Django 
 * API REST
 
 ### Banco de dados
 
-* PostgreSQL
+* MySQL
 
 ### Mobile
 
@@ -325,7 +324,7 @@ Aplicativo mobile integrado à mesma API utilizada pelo sistema web.
 ### Recursos adicionais
 
 * QR Code.
-* NFC.
+* Chatbot.
 * Geolocalização.
 * Realidade Aumentada.
 
