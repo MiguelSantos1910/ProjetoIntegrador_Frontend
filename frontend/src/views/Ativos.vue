@@ -19,7 +19,7 @@
         <button
           type="button"
           class="btn-new-asset"
-          @click="$router.push('/ativos/novo')"
+          @click="router.push('/ativos/novo')"
         >
           + Novo Ativo
         </button>
@@ -36,16 +36,20 @@
           Tipo: Todos
         </option>
 
-        <option value="Computador">
+        <option value="GABINETE">
           Gabinete
         </option>
 
-        <option value="Monitor">
+        <option value="MONITOR">
           Monitor
         </option>
 
-        <option value="Impressora">
+        <option value="TECLADO">
           Teclado
+        </option>
+
+        <option value="MESA">
+          Mesa
         </option>
       </select>
 
@@ -90,13 +94,17 @@
         :rows="filteredRows"
         :show-actions="true"
         @edit="editarAtivo"
-        @delete="deletarAtivo"
+        @delete="handleDelete"
       />
 
       <!-- Paginação -->
       <div class="pagination">
         <span class="pagination-info">
-          Mostrando {{ filteredRows.length }} de {{ ativosStore.ativos.length }} ativos
+          Mostrando
+          {{ filteredRows.length }}
+          de
+          {{ ativosStore.ativos.length }}
+          ativos
         </span>
 
         <div class="pagination-buttons">
@@ -111,20 +119,44 @@
           <button
             type="button"
             class="pagination-button active"
+            disabled
           >
             Próximo
           </button>
         </div>
       </div>
     </div>
+
+    <!-- Modal de exclusão -->
+    <ConfirmModal
+      v-model="showDeleteModal"
+      title="Excluir Ativo?"
+      subtitle="Esta ação não poderá ser desfeita."
+      :item-name="selectedAtivo?.descricao || ''"
+      :item-info="
+        selectedAtivo
+          ? `${selectedAtivo.tipo || 'Ativo'} • ${selectedAtivo.sala || '-'}`
+          : ''
+      "
+      message="O ativo será removido do sistema."
+      confirm-text="Confirmar Exclusão"
+      @confirm="confirmDelete"
+    />
   </div>
 </template>
 
 <script setup>
-import { computed, onMounted, ref } from 'vue'
+import {
+  computed,
+  onMounted,
+  ref
+} from 'vue'
+
 import { useRouter } from 'vue-router'
 
 import Table from '../components/Table.vue'
+import ConfirmModal from '../components/ConfirmModal.vue'
+
 import { useAtivosStore } from '../stores/ativos'
 
 import '../assets/css/Ativos.css'
@@ -136,6 +168,9 @@ const search = ref('')
 const selectedCategory = ref('')
 const selectedRoom = ref('')
 
+const showDeleteModal = ref(false)
+const selectedAtivo = ref(null)
+
 const tableHeaders = [
   'Descrição',
   'Tipo',
@@ -144,66 +179,94 @@ const tableHeaders = [
   'Status'
 ]
 
-onMounted(() => {
-  ativosStore.fetchAtivos()
+
+onMounted(async () => {
+  await ativosStore.fetchAtivos()
 })
+
+
+const filteredAtivos = computed(() => {
+  const termo = search.value
+    .toLowerCase()
+    .trim()
+
+  return ativosStore.ativos.filter((ativo) => {
+    const descricao =
+      ativo.descricao?.toLowerCase() || ''
+
+    const patrimonio =
+      ativo.numero_patrimonio
+        ?.toLowerCase() || ''
+
+    const correspondePesquisa =
+      !termo ||
+      descricao.includes(termo) ||
+      patrimonio.includes(termo)
+
+    const tipo = ativo.tipo || ''
+
+    const correspondeTipo =
+      !selectedCategory.value ||
+      tipo === selectedCategory.value
+
+    const correspondeSala =
+      !selectedRoom.value ||
+      ativo.sala === selectedRoom.value
+
+    return (
+      correspondePesquisa &&
+      correspondeTipo &&
+      correspondeSala
+    )
+  })
+})
+
 
 const filteredRows = computed(() => {
-  const termo = search.value.toLowerCase().trim()
-
-  return ativosStore.ativos
-    .filter((ativo) => {
-      const descricao = ativo.descricao?.toLowerCase() || ''
-      const patrimonio =
-        ativo.numero_patrimonio?.toLowerCase() || ''
-
-      const correspondePesquisa =
-        !termo ||
-        descricao.includes(termo) ||
-        patrimonio.includes(termo)
-
-      const tipo =
-        ativo.tipo?.descricao ||
-        ativo.tipo ||
-        ''
-
-      const correspondetipo =
-        !selectedCategory.value ||
-        tipo === selectedCategory.value
-
-      const correspondeSala =
-        !selectedRoom.value ||
-        ativo.sala === selectedRoom.value
-
-      return (
-        correspondePesquisa &&
-        correspondetipo &&
-        correspondeSala
-      )
-    })
-    .map((ativo) => [
-      ativo.descricao || '-',
-      ativo.tipo?.descricao || ativo.tipo || '-',
-      ativo.numero_patrimonio || '-',
-      ativo.sala || '-',
-      ativo.status || '-'
-    ])
+  return filteredAtivos.value.map((ativo) => [
+    ativo.descricao || '-',
+    ativo.tipo || '-',
+    ativo.numero_patrimonio || '-',
+    ativo.sala || '-',
+    ativo.status || '-'
+  ])
 })
 
-const editarAtivo = (ativo) => {
-  console.log('Editar ativo:', ativo)
 
-}
+const editarAtivo = (rowIndex) => {
+  const ativo = filteredAtivos.value[rowIndex]
 
-const deletarAtivo = async (ativo) => {
-  const confirmar = confirm(
-    `Deseja excluir o ativo "${ativo.descricao}"?`
-  )
-
-  if (!confirmar) {
+  if (!ativo) {
     return
   }
 
-  await ativosStore.deleteAtivo(ativo.id)
+}
+
+
+
+const handleDelete = (rowIndex) => {
+  const ativo = filteredAtivos.value[rowIndex]
+
+  if (!ativo) {
+    return
+  }
+
+  selectedAtivo.value = ativo
+  showDeleteModal.value = true
+}
+
+const confirmDelete = async () => {
+  if (!selectedAtivo.value) {
+    return
+  }
+
+  const sucesso = await ativosStore.deleteAtivo(
+    selectedAtivo.value.id
+  )
+
+  if (sucesso) {
+    showDeleteModal.value = false
+    selectedAtivo.value = null
+  }
 }
 </script>
