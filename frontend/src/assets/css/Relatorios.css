@@ -59,11 +59,18 @@
   border-radius: 6px;
   background-color: #ffffff;
   color: #64748b;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.search-box:hover {
+  border-color: #94a3b8;
 }
 
 .search-box:focus-within {
   border-color: #0d9488;
-  box-shadow: 0 0 0 2px rgba(13, 148, 136, 0.10);
+  box-shadow: 0 0 0 2px rgba(13, 148, 136, 0.1);
 }
 
 .search-box input {
@@ -89,17 +96,28 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
   padding: 0;
   border: 1px solid #cbd5e1;
   border-radius: 6px;
   background-color: #ffffff;
   color: #475569;
   cursor: pointer;
+  transition:
+    border-color 0.2s ease,
+    background-color 0.2s ease,
+    color 0.2s ease;
 }
 
 .notification-button:hover {
   border-color: #94a3b8;
   background-color: #f8fafc;
+  color: #0f172a;
+}
+
+.notification-button:focus-visible {
+  outline: 2px solid rgba(13, 148, 136, 0.25);
+  outline-offset: 2px;
 }
 
 
@@ -111,9 +129,47 @@
   width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 24px;
   padding: 24px;
   box-sizing: border-box;
+}
+
+
+/* ========================================
+   SEÇÕES DO RELATÓRIO
+   ======================================== */
+
+.report-section {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.section-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.section-heading h2 {
+  margin: 0;
+  color: #0f172a;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.section-heading h2::before {
+  content: "";
+  display: inline-block;
+  width: 3px;
+  height: 15px;
+  margin-right: 8px;
+  vertical-align: -2px;
+  border-radius: 2px;
+  background-color: #0d9488;
 }
 
 
@@ -128,6 +184,10 @@
   border: 1px solid #e2e8f0;
   border-radius: 8px;
   box-shadow: 0 1px 2px rgba(15, 23, 42, 0.03);
+}
+
+.report-card:hover {
+  border-color: #d7dee8;
 }
 
 
@@ -150,10 +210,8 @@
   width: 100%;
   display: grid;
   grid-template-columns:
-    minmax(150px, 1fr)
-    minmax(150px, 1fr)
-    minmax(180px, 1fr)
-    minmax(180px, 1fr)
+    minmax(200px, 280px)
+    minmax(200px, 280px)
     auto;
   align-items: end;
   gap: 14px;
@@ -172,7 +230,6 @@
   font-weight: 600;
 }
 
-.filter-field input,
 .filter-field select {
   width: 100%;
   height: 38px;
@@ -186,26 +243,24 @@
   color: #0f172a;
   font-family: inherit;
   font-size: 11px;
+  cursor: pointer;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
-.filter-field input:hover,
 .filter-field select:hover {
   border-color: #94a3b8;
 }
 
-.filter-field input:focus,
 .filter-field select:focus {
   border-color: #0d9488;
-  box-shadow: 0 0 0 2px rgba(13, 148, 136, 0.10);
-}
-
-.filter-field select {
-  cursor: pointer;
+  box-shadow: 0 0 0 2px rgba(13, 148, 136, 0.1);
 }
 
 .generate-button {
   height: 38px;
-  padding: 0 16px;
+  padding: 0 18px;
   box-sizing: border-box;
   border: 1px solid #0d9488;
   border-radius: 6px;
@@ -216,11 +271,47 @@
   font-weight: 600;
   white-space: nowrap;
   cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.1s ease;
 }
 
 .generate-button:hover {
   background-color: #0f766e;
   border-color: #0f766e;
+}
+
+.generate-button:active {
+  transform: translateY(1px);
+}
+
+.generate-button:focus-visible {
+  outline: 2px solid rgba(13, 148, 136, 0.25);
+  outline-offset: 2px;
+}
+
+
+/* ========================================
+   MENSAGENS DE STATUS
+   ======================================== */
+
+.status-message {
+  width: 100%;
+  padding: 18px 20px;
+  box-sizing: border-box;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  background-color: #ffffff;
+  color: #475569;
+  font-size: 12px;
+  text-align: center;
+}
+
+.status-message.error {
+  border-color: #fecaca;
+  background-color: #fef2f2;
+  color: #b91c1c;
 }
 
 
@@ -234,13 +325,6 @@
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 18px;
 }
-
-
-/*
- * O conteúdo dos indicadores agora pertence
- * ao Card.vue. Aqui controlamos somente
- * o posicionamento dos cards.
- */
 
 .indicators-grid > * {
   min-width: 0;
@@ -260,16 +344,18 @@
 
 .chart-card {
   min-width: 0;
+  min-height: 280px;
   padding: 20px;
   overflow: hidden;
 }
 
 
 /* ========================================
-   TABELA
+   TABELAS
    ======================================== */
 
 .table-card {
+  min-width: 0;
   overflow: hidden;
 }
 
@@ -286,12 +372,14 @@
   color: #0f172a;
   font-size: 14px;
   font-weight: 600;
+  line-height: 1.4;
 }
 
 .export-actions {
   display: flex;
   align-items: center;
   gap: 8px;
+  flex-shrink: 0;
 }
 
 .export-button {
@@ -302,7 +390,17 @@
   font-family: inherit;
   font-size: 10px;
   font-weight: 600;
+  white-space: nowrap;
   cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease,
+    transform 0.1s ease;
+}
+
+.export-button:active {
+  transform: translateY(1px);
 }
 
 .export-button.excel {
@@ -326,16 +424,13 @@
   background-color: #f8fafc;
 }
 
-
-/*
- * O Table.vue já possui seu próprio
- * container e estilos.
- *
- * Ajustamos apenas o espaço externo
- * dentro do card do relatório.
- */
+.export-button:focus-visible {
+  outline: 2px solid rgba(13, 148, 136, 0.2);
+  outline-offset: 2px;
+}
 
 .table-card > .table-container {
+  width: 100%;
   margin-top: 16px;
   border: 0;
   border-radius: 0;
@@ -344,7 +439,7 @@
 
 
 /* ========================================
-   RODAPÉ DA TABELA
+   RODAPÉ DAS TABELAS
    ======================================== */
 
 .table-footer {
@@ -379,11 +474,25 @@
   font-size: 10px;
   font-weight: 600;
   cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease;
 }
 
-.page-button:hover {
+.page-button:hover:not(:disabled) {
   background-color: #f8fafc;
   border-color: #94a3b8;
+}
+
+.page-button:focus-visible {
+  outline: 2px solid rgba(13, 148, 136, 0.2);
+  outline-offset: 2px;
+}
+
+.page-button:disabled {
+  opacity: 0.65;
+  cursor: default;
 }
 
 .page-button.active {
@@ -425,6 +534,14 @@
   .charts-grid {
     grid-template-columns: 1fr;
   }
+
+  .chart-card {
+    min-height: 260px;
+  }
+
+  .table-header {
+    align-items: flex-start;
+  }
 }
 
 
@@ -450,7 +567,15 @@
 
   .relatorios-content {
     padding: 16px;
-    gap: 16px;
+    gap: 20px;
+  }
+
+  .report-section {
+    gap: 12px;
+  }
+
+  .section-heading h2 {
+    font-size: 14px;
   }
 
   .filters-card {
@@ -468,6 +593,7 @@
   }
 
   .chart-card {
+    min-height: 240px;
     padding: 16px;
   }
 
@@ -477,12 +603,20 @@
     padding: 16px 16px 0;
   }
 
+  .table-header h2 {
+    font-size: 13px;
+  }
+
   .export-actions {
     width: 100%;
   }
 
   .export-button {
     flex: 1;
+  }
+
+  .table-card > .table-container {
+    overflow-x: auto;
   }
 
   .table-footer {
@@ -507,6 +641,7 @@
   }
 
   .chart-card {
+    min-height: 220px;
     padding: 12px;
   }
 
@@ -521,5 +656,17 @@
 
   .export-button {
     width: 100%;
+  }
+
+  .table-footer {
+    gap: 12px;
+  }
+
+  .pagination {
+    justify-content: stretch;
+  }
+
+  .page-button {
+    flex: 1;
   }
 }

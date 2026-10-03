@@ -32,7 +32,17 @@
               v-for="(cell, cellIndex) in row"
               :key="cellIndex"
             >
-              {{ cell }}
+              <span
+                v-if="headers[cellIndex] === 'Status'"
+                class="status-badge"
+                :class="getStatusClass(cell)"
+              >
+                {{ getStatusLabel(cell) }}
+              </span>
+
+              <span v-else>
+                {{ cell }}
+              </span>
             </td>
 
             <td
@@ -40,20 +50,31 @@
               class="actions"
             >
               <button
+                type="button"
                 class="btn-edit"
                 title="Editar"
-                @click="emit('edit', row)"
+                @click="emit('edit', rowIndex)"
               >
                 <Pencil :size="16" />
               </button>
 
               <button
+                type="button"
                 class="btn-delete"
                 title="Excluir"
-                @click="emit('delete', row)"
+                @click="emit('delete', rowIndex)"
               >
                 <Trash2 :size="16" />
               </button>
+            </td>
+          </tr>
+
+          <tr v-if="rows.length === 0">
+            <td
+              :colspan="headers.length + (showActions ? 1 : 0)"
+              class="empty-row"
+            >
+              Nenhum ativo encontrado.
             </td>
           </tr>
         </tbody>
@@ -62,18 +83,17 @@
   </div>
 </template>
 
-
 <script setup>
 import {
   Pencil,
   Trash2
 } from 'lucide-vue-next'
 
+import { STATUS_ATIVO } from '../composables/status'
+
 import '../assets/css/Table.css'
 
-
 defineProps({
-
   title: {
     type: String,
     default: 'Tabela'
@@ -93,12 +113,18 @@ defineProps({
     type: Boolean,
     default: false
   }
-
 })
-
 
 const emit = defineEmits([
   'edit',
   'delete'
 ])
+
+const getStatusClass = (status) => {
+  return STATUS_ATIVO[status]?.class || ''
+}
+
+const getStatusLabel = (status) => {
+  return STATUS_ATIVO[status]?.label || status
+}
 </script>
