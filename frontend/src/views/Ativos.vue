@@ -95,6 +95,7 @@
         :show-actions="true"
         @edit="editarAtivo"
         @delete="handleDelete"
+        @detail="handleDetail"
       />
 
       <!-- Paginação -->
@@ -242,7 +243,15 @@ const editarAtivo = (rowIndex) => {
 
 }
 
+const handleDetail = (rowIndex) => {
+  const ativo = filteredAtivos.value[rowIndex]
 
+  if (!ativo) {
+    return
+  }
+
+  router.push(`/ativos/detalhe/${ativo.id}`)
+}
 
 const handleDelete = (rowIndex) => {
   const ativo = filteredAtivos.value[rowIndex]

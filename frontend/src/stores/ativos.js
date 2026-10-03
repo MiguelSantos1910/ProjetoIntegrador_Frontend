@@ -4,6 +4,7 @@ import api from '../services/api'
 export const useAtivosStore = defineStore('ativos', {
   state: () => ({
     ativos: [],
+    ativo: null,
     carregando: false,
     erro: null
   }),
@@ -34,6 +35,37 @@ export const useAtivosStore = defineStore('ativos', {
         this.erro =
           error.response?.data?.detail ||
           'Erro ao buscar ativos.'
+
+        return false
+      } finally {
+        this.carregando = false
+      }
+    },
+
+    // Buscar um ativo pelo ID
+    async fetchAtivo(id) {
+      this.carregando = true
+      this.erro = null
+
+      try {
+        const response = await api.get(
+          `/ativos/${id}/`
+        )
+
+        this.ativo = response.data
+
+        return true
+      } catch (error) {
+        console.error(
+          'Erro ao buscar ativo:',
+          error.response?.data || error
+        )
+
+        this.erro =
+          error.response?.data?.detail ||
+          'Erro ao buscar o ativo.'
+
+        this.ativo = null
 
         return false
       } finally {
@@ -86,6 +118,11 @@ export const useAtivosStore = defineStore('ativos', {
           this.ativos[index] = response.data
         }
 
+        // Atualiza também o ativo atualmente aberto
+        if (this.ativo?.id === id) {
+          this.ativo = response.data
+        }
+
         return true
       } catch (error) {
         this.erro =
@@ -109,6 +146,11 @@ export const useAtivosStore = defineStore('ativos', {
         this.ativos = this.ativos.filter(
           (ativo) => ativo.id !== id
         )
+
+        // Se o ativo excluído estava aberto
+        if (this.ativo?.id === id) {
+          this.ativo = null
+        }
 
         return true
       } catch (error) {
