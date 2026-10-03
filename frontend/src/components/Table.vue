@@ -51,6 +51,15 @@
             >
               <button
                 type="button"
+                class="btn-detail"
+                title="Detalhes"
+                @click="emit('detail', rowIndex)"
+              >
+                <Eye :size="16" />
+              </button>
+
+              <button
+                type="button"
                 class="btn-edit"
                 title="Editar"
                 @click="emit('edit', rowIndex)"
@@ -86,7 +95,8 @@
 <script setup>
 import {
   Pencil,
-  Trash2
+  Trash2,
+  Eye
 } from 'lucide-vue-next'
 
 import { STATUS_ATIVO } from '../composables/status'
@@ -117,7 +127,8 @@ defineProps({
 
 const emit = defineEmits([
   'edit',
-  'delete'
+  'delete',
+  'detail'
 ])
 
 const getStatusClass = (status) => {

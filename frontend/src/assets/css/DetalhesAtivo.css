@@ -18,13 +18,13 @@
 ========================= */
 
 .detalhes-header {
-  height: 56px;
+  height: 58px;
 
   display: flex;
   align-items: center;
   justify-content: space-between;
 
-  padding: 0 20px;
+  padding: 0 22px;
 
   box-sizing: border-box;
 
@@ -38,7 +38,7 @@
 
   color: #1e293b;
 
-  font-size: 16px;
+  font-size: 17px;
   font-weight: 700;
 }
 
@@ -55,8 +55,8 @@
 }
 
 .search-box {
-  width: 185px;
-  height: 32px;
+  width: 195px;
+  height: 34px;
 
   display: flex;
   align-items: center;
@@ -86,7 +86,7 @@
   color: #334155;
 
   font-family: inherit;
-  font-size: 9px;
+  font-size: 10px;
 }
 
 .search-box input::placeholder {
@@ -94,8 +94,8 @@
 }
 
 .notification-button {
-  width: 32px;
-  height: 32px;
+  width: 34px;
+  height: 34px;
 
   display: flex;
   align-items: center;
@@ -109,10 +109,19 @@
   color: #64748b;
 
   cursor: pointer;
+
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease;
 }
 
 .notification-button:hover {
   background-color: #f8fafc;
+
+  border-color: #cbd5e1;
+
+  color: #334155;
 }
 
 
@@ -127,11 +136,11 @@
 
   grid-template-columns:
     minmax(0, 1fr)
-    270px;
+    280px;
 
-  gap: 16px;
+  gap: 18px;
 
-  padding: 20px 22px;
+  padding: 22px;
 
   box-sizing: border-box;
 }
@@ -147,7 +156,7 @@
   display: flex;
   flex-direction: column;
 
-  gap: 16px;
+  gap: 18px;
 }
 
 
@@ -161,7 +170,7 @@
   display: flex;
   flex-direction: column;
 
-  gap: 16px;
+  gap: 18px;
 }
 
 
@@ -174,7 +183,7 @@
 
   box-sizing: border-box;
 
-  padding: 20px;
+  padding: 22px;
 
   background-color: #ffffff;
 
@@ -195,35 +204,43 @@
   align-items: flex-start;
   justify-content: space-between;
 
-  gap: 10px;
+  gap: 12px;
 
-  margin-bottom: 18px;
+  margin-bottom: 20px;
 }
 
 .asset-card-header h2 {
-  margin: 0 0 3px;
+  margin: 0 0 5px;
 
   color: #1e293b;
 
-  font-size: 13px;
+  font-size: 15px;
   font-weight: 700;
 }
 
 .asset-code {
   color: #64748b;
 
-  font-size: 8px;
+  font-size: 9px;
 }
 
 .asset-status {
-  padding: 5px 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 
-  border-radius: 12px;
+  min-height: 24px;
+
+  padding: 4px 10px;
+
+  box-sizing: border-box;
+
+  border-radius: 999px;
 
   background-color: #d1fae5;
   color: #059669;
 
-  font-size: 8px;
+  font-size: 10px;
   font-weight: 600;
 }
 
@@ -238,7 +255,7 @@
   grid-template-columns:
     repeat(2, minmax(0, 1fr));
 
-  gap: 14px 18px;
+  gap: 16px 20px;
 }
 
 .detail-field {
@@ -247,24 +264,24 @@
   display: flex;
   flex-direction: column;
 
-  gap: 6px;
+  gap: 7px;
 }
 
 .detail-field label {
   color: #1e293b;
 
-  font-size: 9px;
+  font-size: 10px;
   font-weight: 600;
 }
 
 .detail-field input,
 .detail-field select {
   width: 100%;
-  height: 34px;
+  height: 38px;
 
   box-sizing: border-box;
 
-  padding: 0 10px;
+  padding: 0 11px;
 
   border: 1px solid #dbe3ed;
   border-radius: 6px;
@@ -274,9 +291,14 @@
   color: #334155;
 
   font-family: inherit;
-  font-size: 9px;
+  font-size: 10px;
 
   outline: none;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    background-color 0.2s ease;
 }
 
 .detail-field input:focus,
@@ -284,7 +306,24 @@
   border-color: #0d9f95;
 
   box-shadow:
-    0 0 0 2px rgba(13, 159, 149, 0.08);
+    0 0 0 3px rgba(13, 159, 149, 0.08);
+}
+
+.detail-field input:disabled,
+.detail-field select:disabled {
+  background-color: #f8fafc;
+
+  color: #64748b;
+
+  cursor: not-allowed;
+}
+
+.detail-field input[readonly] {
+  background-color: #f8fafc;
+
+  color: #64748b;
+
+  cursor: default;
 }
 
 
@@ -299,8 +338,8 @@
 
   gap: 10px;
 
-  margin-top: 18px;
-  padding-top: 16px;
+  margin-top: 20px;
+  padding-top: 17px;
 
   border-top: 1px solid #f1f5f9;
 }
@@ -309,25 +348,30 @@
   display: flex;
   align-items: center;
 
-  gap: 8px;
+  gap: 9px;
 }
 
 .delete-button,
 .cancel-button,
 .update-button {
-  height: 32px;
+  min-height: 35px;
 
-  padding: 0 14px;
+  padding: 0 15px;
 
   box-sizing: border-box;
 
   border-radius: 6px;
 
   font-family: inherit;
-  font-size: 9px;
+  font-size: 10px;
   font-weight: 600;
 
   cursor: pointer;
+
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    opacity 0.2s ease;
 }
 
 .delete-button {
@@ -350,6 +394,8 @@
 
 .cancel-button:hover {
   background-color: #f8fafc;
+
+  border-color: #cbd5e1;
 }
 
 .update-button {
@@ -361,6 +407,20 @@
 
 .update-button:hover {
   background-color: #0b8f86;
+}
+
+.delete-button:disabled,
+.cancel-button:disabled,
+.update-button:disabled {
+  opacity: 0.6;
+
+  cursor: not-allowed;
+}
+
+.delete-button:disabled:hover,
+.cancel-button:disabled:hover,
+.update-button:disabled:hover {
+  background-color: inherit;
 }
 
 
@@ -396,6 +456,31 @@
   background-color: #e2e8f0;
 }
 
+
+/* =========================
+   PLACEHOLDER DA IMAGEM
+========================= */
+
+.asset-image-placeholder {
+  width: 100%;
+  height: 100%;
+
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+
+  padding: 12px;
+
+  box-sizing: border-box;
+
+  background-color: #e2e8f0;
+
+  color: #334155;
+
+  font-size: 13px;
+  font-weight: 600;
+}
+
 .asset-image {
   width: 100%;
   height: 100%;
@@ -407,15 +492,15 @@
 
 
 /* =========================
-   DEPRECIAÇÃO
+   QR CODE + INFORMAÇÕES
 ========================= */
 
-.depreciation-card {
+.qr-info-card {
   width: 100%;
 
   box-sizing: border-box;
 
-  padding: 18px;
+  overflow: hidden;
 
   background-color: #ffffff;
 
@@ -426,94 +511,168 @@
     0 1px 3px rgba(15, 23, 42, 0.04);
 }
 
-.depreciation-header h2 {
-  margin: 0 0 18px;
+
+/* =========================
+   ÁREA DO QR CODE
+========================= */
+
+.qr-section {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 18px;
+
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.qr-section .qr-code {
+  width: 100%;
+
+  padding: 0;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  gap: 10px;
+}
+
+.qr-section .qr-code-image {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 10px;
+
+  background-color: #ffffff;
+
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+}
+
+
+/* =========================
+   INFORMAÇÕES DO ATIVO
+========================= */
+
+.asset-info-section {
+  padding: 18px;
+}
+
+.asset-info-section h2 {
+  margin: 0 0 15px;
 
   color: #1e293b;
 
-  font-size: 11px;
+  font-size: 13px;
   font-weight: 700;
 }
 
-.depreciation-row {
+.asset-info-row {
   display: flex;
+  flex-direction: column;
 
-  align-items: center;
-  justify-content: space-between;
+  gap: 4px;
 
-  gap: 10px;
+  padding: 10px 0;
 
-  margin-bottom: 14px;
+  border-bottom: 1px solid #f0f2f5;
 }
 
-.depreciation-row span {
+.asset-info-row:last-child {
+  border-bottom: none;
+
+  padding-bottom: 0;
+}
+
+.asset-info-row span {
   color: #64748b;
-
-  font-size: 8px;
-}
-
-.depreciation-row strong {
-  color: #334155;
 
   font-size: 9px;
+  font-weight: 500;
+}
+
+.asset-info-row strong {
+  color: #1e293b;
+
+  font-size: 11px;
   font-weight: 600;
 
-  white-space: nowrap;
-}
-
-.depreciation-row strong.negative {
-  color: #ef4444;
-}
-
-.depreciation-row.residual {
-  margin-top: 4px;
-}
-
-.depreciation-row.residual strong {
-  color: #0f766e;
-
-  font-size: 10px;
+  line-height: 1.4;
 }
 
 
 /* =========================
-   BARRA DE DEPRECIAÇÃO
+   CÓDIGO QR
 ========================= */
 
-.depreciation-bar {
+.qr-code-value {
+  max-width: 100%;
+
+  overflow-wrap: anywhere;
+  word-break: break-word;
+
+  line-height: 1.4;
+}
+
+
+/* =========================
+   QR CODE INDISPONÍVEL
+========================= */
+
+.qr-code-empty {
   width: 100%;
-  height: 5px;
 
-  margin-top: 6px;
+  padding: 32px 10px;
 
-  overflow: hidden;
-
-  border-radius: 5px;
-
-  background-color: #e2e8f0;
-}
-
-.depreciation-bar span {
-  display: block;
-
-  width: 20%;
-  height: 100%;
-
-  background-color: #0d9f95;
-}
-
-
-/* =========================
-   INFORMAÇÃO
-========================= */
-
-.depreciation-info {
-  margin: 10px 0 0;
+  box-sizing: border-box;
 
   color: #64748b;
 
+  font-size: 10px;
+
+  text-align: center;
+}
+
+
+/* =========================
+   INFORMAÇÕES INTERNAS DO
+   COMPONENTE QR CODE
+========================= */
+
+.qr-info-card .qr-code-info {
+  display: flex;
+  flex-direction: column;
+
+  align-items: center;
+
+  gap: 5px;
+
+  text-align: center;
+}
+
+.qr-info-card .qr-code-info strong {
+  color: #1e293b;
+
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.qr-info-card .qr-code-info span {
+  color: #64748b;
+
+  font-size: 9px;
+}
+
+.qr-info-card .qr-code-info small {
+  max-width: 100%;
+
+  color: #94a3b8;
+
   font-size: 8px;
-  line-height: 1.4;
+
+  word-break: break-all;
 }
 
 
@@ -522,15 +681,15 @@
 ========================= */
 
 .history-card {
-  min-height: 125px;
+  min-height: 135px;
 }
 
 .section-title {
-  margin: 0 0 16px;
+  margin: 0 0 18px;
 
   color: #1e293b;
 
-  font-size: 11px;
+  font-size: 13px;
   font-weight: 700;
 }
 
@@ -542,13 +701,13 @@
 .history-item {
   display: flex;
 
-  gap: 10px;
+  gap: 11px;
 
-  min-height: 42px;
+  min-height: 46px;
 }
 
 .history-marker {
-  width: 12px;
+  width: 13px;
 
   position: relative;
 
@@ -563,8 +722,8 @@
 
   position: absolute;
 
-  top: 9px;
-  bottom: -4px;
+  top: 10px;
+  bottom: -5px;
 
   width: 1px;
 
@@ -576,8 +735,8 @@
 }
 
 .history-marker span {
-  width: 7px;
-  height: 7px;
+  width: 8px;
+  height: 8px;
 
   margin-top: 3px;
 
@@ -594,20 +753,80 @@
   display: flex;
   flex-direction: column;
 
-  gap: 3px;
+  gap: 4px;
+
+  min-width: 0;
 }
 
 .history-content strong {
   color: #334155;
 
-  font-size: 9px;
+  font-size: 10px;
   font-weight: 600;
 }
 
 .history-content span {
   color: #64748b;
 
-  font-size: 7px;
+  font-size: 8px;
+
+  line-height: 1.5;
+}
+
+.history-content p {
+  margin: 2px 0 0;
+
+  color: #64748b;
+
+  font-size: 8px;
+
+  line-height: 1.5;
+}
+
+
+/* =========================
+   HISTÓRICO VAZIO
+========================= */
+
+.history-empty,
+.empty-history {
+  padding: 20px 10px;
+
+  color: #64748b;
+
+  font-size: 9px;
+
+  text-align: center;
+}
+
+
+/* =========================
+   MENSAGENS DE STATUS
+========================= */
+
+.status-message {
+  margin: 22px;
+
+  padding: 22px;
+
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+
+  background-color: #ffffff;
+
+  color: #64748b;
+
+  font-size: 12px;
+
+  text-align: center;
+}
+
+.status-message.error {
+  border-color: #fecaca;
+
+  background-color: #fef2f2;
+
+  color: #b91c1c;
 }
 
 
@@ -615,7 +834,27 @@
    RESPONSIVO
 ========================= */
 
+@media (max-width: 1100px) {
+
+  .detalhes-content {
+    grid-template-columns:
+      minmax(0, 1fr)
+      250px;
+  }
+
+  .qr-section {
+    padding: 15px;
+  }
+
+  .asset-info-section {
+    padding: 15px;
+  }
+
+}
+
+
 @media (max-width: 1000px) {
+
   .detalhes-content {
     grid-template-columns: 1fr;
   }
@@ -625,26 +864,41 @@
 
     grid-template-columns:
       repeat(2, minmax(0, 1fr));
+
+    align-items: start;
   }
+
+  .qr-info-card {
+    grid-column: span 1;
+  }
+
 }
 
 
 @media (max-width: 700px) {
+
   .detalhes-content {
     padding: 16px;
   }
 
   .detalhes-sidebar {
     display: flex;
+    flex-direction: column;
   }
 
   .asset-fields {
     grid-template-columns: 1fr;
   }
+
+  .asset-card {
+    padding: 18px;
+  }
+
 }
 
 
 @media (max-width: 600px) {
+
   .detalhes-header {
     height: auto;
 
@@ -653,10 +907,12 @@
     align-items: flex-start;
 
     gap: 12px;
+
+    flex-direction: column;
   }
 
-  .detalhes-header {
-    flex-direction: column;
+  .detalhes-header h1 {
+    font-size: 16px;
   }
 
   .header-actions {
@@ -671,10 +927,27 @@
 
   .detalhes-content {
     padding: 12px;
+
+    gap: 12px;
+  }
+
+  .detalhes-main,
+  .detalhes-sidebar {
+    gap: 12px;
   }
 
   .asset-card {
     padding: 16px;
+  }
+
+  .asset-card-header {
+    flex-direction: column;
+
+    gap: 8px;
+  }
+
+  .asset-fields {
+    gap: 14px;
   }
 
   .asset-actions {
@@ -692,4 +965,61 @@
   .update-button {
     flex: 1;
   }
+
+  .asset-info-section {
+    padding: 16px;
+  }
+
+  .qr-section {
+    padding: 16px;
+  }
+
+}
+
+
+/* =========================
+   FOCO POR TECLADO
+========================= */
+
+button:focus-visible,
+input:focus-visible,
+select:focus-visible {
+  outline: 2px solid #0d9f95;
+
+  outline-offset: 2px;
+}
+
+
+/* =========================
+   IMPRESSÃO DO QR CODE
+========================= */
+
+@media print {
+
+  body * {
+    visibility: hidden;
+  }
+
+  .qr-info-card,
+  .qr-info-card * {
+    visibility: visible;
+  }
+
+  .qr-info-card {
+    position: absolute;
+
+    top: 20px;
+    left: 20px;
+
+    width: 280px;
+
+    border: none;
+
+    box-shadow: none;
+  }
+
+  .qr-section {
+    border-bottom: none;
+  }
+
 }

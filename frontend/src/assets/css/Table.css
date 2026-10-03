@@ -126,11 +126,20 @@
   white-space: nowrap;
 }
 
+
+/* =========================
+   STATUS
+   ========================= */
+
 .status-badge {
   display: inline-flex;
+
   align-items: center;
+
   padding: 4px 10px;
+
   border-radius: 999px;
+
   font-size: 12px;
   font-weight: 600;
 }
@@ -184,7 +193,7 @@
    ========================= */
 
 .actions {
-  width: 90px;
+  width: 110px;
 
   text-align: center;
 
@@ -213,11 +222,34 @@
 
   cursor: pointer;
 
-  transition: 0.15s ease;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease,
+    border-color 0.15s ease;
 }
 
 
-/* Editar */
+/* =========================
+   DETALHES
+   ========================= */
+
+.actions .btn-detail {
+  color: #64748b;
+}
+
+
+.actions .btn-detail:hover {
+  background-color: #f1f5f9;
+
+  color: #0d9f95;
+
+  border-color: #cbd5e1;
+}
+
+
+/* =========================
+   EDITAR
+   ========================= */
 
 .actions .btn-edit {
   color: #64748b;
@@ -233,7 +265,9 @@
 }
 
 
-/* Excluir */
+/* =========================
+   EXCLUIR
+   ========================= */
 
 .actions .btn-delete {
   color: #94a3b8;

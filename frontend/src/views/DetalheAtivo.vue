@@ -3,7 +3,9 @@
     <!-- CABEÇALHO -->
 
     <header class="detalhes-header">
-      <h1>Detalhes do Ativo</h1>
+      <h1>
+        Detalhes do Ativo
+      </h1>
 
       <div class="header-actions">
         <div class="search-box">
@@ -22,6 +24,7 @@
         <button
           type="button"
           class="notification-button"
+          title="Notificações"
         >
           <Bell
             :size="16"
@@ -32,9 +35,42 @@
     </header>
 
 
+    <!-- CARREGANDO -->
+
+    <div
+      v-if="carregando"
+      class="status-message"
+    >
+      Carregando dados do ativo...
+    </div>
+
+
+    <!-- ERRO -->
+
+    <div
+      v-else-if="erro"
+      class="status-message error"
+    >
+      {{ erro }}
+    </div>
+
+
+    <!-- ATIVO NÃO ENCONTRADO -->
+
+    <div
+      v-else-if="!asset"
+      class="status-message"
+    >
+      Ativo não encontrado.
+    </div>
+
+
     <!-- CONTEÚDO -->
 
-    <main class="detalhes-content">
+    <main
+      v-else
+      class="detalhes-content"
+    >
       <!-- COLUNA PRINCIPAL -->
 
       <div class="detalhes-main">
@@ -44,16 +80,20 @@
           <div class="asset-card-header">
             <div>
               <h2>
-                Notebook Dell Latitude 5520
+                {{ asset.descricao || 'Ativo sem descrição' }}
               </h2>
 
               <span class="asset-code">
-                Patrimônio ID: AVT-001
+                Patrimônio ID:
+                {{ asset.numero_patrimonio || '-' }}
               </span>
             </div>
 
-            <span class="asset-status">
-              Ativo
+            <span
+              class="asset-status"
+              :class="statusClass"
+            >
+              {{ statusLabel }}
             </span>
           </div>
 
@@ -61,103 +101,120 @@
           <!-- CAMPOS -->
 
           <div class="asset-fields">
+            <!-- DESCRIÇÃO -->
+
             <div class="detail-field">
-              <label for="nome-ativo">
-                Nome do Ativo
+              <label for="descricao">
+                Descrição
               </label>
 
               <input
-                id="nome-ativo"
-                v-model="asset.nome"
+                id="descricao"
+                v-model="assetEdit.descricao"
                 type="text"
               >
             </div>
 
 
+            <!-- TIPO -->
+
             <div class="detail-field">
-              <label for="categoria">
-                Categoria
+              <label for="tipo">
+                Tipo
               </label>
 
               <select
-                id="categoria"
-                v-model="asset.categoria"
+                id="tipo"
+                v-model="assetEdit.tipo"
               >
-                <option value="TI">
-                  TI
+                <option value="GABINETE">
+                  Gabinete
                 </option>
 
-                <option value="Eletrônico">
-                  Eletrônico
+                <option value="MONITOR">
+                  Monitor
                 </option>
 
-                <option value="Móvel">
-                  Móvel
+                <option value="TECLADO">
+                  Teclado
+                </option>
+
+                <option value="MESA">
+                  Mesa
                 </option>
               </select>
             </div>
 
 
+            <!-- PATRIMÔNIO -->
+
             <div class="detail-field">
-              <label for="numero-serie">
-                Número de Série
+              <label for="numero-patrimonio">
+                Número de Patrimônio
               </label>
 
               <input
-                id="numero-serie"
-                v-model="asset.numeroSerie"
+                id="numero-patrimonio"
+                v-model="assetEdit.numero_patrimonio"
                 type="text"
               >
             </div>
 
 
+            <!-- SALA -->
+
             <div class="detail-field">
-              <label for="data-aquisicao">
-                Data de Aquisição
+              <label for="sala">
+                Sala
               </label>
 
               <input
-                id="data-aquisicao"
-                v-model="asset.dataAquisicao"
-                type="date"
-              >
-            </div>
-
-
-            <div class="detail-field">
-              <label for="valor">
-                Valor de Aquisição
-              </label>
-
-              <input
-                id="valor"
-                v-model="asset.valor"
+                id="sala"
+                v-model="assetEdit.sala"
                 type="text"
               >
             </div>
 
 
+            <!-- STATUS -->
+
             <div class="detail-field">
-              <label for="localizacao">
-                Localização
+              <label for="status">
+                Status
               </label>
 
               <select
-                id="localizacao"
-                v-model="asset.localizacao"
+                id="status"
+                v-model="assetEdit.status"
               >
-                <option value="Sede - Bloco A">
-                  Sede - Bloco A
+                <option value="ATIVO">
+                  Ativo
                 </option>
 
-                <option value="Sede - Bloco B">
-                  Sede - Bloco B
+                <option value="EM_MANUTENCAO">
+                  Em manutenção
                 </option>
 
-                <option value="Filial">
-                  Filial
+                <option value="DEVOLVIDO">
+                  Devolvido
                 </option>
               </select>
+            </div>
+
+
+            <!-- DATA DE CADASTRO -->
+
+            <div class="detail-field">
+              <label for="data-cadastro">
+                Data de Cadastro
+              </label>
+
+              <input
+                id="data-cadastro"
+                :value="dataFormatada(asset.data_cadastro)"
+                type="text"
+                disabled
+              >
             </div>
           </div>
 
@@ -168,6 +225,7 @@
             <button
               type="button"
               class="delete-button"
+              :disabled="ativosStore.carregando"
               @click="handleDelete"
             >
               Excluir Ativo
@@ -178,6 +236,7 @@
               <button
                 type="button"
                 class="cancel-button"
+                :disabled="ativosStore.carregando"
                 @click="handleCancel"
               >
                 Cancelar
@@ -187,9 +246,14 @@
               <button
                 type="button"
                 class="update-button"
+                :disabled="ativosStore.carregando"
                 @click="handleUpdate"
               >
-                Atualizar
+                {{
+                  ativosStore.carregando
+                    ? 'Atualizando...'
+                    : 'Atualizar'
+                }}
               </button>
             </div>
           </div>
@@ -200,14 +264,17 @@
 
         <section class="asset-card history-card">
           <h2 class="section-title">
-            Histórico de Manutenções
+            Histórico de Movimentações
           </h2>
 
 
-          <div class="maintenance-history">
+          <div
+            v-if="historicoFiltrado.length"
+            class="maintenance-history"
+          >
             <div
-              v-for="maintenance in maintenanceHistory"
-              :key="maintenance.id"
+              v-for="evento in historicoFiltrado"
+              :key="evento.id"
               class="history-item"
             >
               <div class="history-marker">
@@ -217,16 +284,30 @@
 
               <div class="history-content">
                 <strong>
-                  {{ maintenance.title }}
+                  {{ formatarEvento(evento) }}
                 </strong>
 
                 <span>
-                  {{ maintenance.date }}
-                  • Resp: {{ maintenance.responsible }}
-                  • Custo: {{ maintenance.cost }}
+                  {{ dataFormatada(evento.data) }}
+
+                  <template v-if="evento.usuario">
+                    • Resp: {{ evento.usuario }}
+                  </template>
+
+                  <template v-if="evento.descricao">
+                    • {{ evento.descricao }}
+                  </template>
                 </span>
               </div>
             </div>
+          </div>
+
+
+          <div
+            v-else
+            class="history-empty"
+          >
+            Nenhuma movimentação registrada para este ativo.
           </div>
         </section>
       </div>
@@ -235,197 +316,521 @@
       <!-- COLUNA LATERAL -->
 
       <aside class="detalhes-sidebar">
-        <!-- IMAGEM -->
+        <!-- IMAGEM / REPRESENTAÇÃO DO ATIVO -->
 
         <section class="image-card">
           <div class="asset-image-wrapper">
-            <img
-              :src="asset.image"
-              alt="Imagem do ativo"
-              class="asset-image"
-            >
+            <div class="asset-image-placeholder">
+              {{ formatarTipo(asset.tipo) }}
+            </div>
           </div>
         </section>
 
 
-        <!-- DEPRECIAÇÃO -->
+        <!-- QR CODE + INFORMAÇÕES -->
 
-        <section class="depreciation-card">
-          <div class="depreciation-header">
+        <section class="qr-info-card">
+          <!-- QR CODE -->
+
+          <div class="qr-section">
+            <QrCode
+              v-if="asset.codigo_qr"
+              :value="String(asset.codigo_qr)"
+              :size="180"
+              title="QR Code do Ativo"
+              description="Escaneie para identificar este ativo"
+            />
+
+            <div
+              v-else
+              class="qr-code-empty"
+            >
+              QR Code não disponível.
+            </div>
+          </div>
+
+
+          <!-- INFORMAÇÕES DO ATIVO -->
+
+          <div class="asset-info-section">
             <h2>
-              Depreciação Acumulada
+              Informações do Ativo
             </h2>
+
+
+            <!-- TIPO -->
+
+            <div class="asset-info-row">
+              <span>
+                Tipo
+              </span>
+
+              <strong>
+                {{ formatarTipo(asset.tipo) }}
+              </strong>
+            </div>
+
+
+            <!-- SALA -->
+
+            <div class="asset-info-row">
+              <span>
+                Sala
+              </span>
+
+              <strong>
+                {{ asset.sala || '-' }}
+              </strong>
+            </div>
+
+
+            <!-- CÓDIGO QR -->
+
+            <div class="asset-info-row">
+              <span>
+                Código QR
+              </span>
+
+              <strong class="qr-code-value">
+                {{ asset.codigo_qr || '-' }}
+              </strong>
+            </div>
+
+
+            <!-- ÚLTIMA ATUALIZAÇÃO -->
+
+            <div class="asset-info-row">
+              <span>
+                Última atualização
+              </span>
+
+              <strong>
+                {{ dataFormatada(asset.atualizado_em) }}
+              </strong>
+            </div>
           </div>
-
-
-          <div class="depreciation-row">
-            <span>
-              Taxa de Depreciação Anual
-            </span>
-
-            <strong>
-              20%
-            </strong>
-          </div>
-
-
-          <div class="depreciation-row">
-            <span>
-              Valor Depreciado Atual
-            </span>
-
-            <strong class="negative">
-              - R$ 1.300,00
-            </strong>
-          </div>
-
-
-          <div class="depreciation-row residual">
-            <span>
-              Valor Contábil Residual
-            </span>
-
-            <strong>
-              R$ 5.200,00
-            </strong>
-          </div>
-
-
-          <div class="depreciation-bar">
-            <span />
-          </div>
-
-
-          <p class="depreciation-info">
-            Ciclo de vida restante estimado:
-            48 meses.
-          </p>
         </section>
       </aside>
     </main>
+
+
+    <!-- MODAL DE EXCLUSÃO -->
+
+    <ConfirmModal
+      v-model="showDeleteModal"
+
+      title="Excluir Ativo?"
+
+      subtitle="Esta ação não poderá ser desfeita."
+
+      :item-name="
+        asset?.descricao || 'Ativo'
+      "
+
+      :item-info="
+        asset
+          ? `ID: ${asset.numero_patrimonio || '-'} • ${formatarTipo(asset.tipo)}`
+          : ''
+      "
+
+      message="O ativo será removido do sistema."
+
+      confirm-text="Confirmar Exclusão"
+
+      @confirm="confirmDelete"
+    />
   </div>
-
-
-  <!-- MODAL DE EXCLUSÃO -->
-
-  <ConfirmModal
-    v-model="showDeleteModal"
-    title="Excluir Ativo?"
-    subtitle="Esta ação não poderá ser desfeita."
-    item-name="Notebook Dell Latitude 5520"
-    item-info="ID: AVT-001 • Categoria: TI • R$ 6.500,00"
-    message="O ativo será removido permanentemente de todas as listagens e relatórios. Caso o ativo ainda esteja fisicamente em operação, isto poderá causar divergências contábeis."
-    confirm-text="Confirmar Exclusão"
-    @confirm="confirmDelete"
-  />
 </template>
 
 
 <script setup>
-import { ref, reactive } from 'vue'
+
+import {
+  computed,
+  onMounted,
+  reactive,
+  ref
+} from 'vue'
+
+
+import {
+  useRoute,
+  useRouter
+} from 'vue-router'
+
 
 import {
   Search,
   Bell
 } from 'lucide-vue-next'
 
+
 import ConfirmModal from '../components/ConfirmModal.vue'
+
+import QrCode from '../components/QrCode.vue'
+
+
+import { useAtivosStore } from '../stores/ativos'
+
+import { useHistoricoStore } from '../stores/historico'
+
+
+import { STATUS_ATIVO } from '../composables/status.js'
+
+import { dataFormatada } from '../composables/formatData.js'
+
 
 import '../assets/css/DetalhesAtivo.css'
 
+const route = useRoute()
 
-/* MODAL DE EXCLUSÃO */
+const router = useRouter()
 
-const showDeleteModal = ref(false)
+const ativosStore = useAtivosStore()
 
-
-const handleDelete = () => {
-  showDeleteModal.value = true
-}
-
-
-const confirmDelete = () => {
-  console.log('Ativo excluído')
-
-  showDeleteModal.value = false
-}
-
-
-/* PESQUISA */
+const historicoStore = useHistoricoStore()
 
 const search = ref('')
 
+const showDeleteModal = ref(false)
 
-/* DADOS DO ATIVO */
+const asset = ref(null)
 
-const asset = reactive({
-  nome: 'Notebook Dell Latitude 5520',
+const assetOriginal = ref(null)
 
-  categoria: 'TI',
+const assetEdit = reactive({
 
-  numeroSerie: 'CN-0X7Z8D-Dell-81A',
+  descricao: '',
 
-  dataAquisicao: '2024-03-12',
+  tipo: '',
 
-  valor: 'R$ 6.500,00',
+  numero_patrimonio: '',
 
-  localizacao: 'Sede - Bloco A',
+  sala: '',
 
-  image:
-    'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&w=900&q=80'
+  status: ''
+
+})
+
+const TIPOS_ATIVO = {
+
+  GABINETE: 'Gabinete',
+
+  MONITOR: 'Monitor',
+
+  TECLADO: 'Teclado',
+
+  MESA: 'Mesa'
+
+}
+
+const carregando = computed(() => {
+
+  return (
+    ativosStore.carregando ||
+    historicoStore.carregando
+  )
+
 })
 
 
-/* HISTÓRICO */
+const erro = computed(() => {
 
-const maintenanceHistory = ref([
-  {
-    id: 1,
+  return (
+    ativosStore.erro ||
+    historicoStore.erro
+  )
 
-    title:
-      'Limpeza física interna e troca de pasta térmica',
+})
 
-    date:
-      '15/09/2024',
+const statusAtual = computed(() => {
 
-    responsible:
-      'Suporte Técnico TI',
+  return (
+    assetEdit.status ||
+    asset.value?.status ||
+    ''
+  )
 
-    cost:
-      'R$ 150,00'
-  },
+})
 
-  {
-    id: 2,
 
-    title:
-      'Upgrade de Memória RAM para 32GB',
+const statusLabel = computed(() => {
 
-    date:
-      '10/05/2024',
-
-    responsible:
-      'Rodrigo Silva (Admin)',
-
-    cost:
-      'R$ 450,00'
+  if (!statusAtual.value) {
+    return 'Não informado'
   }
-])
 
 
-/* CANCELAR */
+  return (
+    STATUS_ATIVO[statusAtual.value]?.label ||
+    statusAtual.value
+  )
+
+})
+
+
+const statusClass = computed(() => {
+
+  if (!statusAtual.value) {
+    return ''
+  }
+
+
+  return (
+    STATUS_ATIVO[statusAtual.value]?.class ||
+    ''
+  )
+
+})
+
+const formatarTipo = (tipo) => {
+
+  return (
+    TIPOS_ATIVO[tipo] ||
+    tipo ||
+    'Não informado'
+  )
+
+}
+
+
+const formatarEvento = (evento) => {
+
+  const tipoEvento =
+    evento.acao ||
+    evento.tipo_evento ||
+    ''
+
+
+  const eventos = {
+
+    CADASTRO: 'Cadastro do ativo',
+
+    ENTREGA: 'Entrega do ativo',
+
+    DEVOLUCAO: 'Devolução do ativo',
+
+    MANUTENCAO: 'Manutenção do ativo'
+
+  }
+
+
+  return (
+    eventos[tipoEvento] ||
+    tipoEvento ||
+    'Movimentação'
+  )
+
+}
+
+const historicoFiltrado = computed(() => {
+
+  if (!asset.value) {
+    return []
+  }
+
+
+  return historicoStore.historico.filter((evento) => {
+
+    const ativoId =
+      evento.ativo_id ??
+      evento.ativo
+
+
+    return (
+      String(ativoId) ===
+      String(asset.value.id)
+    )
+
+  })
+
+})
+
+const preencherFormulario = (dados) => {
+
+  assetEdit.descricao =
+    dados?.descricao || ''
+
+
+  assetEdit.tipo =
+    dados?.tipo || ''
+
+
+  assetEdit.numero_patrimonio =
+    dados?.numero_patrimonio || ''
+
+
+  assetEdit.sala =
+    dados?.sala || ''
+
+
+  assetEdit.status =
+    dados?.status || ''
+
+}
+
+const carregarAtivo = async () => {
+
+  const id = route.params.id
+
+
+  if (!id) {
+
+    ativosStore.erro =
+      'ID do ativo não informado.'
+
+    return
+
+  }
+
+
+  const sucesso =
+    await ativosStore.fetchAtivo(id)
+
+
+  if (
+    !sucesso ||
+    !ativosStore.ativo
+  ) {
+
+    return
+
+  }
+
+
+  asset.value = {
+    ...ativosStore.ativo
+  }
+
+
+  assetOriginal.value = {
+    ...ativosStore.ativo
+  }
+
+
+  preencherFormulario(
+    ativosStore.ativo
+  )
+
+
+  await historicoStore.fetchHistorico()
+
+}
+
+const handleUpdate = async () => {
+
+  if (!asset.value) {
+    return
+  }
+
+
+  const dados = {
+
+    descricao:
+      assetEdit.descricao.trim(),
+
+    tipo:
+      assetEdit.tipo,
+
+    numero_patrimonio:
+      assetEdit.numero_patrimonio.trim() ||
+      null,
+
+    sala:
+      assetEdit.sala.trim(),
+
+    status:
+      assetEdit.status
+
+  }
+
+
+  const sucesso =
+    await ativosStore.updateAtivo(
+
+      asset.value.id,
+
+      dados
+
+    )
+
+
+  if (!sucesso) {
+    return
+  }
+
+
+  asset.value = {
+    ...ativosStore.ativo
+  }
+
+
+  assetOriginal.value = {
+    ...ativosStore.ativo
+  }
+
+
+  preencherFormulario(
+    ativosStore.ativo
+  )
+
+}
 
 const handleCancel = () => {
-  console.log('Cancelar alterações')
-}
+
+  if (!assetOriginal.value) {
+    return
+  }
 
 
-/* ATUALIZAR */
-
-const handleUpdate = () => {
-  console.log(
-    'Atualizar ativo:',
-    asset
+  preencherFormulario(
+    assetOriginal.value
   )
+
+  router.push('/ativos')
 }
+
+
+const handleDelete = () => {
+
+  showDeleteModal.value = true
+
+}
+
+
+const confirmDelete = async () => {
+
+  if (!asset.value) {
+    return
+  }
+
+
+  const sucesso =
+    await ativosStore.deleteAtivo(
+      asset.value.id
+    )
+
+
+  if (!sucesso) {
+    return
+  }
+
+
+  showDeleteModal.value = false
+
+  asset.value = null
+
+  assetOriginal.value = null
+
+
+  router.push('/ativos')
+
+}
+
+onMounted(async () => {
+
+  await carregarAtivo()
+
+})
+
 </script>
