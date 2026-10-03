@@ -13,7 +13,6 @@
         </span>
       </div>
 
-
       <div class="header-actions">
         <div class="search-box">
           <Search
@@ -27,7 +26,6 @@
             placeholder="Pesquisar categorias..."
           >
         </div>
-
 
         <button
           type="button"
@@ -50,14 +48,13 @@
       <div class="page-actions">
         <div>
           <h2>
-            Categorias cadastradas
+            Categorias
           </h2>
 
           <span>
-            Organize e acompanhe os ativos por categoria.
+            Categorias disponíveis para classificação dos ativos.
           </span>
         </div>
-
 
         <button
           type="button"
@@ -138,13 +135,36 @@
       </section>
 
 
-      <!-- TABELA REUTILIZÁVEL -->
+      <!-- CARREGANDO -->
 
-      <section class="categories-table">
+      <div
+        v-if="ativosStore.carregando"
+        class="status-message"
+      >
+        Carregando categorias...
+      </div>
+
+
+      <!-- ERRO -->
+
+      <div
+        v-else-if="ativosStore.erro"
+        class="status-message error"
+      >
+        {{ ativosStore.erro }}
+      </div>
+
+
+      <!-- TABELA -->
+
+      <section
+        v-else
+        class="categories-table"
+      >
         <Table
           title="Lista de Categorias"
-          :headers="tableHeaders"
-          :rows="tableRows"
+          :headers="categoriasHeaders"
+          :rows="filteredCategories"
           :show-actions="true"
           @edit="handleEdit"
           @delete="handleDelete"
@@ -176,6 +196,7 @@
 <script setup>
 import {
   computed,
+  onMounted,
   ref
 } from 'vue'
 
@@ -193,189 +214,175 @@ import {
 import Table from '../components/Table.vue'
 import ConfirmModal from '../components/ConfirmModal.vue'
 
+import { useAtivosStore } from '../stores/ativos'
+
 import '../assets/css/Categorias.css'
 
 
-/* ROTEAMENTO */
-
 const router = useRouter()
+const ativosStore = useAtivosStore()
 
-
-/* PESQUISA */
 
 const search = ref('')
-
-
-/* MODAL DE EXCLUSÃO */
-
 const showDeleteModal = ref(false)
-
 const selectedCategory = ref(null)
 
 
-/* CATEGORIAS */
-
-const categories = ref([
-  {
-    id: 1,
-    name: 'TI',
-    description: 'Computadores, servidores e equipamentos de rede.',
-    assets: 345,
-    active: true
-  },
-
-  {
-    id: 2,
-    name: 'Eletrônicos',
-    description: 'Monitores, TVs, projetores e outros eletrônicos.',
-    assets: 82,
-    active: true
-  },
-
-  {
-    id: 3,
-    name: 'Mobiliário',
-    description: 'Mesas, cadeiras, armários e outros móveis.',
-    assets: 180,
-    active: true
-  },
-
-  {
-    id: 4,
-    name: 'Veículos',
-    description: 'Carros, motos, caminhões e veículos corporativos.',
-    assets: 128,
-    active: true
-  },
-
-  {
-    id: 5,
-    name: 'Máquinas e Equipamentos',
-    description: 'Máquinas e equipamentos utilizados pela empresa.',
-    assets: 112,
-    active: true
-  },
-
-  {
-    id: 6,
-    name: 'Ferramentas',
-    description: 'Ferramentas manuais e elétricas.',
-    assets: 56,
-    active: true
-  },
-
-  {
-    id: 7,
-    name: 'Imóveis e Instalações',
-    description: 'Salas, galpões e instalações da empresa.',
-    assets: 31,
-    active: true
-  },
-
-  {
-    id: 8,
-    name: 'Outros',
-    description: 'Ativos que não se enquadram nas demais categorias.',
-    assets: 13,
-    active: true
-  }
-])
+onMounted(async () => {
+  await ativosStore.fetchAtivos()
+})
 
 
-/* FILTRO */
+const categoriasHeaders = [
+  'Categoria',
+  'Descrição',
+  'Status'
+]
+
+const categories = computed(() => {
+
+  const tipos = [
+    {
+      id: 'GABINETE',
+      name: 'Gabinete',
+      description: 'Computadores e gabinetes',
+      active: true
+    },
+
+    {
+      id: 'MONITOR',
+      name: 'Monitor',
+      description: 'Monitores e telas',
+      active: true
+    },
+
+    {
+      id: 'TECLADO',
+      name: 'Teclado',
+      description: 'Teclados para computadores',
+      active: true
+    },
+
+    {
+      id: 'MESA',
+      name: 'Mesa',
+      description: 'Mesas e mobiliário',
+      active: true
+    }
+  ]
+
+  return tipos.map((tipo) => {
+
+    const quantidade = ativosStore.ativos.filter(
+      (ativo) => ativo.tipo === tipo.id
+    ).length
+
+    return {
+      ...tipo,
+      assets: quantidade
+    }
+
+  })
+})
+
+const totalAssets = computed(() => {
+  return ativosStore.ativos.length
+})
+
+const activeCategories = computed(() => {
+
+  return categories.value.filter(
+    (category) => category.active
+  ).length
+
+})
+
+
+const categoriasRows = computed(() => {
+
+  return categories.value.map((category) => [
+
+    category.name,
+
+    `${category.description} (${category.assets} ativos)`,
+
+    category.active
+      ? 'ATIVO'
+      : 'INATIVO'
+
+  ])
+
+})
+
 
 const filteredCategories = computed(() => {
+
   const term = search.value
     .toLowerCase()
     .trim()
 
   if (!term) {
-    return categories.value
+    return categoriasRows.value
   }
 
-  return categories.value.filter((category) => {
+  return categoriasRows.value.filter((row) => {
+
+    const categoria =
+      row[0]?.toLowerCase() || ''
+
+    const descricao =
+      row[1]?.toLowerCase() || ''
+
     return (
-      category.name
-        .toLowerCase()
-        .includes(term) ||
-
-      category.description
-        .toLowerCase()
-        .includes(term)
+      categoria.includes(term) ||
+      descricao.includes(term)
     )
+
   })
+
 })
 
-
-/* TABELA */
-
-const tableHeaders = [
-  'Categoria',
-  'Descrição',
-  'Ativos',
-  'Status'
-]
-
-
-const tableRows = computed(() => {
-  return filteredCategories.value.map((category) => {
-    return [
-      category.name,
-      category.description,
-      category.assets,
-      category.active
-        ? 'Ativa'
-        : 'Inativa'
-    ]
-  })
-})
-
-
-/* RESUMO */
-
-const totalAssets = computed(() => {
-  return categories.value.reduce(
-    (total, category) => {
-      return total + category.assets
-    },
-    0
-  )
-})
-
-
-const activeCategories = computed(() => {
-  return categories.value.filter(
-    (category) => category.active
-  ).length
-})
-
-
-/* AÇÕES */
-
-/* Abre a tela de cadastro de nova categoria.*/
 
 const handleNewCategory = () => {
+
   router.push('/categorias/nova')
+
 }
 
+const handleEdit = (rowIndex) => {
 
-/* Edita uma categoria. */
+  const row = filteredCategories.value[rowIndex]
 
-const handleEdit = (row) => {
-  console.log(
-    'Editar categoria:',
-    row
-  )
-}
-
-
-/* Abre o modal de confirmação.*/
-
-const handleDelete = (row) => {
-  const categoryName = row[0]
+  if (!row) {
+    return
+  }
 
   const category = categories.value.find(
-    (item) => item.name === categoryName
+    (item) => item.name === row[0]
+  )
+
+  if (!category) {
+    return
+  }
+
+  console.log(
+    'Editar categoria:',
+    category
+  )
+
+}
+
+
+const handleDelete = (rowIndex) => {
+
+  const row = filteredCategories.value[rowIndex]
+
+  if (!row) {
+    return
+  }
+
+  const category = categories.value.find(
+    (item) => item.name === row[0]
   )
 
   if (!category) {
@@ -385,24 +392,22 @@ const handleDelete = (row) => {
   selectedCategory.value = category
 
   showDeleteModal.value = true
+
 }
 
-
-/* Confirma a exclusão da categoria. */
-
 const confirmDelete = () => {
+
   if (!selectedCategory.value) {
     return
   }
 
-  categories.value = categories.value.filter(
-    (category) => {
-      return category.id !== selectedCategory.value.id
-    }
+  console.log(
+    'Categoria selecionada:',
+    selectedCategory.value
   )
 
   showDeleteModal.value = false
-
   selectedCategory.value = null
+
 }
 </script>

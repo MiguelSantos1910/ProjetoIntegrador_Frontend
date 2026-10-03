@@ -1,7 +1,5 @@
 <template>
   <div class="relatorios">
-    <!-- CABEÇALHO -->
-
     <header class="relatorios-header">
       <div>
         <h1>
@@ -35,10 +33,7 @@
       </div>
     </header>
 
-    <!-- CONTEÚDO -->
-
     <main class="relatorios-content">
-      <!-- FILTROS -->
 
       <section class="report-card filters-card">
         <h2>
@@ -46,57 +41,30 @@
         </h2>
 
         <div class="filters-grid">
-          <div class="filter-field">
-            <label for="data-inicial">
-              De
-            </label>
-
-            <input
-              id="data-inicial"
-              v-model="filters.dataInicial"
-              type="date"
-            >
-          </div>
 
           <div class="filter-field">
-            <label for="data-final">
-              Até
-            </label>
-
-            <input
-              id="data-final"
-              v-model="filters.dataFinal"
-              type="date"
-            >
-          </div>
-
-          <div class="filter-field">
-            <label for="categoria">
-              Categoria
+            <label for="papel">
+              Papel
             </label>
 
             <select
-              id="categoria"
-              v-model="filters.categoria"
+              id="papel"
+              v-model="filters.papel"
             >
-              <option value="todas">
-                Todas as Categorias
+              <option value="todos">
+                Todos os Papéis
               </option>
 
-              <option value="ti">
-                TI
+              <option value="ALUNO">
+                Aluno
               </option>
 
-              <option value="veiculos">
-                Veículos
+              <option value="PROFESSOR">
+                Professor
               </option>
 
-              <option value="mobiliario">
-                Mobiliário
-              </option>
-
-              <option value="maquinario">
-                Maquinário
+              <option value="SUPORTE">
+                Suporte técnico
               </option>
             </select>
           </div>
@@ -115,15 +83,11 @@
               </option>
 
               <option value="ativo">
-                Ativo
+                Ativos
               </option>
 
-              <option value="manutencao">
-                Em Manutenção
-              </option>
-
-              <option value="depreciado">
-                Depreciado
+              <option value="inativo">
+                Inativos
               </option>
             </select>
           </div>
@@ -135,320 +99,635 @@
           >
             Gerar Relatório
           </button>
+
         </div>
       </section>
 
-      <!-- INDICADORES -->
+      <div
+        v-if="usuariosStore.carregando"
+        class="status-message"
+      >
+        Carregando dados dos usuários...
+      </div>
 
-      <section class="indicators-grid">
-        <Card
-          title="Total de Ativos"
-          value="847"
-          footer-text="↑ 5,2% — Novos cadastrados"
-        />
+      <div
+        v-else-if="usuariosStore.erro"
+        class="status-message error"
+      >
+        {{ usuariosStore.erro }}
+      </div>
 
-        <Card
-          title="Valor do Patrimônio"
-          value="R$ 2.340.500"
-          footer-text="↑ 14,8% — Valor residual total"
-        />
+      <template v-else>
 
-        <Card
-          title="Depreciação Média"
-          value="18,4%"
-          footer-text="↓ 1,2% — Taxa anual média"
-        />
+        <section class="report-section">
 
-        <Card
-          title="Em Manutenção"
-          value="23"
-          footer-text="↓ 4,1% — Custos sob controle"
-        />
-      </section>
-
-      <!-- GRÁFICOS -->
-
-      <section class="charts-grid">
-        <div class="report-card chart-card">
-          <Chart
-            type="bar"
-            title="Ativos por Categoria (Quantidade)"
-            :labels="categoryLabels"
-            :values="categoryValues"
-          />
-        </div>
-
-        <div class="report-card chart-card">
-          <Chart
-            type="line"
-            title="Evolução do Patrimônio (R$k) — 12 Meses"
-            :labels="patrimonyLabels"
-            :values="patrimonyValues"
-          />
-        </div>
-      </section>
-
-      <!-- TABELA -->
-
-      <section class="report-card table-card">
-        <div class="table-header">
-          <h2>
-            Relatório Detalhado de Ativos
-          </h2>
-
-          <div class="export-actions">
-            <button
-              type="button"
-              class="export-button excel"
-              @click="exportExcel"
-            >
-              Exportar Excel
-            </button>
-
-            <button
-              type="button"
-              class="export-button pdf"
-              @click="exportPdf"
-            >
-              Exportar PDF
-            </button>
+          <div class="section-heading">
+            <h2>
+              Usuários
+            </h2>
           </div>
-        </div>
 
-        <Table
-          title=""
-          :headers="tableHeaders"
-          :rows="tableRows"
-        />
+          <div class="indicators-grid">
 
-        <!-- PAGINAÇÃO -->
+            <Card
+              title="Total de Usuários"
+              :value="totalUsuarios"
+              :footer-text="`${usuariosAtivos} usuários ativos`"
+              :icon="Users"
+            />
 
-        <div class="table-footer">
-          <span>
-            Mostrando 1–6 de 847 ativos
-          </span>
+            <Card
+              title="Usuários Ativos"
+              :value="usuariosAtivos"
+              :footer-text="`${porcentagemAtivos}% do total`"
+              :icon="UserCheck"
+            />
 
-          <div class="pagination">
-            <button
-              type="button"
-              class="page-button"
-            >
-              Anterior
-            </button>
+            <Card
+              title="Alunos"
+              :value="totalAlunos"
+              :footer-text="`${porcentagemAlunos}% dos usuários`"
+              :icon="GraduationCap"
+            />
 
-            <button
-              type="button"
-              class="page-button active"
-            >
-              Próximo
-            </button>
+            <Card
+              title="Professores"
+              :value="totalProfessores"
+              :footer-text="`${porcentagemProfessores}% dos usuários`"
+              :icon="UserRound"
+            />
+
           </div>
-        </div>
-      </section>
+
+        </section>
+
+        <section class="report-section">
+
+          <div class="section-heading">
+            <h2>
+              Ordens de Manutenção
+            </h2>
+          </div>
+
+          <div class="indicators-grid">
+
+            <Card
+              title="Total de Ordens"
+              :value="totalManutencoes"
+              :footer-text="`${ordensAbertas} ordens abertas`"
+              :icon="ClipboardList"
+            />
+
+            <Card
+              title="Ordens Abertas"
+              :value="ordensAbertas"
+              :footer-text="`${porcentagemAbertas}% das ordens`"
+              :icon="ClipboardPlus"
+            />
+
+            <Card
+              title="Em Andamento"
+              :value="ordensEmAndamento"
+              :footer-text="`${porcentagemEmAndamento}% das ordens`"
+              :icon="Wrench"
+            />
+
+            <Card
+              title="Concluídas"
+              :value="ordensConcluidas"
+              :footer-text="`${porcentagemConcluidas}% das ordens`"
+              :icon="CheckCircle"
+            />
+
+          </div>
+
+        </section>
+
+        <section class="charts-grid">
+
+          <div class="report-card chart-card">
+            <Chart
+              type="bar"
+              title="Usuários por Papel"
+              :labels="papelLabels"
+              :values="papelValues"
+            />
+          </div>
+
+          <div class="report-card chart-card">
+            <Chart
+              type="bar"
+              title="Status dos Usuários"
+              :labels="statusLabels"
+              :values="statusValues"
+            />
+          </div>
+
+        </section>
+
+        <section class="report-card table-card">
+
+          <div class="table-header">
+            <h2>
+              Relatório Detalhado de Usuários
+            </h2>
+
+            <div class="export-actions">
+
+              <button
+                type="button"
+                class="export-button excel"
+                @click="exportExcel"
+              >
+                Exportar Excel
+              </button>
+
+              <button
+                type="button"
+                class="export-button pdf"
+                @click="exportPdf"
+              >
+                Exportar PDF
+              </button>
+
+            </div>
+          </div>
+
+          <Table
+            title=""
+            :headers="userTableHeaders"
+            :rows="userTableRows"
+          />
+
+          <div class="table-footer">
+            <span>
+              Mostrando
+              {{ filteredUsuarios.length }}
+              de
+              {{ usuariosStore.usuarios.length }}
+              usuários
+            </span>
+
+            <div class="pagination">
+
+              <button
+                type="button"
+                class="page-button"
+                disabled
+              >
+                Anterior
+              </button>
+
+              <button
+                type="button"
+                class="page-button active"
+                disabled
+              >
+                Próximo
+              </button>
+
+            </div>
+          </div>
+
+        </section>
+
+        <section class="report-card table-card">
+
+          <div class="table-header">
+            <h2>
+              Ordens de Manutenção
+            </h2>
+
+            <div class="export-actions">
+
+              <button
+                type="button"
+                class="export-button excel"
+                @click="exportManutencaoExcel"
+              >
+                Exportar Excel
+              </button>
+
+              <button
+                type="button"
+                class="export-button pdf"
+                @click="exportManutencaoPdf"
+              >
+                Exportar PDF
+              </button>
+
+            </div>
+          </div>
+
+          <div
+            v-if="carregandoManutencoes"
+            class="status-message"
+          >
+            Carregando ordens de manutenção...
+          </div>
+
+          <Table
+            v-else
+            title=""
+            :headers="manutencaoTableHeaders"
+            :rows="manutencaoTableRows"
+          />
+
+          <div class="table-footer">
+            <span>
+              Mostrando
+              {{ manutencaoTableRows.length }}
+              ordens de manutenção
+            </span>
+
+            <div class="pagination">
+
+              <button
+                type="button"
+                class="page-button"
+                disabled
+              >
+                Anterior
+              </button>
+
+              <button
+                type="button"
+                class="page-button active"
+                disabled
+              >
+                Próximo
+              </button>
+
+            </div>
+          </div>
+
+        </section>
+
+      </template>
     </main>
   </div>
 </template>
 
 <script setup>
-import { computed, reactive, ref } from 'vue'
+import {
+  computed,
+  onMounted,
+  reactive,
+  ref
+} from 'vue'
 
 import {
   Search,
-  Bell
+  Bell,
+  Users,
+  UserCheck,
+  GraduationCap,
+  UserRound,
+  ClipboardList,
+  ClipboardPlus,
+  Wrench,
+  CheckCircle
 } from 'lucide-vue-next'
 
 import Card from '../components/Card.vue'
 import Chart from '../components/Chart.vue'
 import Table from '../components/Table.vue'
 
+import { useUsuariosStore } from '../stores/usuarios'
+
 import '../assets/css/Relatorios.css'
 
-
-/* PESQUISA */
+const usuariosStore = useUsuariosStore()
 
 const search = ref('')
 
-
-/* FILTROS */
-
 const filters = reactive({
-  dataInicial: '2023-01-01',
-  dataFinal: '2023-12-31',
-  categoria: 'todas',
+  papel: 'todos',
   status: 'todos'
 })
 
+const manutencoes = ref([])
 
-/* DADOS DO GRÁFICO DE CATEGORIAS */
+const carregandoManutencoes = ref(false)
 
-const categories = ref([
-  {
-    name: 'TI',
-    value: 345
-  },
-
-  {
-    name: 'Veículos',
-    value: 210
-  },
-
-  {
-    name: 'Mobiliário',
-    value: 180
-  },
-
-  {
-    name: 'Maquinário',
-    value: 112
-  }
-])
-
-const categoryLabels = computed(() => {
-  return categories.value.map(category => category.name)
+onMounted(async () => {
+  await usuariosStore.fetchUsuarios()
 })
 
-const categoryValues = computed(() => {
-  return categories.value.map(category => category.value)
+const formatPapel = (papel) => {
+  const papeis = {
+    ALUNO: 'Aluno',
+    PROFESSOR: 'Professor',
+    SUPORTE: 'Suporte técnico'
+  }
+
+  return papeis[papel] || papel || '-'
+}
+
+const filteredUsuarios = computed(() => {
+  const termo = search.value
+    .toLowerCase()
+    .trim()
+
+  return usuariosStore.usuarios.filter((usuario) => {
+    const nomeCompleto = [
+      usuario.first_name,
+      usuario.last_name
+    ]
+      .filter(Boolean)
+      .join(' ')
+
+    const correspondePesquisa =
+      !termo ||
+      usuario.username
+        ?.toLowerCase()
+        .includes(termo) ||
+      nomeCompleto
+        .toLowerCase()
+        .includes(termo) ||
+      usuario.email
+        ?.toLowerCase()
+        .includes(termo)
+
+    const correspondePapel =
+      filters.papel === 'todos' ||
+      usuario.papel === filters.papel
+
+    const correspondeStatus =
+      filters.status === 'todos' ||
+      (filters.status === 'ativo' && usuario.is_active) ||
+      (filters.status === 'inativo' && !usuario.is_active)
+
+    return (
+      correspondePesquisa &&
+      correspondePapel &&
+      correspondeStatus
+    )
+  })
 })
 
+const totalUsuarios = computed(() => {
+  return filteredUsuarios.value.length
+})
 
-/* DADOS DO GRÁFICO DE PATRIMÔNIO */
+const usuariosAtivos = computed(() => {
+  return filteredUsuarios.value.filter(
+    (usuario) => usuario.is_active
+  ).length
+})
 
-const patrimonyLabels = [
-  'Jan',
-  'Mar',
-  'Mai',
-  'Jul',
-  'Set',
-  'Nov',
-  'Dez'
-]
+const usuariosInativos = computed(() => {
+  return filteredUsuarios.value.filter(
+    (usuario) => !usuario.is_active
+  ).length
+})
 
-const patrimonyValues = [
-  40,
-  46,
-  55,
-  64,
-  71,
-  82,
-  94
-]
+const totalAlunos = computed(() => {
+  return filteredUsuarios.value.filter(
+    (usuario) => usuario.papel === 'ALUNO'
+  ).length
+})
 
+const totalProfessores = computed(() => {
+  return filteredUsuarios.value.filter(
+    (usuario) => usuario.papel === 'PROFESSOR'
+  ).length
+})
 
-/* ATIVOS */
-
-const assets = ref([
-  {
-    id: 'ATV-001',
-    nome: 'Notebook Dell Latitude 5520',
-    categoria: 'TI',
-    localizacao: 'Sede - Bloco A',
-    valorAquisicao: 'R$ 6.500,00',
-    depreciacao: '10% (R$ 650)',
-    valorAtual: 'R$ 5.850,00',
-    status: 'Ativo'
-  },
-
-  {
-    id: 'ATV-002',
-    nome: 'Impressora HP LaserJet Pro',
-    categoria: 'TI',
-    localizacao: 'Sede - Recepção',
-    valorAquisicao: 'R$ 2.100,00',
-    depreciacao: '15% (R$ 315)',
-    valorAtual: 'R$ 1.785,00',
-    status: 'Em Manutenção'
-  },
-
-  {
-    id: 'ATV-003',
-    nome: 'Fiat Fiorino 1.4 Hard Working',
-    categoria: 'Veículos',
-    localizacao: 'Sede - Logística',
-    valorAquisicao: 'R$ 82.000,00',
-    depreciacao: '20% (R$ 16.400)',
-    valorAtual: 'R$ 65.600,00',
-    status: 'Ativo'
-  },
-
-  {
-    id: 'ATV-005',
-    nome: 'Servidor Dell PowerEdge R750',
-    categoria: 'TI',
-    localizacao: 'Datacenter Principal',
-    valorAquisicao: 'R$ 45.000,00',
-    depreciacao: '8% (R$ 3.600)',
-    valorAtual: 'R$ 41.400,00',
-    status: 'Ativo'
-  },
-
-  {
-    id: 'ATV-006',
-    nome: 'Ar Condicionado Split Consul 1.8',
-    categoria: 'Mobiliário',
-    localizacao: 'Filial SP',
-    valorAquisicao: 'R$ 3.500,00',
-    depreciacao: '100% (R$ 3.500)',
-    valorAtual: 'R$ 0,00',
-    status: 'Depreciado'
-  },
-
-  {
-    id: 'ATV-008',
-    nome: 'Switch Cisco 24 Portas Gigabit',
-    categoria: 'TI',
-    localizacao: 'Datacenter - Rack 1',
-    valorAquisicao: 'R$ 7.900,00',
-    depreciacao: '12% (R$ 948)',
-    valorAtual: 'R$ 6.952,00',
-    status: 'Ativo'
+const porcentagemAtivos = computed(() => {
+  if (!totalUsuarios.value) {
+    return 0
   }
-])
 
+  return Math.round(
+    (usuariosAtivos.value / totalUsuarios.value) * 100
+  )
+})
 
-/* TABELA */
+const porcentagemAlunos = computed(() => {
+  if (!totalUsuarios.value) {
+    return 0
+  }
 
-const tableHeaders = [
+  return Math.round(
+    (totalAlunos.value / totalUsuarios.value) * 100
+  )
+})
+
+const porcentagemProfessores = computed(() => {
+  if (!totalUsuarios.value) {
+    return 0
+  }
+
+  return Math.round(
+    (totalProfessores.value / totalUsuarios.value) * 100
+  )
+})
+
+const totalManutencoes = computed(() => {
+  return manutencoes.value.length
+})
+
+const ordensAbertas = computed(() => {
+  return manutencoes.value.filter(
+    (ordem) => ordem.status === 'ABERTA'
+  ).length
+})
+
+const ordensEmAndamento = computed(() => {
+  return manutencoes.value.filter(
+    (ordem) => ordem.status === 'EM_ANDAMENTO'
+  ).length
+})
+
+const ordensConcluidas = computed(() => {
+  return manutencoes.value.filter(
+    (ordem) => ordem.status === 'CONCLUIDA'
+  ).length
+})
+
+const porcentagemAbertas = computed(() => {
+  if (!totalManutencoes.value) {
+    return 0
+  }
+
+  return Math.round(
+    (ordensAbertas.value / totalManutencoes.value) * 100
+  )
+})
+
+const porcentagemEmAndamento = computed(() => {
+  if (!totalManutencoes.value) {
+    return 0
+  }
+
+  return Math.round(
+    (ordensEmAndamento.value / totalManutencoes.value) * 100
+  )
+})
+
+const porcentagemConcluidas = computed(() => {
+  if (!totalManutencoes.value) {
+    return 0
+  }
+
+  return Math.round(
+    (ordensConcluidas.value / totalManutencoes.value) * 100
+  )
+})
+
+const papelLabels = [
+  'Aluno',
+  'Professor',
+  'Suporte técnico'
+]
+
+const papelValues = computed(() => {
+  return [
+    filteredUsuarios.value.filter(
+      (usuario) => usuario.papel === 'ALUNO'
+    ).length,
+
+    filteredUsuarios.value.filter(
+      (usuario) => usuario.papel === 'PROFESSOR'
+    ).length,
+
+    filteredUsuarios.value.filter(
+      (usuario) => usuario.papel === 'SUPORTE'
+    ).length
+  ]
+})
+
+const statusLabels = [
+  'Ativos',
+  'Inativos'
+]
+
+const statusValues = computed(() => {
+  return [
+    usuariosAtivos.value,
+    usuariosInativos.value
+  ]
+})
+
+const userTableHeaders = [
   'ID',
-  'Ativo',
-  'Categoria',
-  'Localização',
-  'Valor Aquisição',
-  'Depreciação',
-  'Valor Atual',
+  'Usuário',
+  'Nome',
+  'E-mail',
+  'Papel',
   'Status'
 ]
 
-const tableRows = computed(() => {
-  return assets.value.map(asset => [
-    asset.id,
-    asset.nome,
-    asset.categoria,
-    asset.localizacao,
-    asset.valorAquisicao,
-    asset.depreciacao,
-    asset.valorAtual,
-    asset.status
-  ])
+const userTableRows = computed(() => {
+  return filteredUsuarios.value.map((usuario) => {
+    const nomeCompleto = [
+      usuario.first_name,
+      usuario.last_name
+    ]
+      .filter(Boolean)
+      .join(' ')
+
+    return [
+      usuario.id || '-',
+      usuario.username || '-',
+      nomeCompleto || '-',
+      usuario.email || '-',
+      formatPapel(usuario.papel),
+      usuario.is_active ? 'ATIVO' : 'INATIVO'
+    ]
+  })
 })
 
+const manutencaoTableHeaders = [
+  'Ordem',
+  'Ativo',
+  'Tipo',
+  'Descrição',
+  'Responsável',
+  'Status',
+  'Data'
+]
 
-/* AÇÕES */
+const formatStatusManutencao = (status) => {
+  const statusMap = {
+    ABERTA: 'Aberta',
+    EM_ANDAMENTO: 'Em andamento',
+    CONCLUIDA: 'Concluída',
+    CANCELADA: 'Cancelada'
+  }
+
+  return statusMap[status] || status || '-'
+}
+
+const formatData = (data) => {
+  if (!data) {
+    return '-'
+  }
+
+  return new Date(data).toLocaleDateString('pt-BR')
+}
+
+const manutencaoTableRows = computed(() => {
+  return manutencoes.value.map((ordem) => {
+    return [
+      ordem.id || '-',
+      ordem.ativo?.descricao || ordem.ativo || '-',
+      ordem.tipo || '-',
+      ordem.descricao || '-',
+      ordem.responsavel?.username ||
+        ordem.responsavel ||
+        '-',
+      formatStatusManutencao(ordem.status),
+      formatData(ordem.data_abertura)
+    ]
+  })
+})
 
 const generateReport = () => {
   console.log(
-    'Gerando relatório:',
-    filters
+    'Filtros aplicados:',
+    {
+      ...filters
+    }
+  )
+
+  console.log(
+    'Usuários encontrados:',
+    filteredUsuarios.value
+  )
+
+  console.log(
+    'Ordens de manutenção:',
+    manutencoes.value
   )
 }
 
-
 const exportExcel = () => {
-  console.log('Exportar Excel')
+  console.log(
+    'Exportando relatório de usuários:',
+    filteredUsuarios.value
+  )
 }
 
-
 const exportPdf = () => {
-  console.log('Exportar PDF')
+  console.log(
+    'Exportando relatório de usuários:',
+    filteredUsuarios.value
+  )
+}
+
+const exportManutencaoExcel = () => {
+  console.log(
+    'Exportando ordens de manutenção:',
+    manutencoes.value
+  )
+}
+
+const exportManutencaoPdf = () => {
+  console.log(
+    'Exportando ordens de manutenção:',
+    manutencoes.value
+  )
 }
 </script>

@@ -126,6 +126,35 @@
   white-space: nowrap;
 }
 
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.status-ativo {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.status-inativo {
+  background: #f3f4f6;
+  color: #374151;
+}
+
+.status-manutencao {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.status-descartado {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
 
 /* =========================
    ÚLTIMA LINHA
