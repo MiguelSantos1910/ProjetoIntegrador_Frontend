@@ -403,9 +403,11 @@
   </div>
 </template>
 
-
 <script setup>
-import { reactive } from 'vue'
+import {
+  reactive,
+  onMounted
+} from 'vue'
 
 import {
   User,
@@ -415,13 +417,20 @@ import {
   Save
 } from 'lucide-vue-next'
 
+import { useAuthStore } from '../stores/auth'
+import { useUsuariosStore } from '../stores/usuarios'
+
 import '../assets/css/Configuracoes.css'
 
 
+const authStore = useAuthStore()
+const usuariosStore = useUsuariosStore()
+
+
 const formData = reactive({
-  nome: 'Usuário',
-  email: 'usuario@empresa.com',
-  funcao: 'Administrador',
+  nome: '',
+  email: '',
+  funcao: '',
   telefone: '',
 
   notificacoes: true,
@@ -435,22 +444,75 @@ const formData = reactive({
 })
 
 
-const handleSave = () => {
-  console.log('Configurações salvas:', formData)
+const carregarUsuario = () => {
+  const usuario = authStore.usuario
+
+  if (!usuario) {
+    return
+  }
+
+  formData.nome = [
+    usuario.first_name,
+    usuario.last_name
+  ]
+    .filter(Boolean)
+    .join(' ')
+
+  formData.email = usuario.email || ''
+
+  formData.funcao = formatarPapel(
+    usuario.papel
+  )
+}
+
+
+const formatarPapel = (papel) => {
+  const papeis = {
+    ALUNO: 'Aluno',
+    PROFESSOR: 'Professor',
+    SUPORTE: 'Suporte técnico'
+  }
+
+  return papeis[papel] || papel || ''
+}
+
+
+onMounted(async () => {
+  if (!authStore.usuario) {
+    await authStore.buscarUsuario()
+  }
+
+  carregarUsuario()
+})
+
+
+const handleSave = async () => {
+  console.log(
+    'Configurações salvas:',
+    formData
+  )
+
+  alert(
+    'As configurações foram salvas localmente.'
+  )
 }
 
 
 const handleCancel = () => {
-  console.log('Cancelando alterações')
+  carregarUsuario()
 }
 
 
 const handleChangePassword = () => {
-  console.log('Alterar senha')
+  console.log(
+    'Abrir alteração de senha'
+  )
 }
 
 
 const handleLogoutOtherSessions = () => {
-  console.log('Encerrar outras sessões')
+  console.log(
+    'Encerrar outras sessões'
+  )
 }
 </script>

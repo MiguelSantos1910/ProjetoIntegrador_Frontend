@@ -54,8 +54,8 @@
     <div class="history-section">
       <Table
         title="Histórico de Movimentação"
-        :headers="manutencaoHeaders"
-        :rows="manutencaoRows"
+        :headers="historicoHeaders"
+        :rows="historicoRows"
       />
     </div>
   </div>
@@ -65,8 +65,10 @@
 import Card from '../components/Card.vue'
 import Chart from '../components/Chart.vue'
 import Table from '../components/Table.vue'
+import { dataFormatada } from '../composables/formatData'
 import { useAuthStore } from '../stores/auth'
 import { useAtivosStore } from '../stores/ativos'
+import { useHistoricoStore } from '../stores/historico'
 import { computed, ref, onMounted } from 'vue' 
 import '../assets/css/Dashboard.css'
 import {
@@ -79,6 +81,7 @@ import {
 
 const authStore = useAuthStore()
 const ativosStore = useAtivosStore()
+const historicoStore = useHistoricoStore()
 
 const saudacao = computed(() => {
   const nome = authStore.usuario?.username || 'Usuário'
@@ -87,6 +90,7 @@ const saudacao = computed(() => {
 
 onMounted(() => {
   ativosStore.fetchAtivos()
+  historicoStore.fetchHistorico()
 })
 
 const chartLabels = computed(() => {
@@ -100,17 +104,15 @@ const chartValues = computed(() => {
   })
 })
 
-const manutencaoHeaders = ['Descrição', 'Tipo', 'Patrimônio', 'Sala', 'Status']
+const historicoHeaders = ['ID', 'Tipo', 'Descrição', 'Data']
 
-const manutencaoRows = computed(() => {
-  return ativosStore.ativos
-    .filter((ativo) => ativo.status === 'Em Manutenção')
-    .map((ativo) => [
-      ativo.descricao || 'Sem informação',
-      ativo.tipo?.descricao || ativo.tipo || 'Sem informação',
-      ativo.numero_patrimonio || 'Sem informação',
-      ativo.sala || 'Sem informação',
-      ativo.status || 'Sem informação'
+const historicoRows = computed(() => {
+  return historicoStore.historico
+    .map((historico) => [
+      historico.id || '-',
+      historico.tipo_evento || '-',
+      historico.descricao || '-',
+      dataFormatada(historico.data) || '-'
     ])
 })
 
