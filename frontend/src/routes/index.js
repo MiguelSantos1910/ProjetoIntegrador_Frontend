@@ -11,6 +11,7 @@ import Relatorios from '../views/Relatorios.vue'
 import Categorias from '../views/Categorias.vue'
 import Configuracoes from '../views/Configuracoes.vue'
 import NovaCategoria from '../views/NovaCategoria.vue'
+import DetalheManutencao from '../views/DetalheManutencao.vue'
 
 const routes = [
   {
@@ -64,7 +65,7 @@ const routes = [
   },
 
   {
-    path: '/ativos/detalhe',
+    path: '/ativos/detalhe/:id',
     name: 'detalhe',
     component: DetalheAtivo,
     meta: {
@@ -103,6 +104,15 @@ const routes = [
     path: '/manutencao',
     name: 'manutencao-ativo',
     component: ManutencaoAtivo,
+    meta: {
+      requiresAuth: true
+    }
+  },
+
+  {
+    path: '/manutencao/detalhe/',
+    name: 'detalhe-manutencao',
+    component: DetalheManutencao,
     meta: {
       requiresAuth: true
     }
