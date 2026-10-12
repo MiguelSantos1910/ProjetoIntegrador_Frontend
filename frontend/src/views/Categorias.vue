@@ -168,6 +168,7 @@
           :show-actions="true"
           @edit="handleEdit"
           @delete="handleDelete"
+          @detail="handleDetail"
         />
       </section>
     </main>
@@ -365,10 +366,7 @@ const handleEdit = (rowIndex) => {
     return
   }
 
-  console.log(
-    'Editar categoria:',
-    category
-  )
+  router.push(`/ativos/editar/${category.id}`)
 
 }
 
@@ -408,6 +406,25 @@ const confirmDelete = () => {
 
   showDeleteModal.value = false
   selectedCategory.value = null
+}
+
+const handleDetail = (rowIndex) => {
+
+  const row = filteredCategories.value[rowIndex]
+
+  if (!row) {
+    return
+  }
+
+  const category = categories.value.find(
+    (item) => item.name === row[0]
+  )
+
+  if (!category) {
+    return
+  }
+
+  router.push(`/ativos/detalhe/${category.id}`)
 
 }
 </script>

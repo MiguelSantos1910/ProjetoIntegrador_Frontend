@@ -20,7 +20,7 @@
 
       <Card
         title="Em Manutenção"
-        :value="manutencao"
+        :value="totalOrdens"
         footer-text="Ativos em manutenção"
         :icon="Wrench"
       />
@@ -69,6 +69,7 @@ import { dataFormatada } from '../composables/formatData'
 import { useAuthStore } from '../stores/auth'
 import { useAtivosStore } from '../stores/ativos'
 import { useHistoricoStore } from '../stores/historico'
+import { useOrdensStore } from '../stores/ordens'
 import { computed, ref, onMounted } from 'vue' 
 import '../assets/css/Dashboard.css'
 import {
@@ -82,7 +83,7 @@ import {
 const authStore = useAuthStore()
 const ativosStore = useAtivosStore()
 const historicoStore = useHistoricoStore()
-
+const ordensStore = useOrdensStore()
 const saudacao = computed(() => {
   const nome = authStore.usuario?.username || 'Usuário'
   return `Bem vindo, ${nome}!`
@@ -91,6 +92,7 @@ const saudacao = computed(() => {
 onMounted(() => {
   ativosStore.fetchAtivos()
   historicoStore.fetchHistorico()
+  ordensStore.fetchOrdens()
 })
 
 const chartLabels = computed(() => {
@@ -130,5 +132,9 @@ const atencao = computed(() => {
 
 const totalAtivos = computed(() => {
   return ativosStore.ativos.length
+})
+
+const totalOrdens = computed(() => {
+  return ordensStore.ordens.length
 })
 </script>

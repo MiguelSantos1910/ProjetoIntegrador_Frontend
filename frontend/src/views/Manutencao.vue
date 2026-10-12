@@ -7,84 +7,12 @@
       submit-button-text="Cadastrar"
       @submit="handleFormSubmit"
       @cancel="handleCancel"
-    >
-      <!-- RESUMO PATRIMONIAL -->
-
-      <template #resumo-patrimonial>
-        <div class="summary-content">
-          <div class="summary-item">
-            <span class="summary-label">
-              Valor de Aquisição
-            </span>
-
-            <strong class="summary-value">
-              R$ 6.500,00
-            </strong>
-          </div>
-
-          <div class="summary-item">
-            <span class="summary-label">
-              Total Gasto em Manut.
-            </span>
-
-            <strong class="summary-value">
-              R$ 600,00
-            </strong>
-          </div>
-
-          <div class="summary-item">
-            <span class="summary-label">
-              Última Manutenção
-            </span>
-
-            <strong class="summary-value">
-              15/09/2024
-            </strong>
-          </div>
-
-          <div class="summary-item">
-            <span class="summary-label">
-              Depreciação Acumulada
-            </span>
-
-            <strong class="summary-value">
-              10%
-            </strong>
-          </div>
-
-          <div class="summary-status">
-            <span class="status-dot" />
-
-            <div>
-              <strong>
-                Ativo Saudável
-              </strong>
-
-              <span>
-                Sem pendências críticas
-              </span>
-            </div>
-          </div>
-
-          <div class="summary-warning">
-            <span>
-              ⚠
-            </span>
-
-            <p>
-              O custo acumulado de manutenção representa
-              9,2% do valor de aquisição do ativo.
-            </p>
-          </div>
-        </div>
-      </template>
-    </Form>
+    />
   </div>
 </template>
 
-
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 
 import {
   Package,
@@ -96,13 +24,14 @@ import {
 } from 'lucide-vue-next'
 
 import Form from '../components/Form.vue'
+import api from '../services/api'
+import { useOrdensStore } from '../stores/ordens'
 
 import '../assets/css/Manutencao.css'
 
+const ordensStore = useOrdensStore()
 
-/* ========================================
-   SEÇÕES DO FORMULÁRIO
-   ======================================== */
+const carregandoAtivos = ref(false)
 
 const formSections = ref([
   {
@@ -117,20 +46,8 @@ const formSections = ref([
         type: 'select',
         placeholder: 'Selecione o ativo',
         required: true,
-
-        options: [
-          {
-            value: 'notebook',
-            label: 'Notebook Dell Latitude'
-          },
-
-          {
-            value: 'desktop',
-            label: 'Desktop Dell Optiplex'
-          }
-        ]
+        options: []
       },
-
       {
         name: 'patrimonio',
         label: 'Número de Patrimônio',
@@ -138,7 +55,6 @@ const formSections = ref([
         placeholder: 'PAT-2024-0891',
         required: false
       },
-
       {
         name: 'localizacao',
         label: 'Localização do Ativo',
@@ -148,7 +64,6 @@ const formSections = ref([
       }
     ]
   },
-
 
   {
     title: 'Detalhes da Manutenção',
@@ -162,84 +77,43 @@ const formSections = ref([
         type: 'select',
         placeholder: 'Selecione',
         required: true,
-
         options: [
-          {
-            value: 'preventiva',
-            label: 'Preventiva'
-          },
-
-          {
-            value: 'corretiva',
-            label: 'Corretiva'
-          },
-
-          {
-            value: 'preditiva',
-            label: 'Preditiva'
-          }
+          { value: 'preventiva', label: 'Preventiva' },
+          { value: 'corretiva', label: 'Corretiva' },
+          { value: 'preditiva', label: 'Preditiva' }
         ]
       },
-
       {
         name: 'prioridade',
         label: 'Prioridade',
         type: 'select',
         placeholder: 'Selecione',
         required: true,
-
         options: [
-          {
-            value: 'baixa',
-            label: 'Baixa'
-          },
-
-          {
-            value: 'media',
-            label: 'Média'
-          },
-
-          {
-            value: 'alta',
-            label: 'Alta'
-          }
+          { value: 'baixa', label: 'Baixa' },
+          { value: 'media', label: 'Média' },
+          { value: 'alta', label: 'Alta' }
         ]
       },
-
       {
         name: 'dataAbertura',
         label: 'Data de Abertura',
         type: 'date',
         required: true
       },
-
       {
         name: 'dataConclusao',
         label: 'Data Prevista de Conclusão',
         type: 'date',
         required: false
       },
-
       {
         name: 'responsavel',
         label: 'Responsável Técnico',
-        type: 'select',
-        placeholder: 'Selecione',
-        required: false,
-
-        options: [
-          {
-            value: 'marcos',
-            label: 'Marcos Santos (Suporte TI)'
-          },
-
-          {
-            value: 'joao',
-            label: 'João Silva'
-          }
-        ]
+        type: 'text',
+        placeholder: 'Digite o nome do responsável',
+        required: false
       },
-
       {
         name: 'fornecedor',
         label: 'Fornecedor / Prestador de Serviço',
@@ -249,7 +123,6 @@ const formSections = ref([
       }
     ]
   },
-
 
   {
     title: 'Descrição e Custos Estimados',
@@ -262,10 +135,9 @@ const formSections = ref([
         label: 'Descrição do Problema',
         type: 'textarea',
         placeholder: 'Descreva o problema encontrado...',
-        required: false,
+        required: true,
         full: true
       },
-
       {
         name: 'custo',
         label: 'Custo Estimado (R$)',
@@ -273,7 +145,6 @@ const formSections = ref([
         placeholder: '0,00',
         required: false
       },
-
       {
         name: 'diagnostico',
         label: 'Diagnóstico Inicial',
@@ -284,7 +155,6 @@ const formSections = ref([
       }
     ]
   },
-
 
   {
     title: 'Documentos & Anexos',
@@ -305,58 +175,114 @@ const formSections = ref([
       }
     ]
   },
-
-
-  {
-    title: 'Resumo Patrimonial',
-    icon: ClipboardList,
-    class: 'sidebar-section summary-section',
-    content: 'resumo-patrimonial',
-
-    fields: []
-  }
 ])
 
 
-/* ========================================
-   DADOS INICIAIS
-   ======================================== */
-
-const initialData = ref({
-  ativo: '',
-  patrimonio: '',
-  localizacao: '',
-
-  tipo: '',
-  prioridade: '',
-  dataAbertura: '',
-  dataConclusao: '',
-  responsavel: '',
-  fornecedor: '',
-
-  descricao: '',
-  custo: '',
-  diagnostico: '',
-
-  documentos: []
-})
-
-
-/* ========================================
-   AÇÕES
-   ======================================== */
-
-const handleFormSubmit = (data) => {
-  console.log(
-    'Dados da manutenção:',
-    data
-  )
+function criarDadosIniciais() {
+  return {
+    ativo: '',
+    patrimonio: '',
+    localizacao: '',
+    tipo: '',
+    prioridade: '',
+    dataAbertura: new Date().toISOString().slice(0, 10),
+    dataConclusao: '',
+    responsavel: '',
+    fornecedor: '',
+    descricao: '',
+    custo: '',
+    diagnostico: '',
+    documentos: []
+  }
 }
 
+const initialData = ref(criarDadosIniciais())
 
-const handleCancel = () => {
-  console.log(
-    'Ação de cancelar'
-  )
+async function carregarAtivos() {
+  carregandoAtivos.value = true
+
+  try {
+    const response = await api.get('/ativos/')
+
+    const ativos = Array.isArray(response.data)
+      ? response.data
+      : response.data.results ?? []
+
+    const secaoAtivo = formSections.value.find(
+      secao => secao.title === 'Informações do Ativo'
+    )
+
+    const campoAtivo = secaoAtivo.fields.find(
+      campo => campo.name === 'ativo'
+    )
+
+    campoAtivo.options = ativos.map(ativo => ({
+      value: String(ativo.id),
+      label:
+        ativo.nome ??
+        ativo.descricao ??
+        ativo.numero_patrimonio ??
+        `Ativo #${ativo.id}`
+    }))
+  } catch (error) {
+    console.error(
+      'Erro ao carregar ativos:',
+      error.response?.data ?? error
+    )
+
+    alert(
+      'Não foi possível carregar os ativos. Verifique a API.'
+    )
+  } finally {
+    carregandoAtivos.value = false
+  }
+}
+
+onMounted(carregarAtivos)
+
+async function handleFormSubmit(data) {
+  if (ordensStore.carregando) return
+
+  if (!data.ativo) {
+    alert('Selecione um ativo.')
+    return
+  }
+
+  if (!data.descricao?.trim()) {
+    alert('Informe a descrição do problema.')
+    return
+  }
+
+  const custo = data.custo === '' || data.custo == null
+    ? null
+    : Number(String(data.custo).replace(',', '.'))
+
+  if (custo !== null && (!Number.isFinite(custo) || custo < 0)) {
+    alert('Informe um custo estimado válido.')
+    return
+  }
+
+  const dadosOrdem = {
+    ativo: Number(data.ativo),
+    descricao: data.descricao.trim(),
+    responsavel: data.responsavel || 'Não informado',
+    status: 'Pendente',
+    custo_estimado: custo
+  }
+
+  const sucesso = await ordensStore.registerOrder(dadosOrdem)
+
+  if (sucesso) {
+    alert('Manutenção cadastrada com sucesso!')
+    initialData.value = criarDadosIniciais()
+  } else {
+    alert(
+      ordensStore.erro || 'Erro ao cadastrar a manutenção.'
+    )
+  }
+}
+
+function handleCancel() {
+  initialData.value = criarDadosIniciais()
 }
 </script>
