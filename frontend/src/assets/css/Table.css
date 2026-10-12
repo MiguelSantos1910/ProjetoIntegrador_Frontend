@@ -164,6 +164,28 @@
   color: #991b1b;
 }
 
+/* Ordens de manutenção */
+.status-pendente {
+  color: #92400e;
+  background-color: #fef3c7;
+}
+
+.status-andamento {
+  color: #1d4ed8;
+  background-color: #dbeafe;
+}
+
+.status-concluido,
+.status-concluida {
+  color: #166534;
+  background-color: #dcfce7;
+}
+
+.status-cancelado {
+  color: #991b1b;
+  background-color: #fee2e2;
+}
+
 
 /* =========================
    ÚLTIMA LINHA
