@@ -12,6 +12,7 @@ import Categorias from '../views/Categorias.vue'
 import Configuracoes from '../views/Configuracoes.vue'
 import NovaCategoria from '../views/NovaCategoria.vue'
 import DetalheManutencao from '../views/DetalheManutencao.vue'
+import EditarAtivo from '../views/EditarAtivo.vue'
 
 const routes = [
   {
@@ -74,6 +75,15 @@ const routes = [
   },
 
   {
+    path: '/ativos/editar/:id',
+    name: 'editar',
+    component: EditarAtivo,
+    meta: {
+      requiresAuth: true
+    }
+  },
+
+  {
     path: '/relatorios',
     name: 'relatorios',
     component: Relatorios,
@@ -110,7 +120,7 @@ const routes = [
   },
 
   {
-    path: '/manutencao/detalhe/',
+    path: '/manutencao/detalhe/:id',
     name: 'detalhe-manutencao',
     component: DetalheManutencao,
     meta: {
