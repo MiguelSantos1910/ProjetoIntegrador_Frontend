@@ -83,7 +83,7 @@
               :colspan="headers.length + (showActions ? 1 : 0)"
               class="empty-row"
             >
-              Nenhum ativo encontrado.
+              Nenhum registro encontrado.
             </td>
           </tr>
         </tbody>
@@ -100,7 +100,6 @@ import {
 } from 'lucide-vue-next'
 
 import { STATUS_ATIVO } from '../composables/status'
-
 import '../assets/css/Table.css'
 
 defineProps({
@@ -131,11 +130,26 @@ const emit = defineEmits([
   'detail'
 ])
 
+// Converte "Em andamento" em "EM_ANDAMENTO"
+// e remove acentos para encontrar a chave correta.
+const normalizarStatus = (status) => {
+  return String(status ?? '')
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .trim()
+    .toUpperCase()
+    .replace(/\s+/g, '_')
+}
+
 const getStatusClass = (status) => {
-  return STATUS_ATIVO[status]?.class || ''
+  const chave = normalizarStatus(status)
+
+  return STATUS_ATIVO[chave]?.class || ''
 }
 
 const getStatusLabel = (status) => {
-  return STATUS_ATIVO[status]?.label || status
+  const chave = normalizarStatus(status)
+
+  return STATUS_ATIVO[chave]?.label || status || '-'
 }
 </script>

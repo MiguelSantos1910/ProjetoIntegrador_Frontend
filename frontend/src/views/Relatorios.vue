@@ -2,9 +2,7 @@
   <div class="relatorios">
     <header class="relatorios-header">
       <div>
-        <h1>
-          Relatórios Consolidados
-        </h1>
+        <h1>Relatórios Consolidados</h1>
       </div>
 
       <div class="header-actions">
@@ -13,7 +11,6 @@
             :size="14"
             :stroke-width="2"
           />
-
           <input
             v-model="search"
             type="text"
@@ -34,19 +31,12 @@
     </header>
 
     <main class="relatorios-content">
-
       <section class="report-card filters-card">
-        <h2>
-          Filtros de Exportação
-        </h2>
+        <h2>Filtros de Exportação</h2>
 
         <div class="filters-grid">
-
           <div class="filter-field">
-            <label for="papel">
-              Papel
-            </label>
-
+            <label for="papel">Papel</label>
             <select
               id="papel"
               v-model="filters.papel"
@@ -54,15 +44,12 @@
               <option value="todos">
                 Todos os Papéis
               </option>
-
               <option value="ALUNO">
                 Aluno
               </option>
-
               <option value="PROFESSOR">
                 Professor
               </option>
-
               <option value="SUPORTE">
                 Suporte técnico
               </option>
@@ -70,10 +57,7 @@
           </div>
 
           <div class="filter-field">
-            <label for="status">
-              Status
-            </label>
-
+            <label for="status">Status</label>
             <select
               id="status"
               v-model="filters.status"
@@ -81,11 +65,9 @@
               <option value="todos">
                 Todos os Status
               </option>
-
               <option value="ativo">
                 Ativos
               </option>
-
               <option value="inativo">
                 Inativos
               </option>
@@ -99,36 +81,31 @@
           >
             Gerar Relatório
           </button>
-
         </div>
       </section>
 
       <div
-        v-if="usuariosStore.carregando"
+        v-if="usuariosStore.carregando || carregandoManutencoes"
         class="status-message"
       >
-        Carregando dados dos usuários...
+        Carregando dados dos relatórios...
       </div>
 
       <div
-        v-else-if="usuariosStore.erro"
+        v-else-if="usuariosStore.erro || erroManutencoes"
         class="status-message error"
       >
-        {{ usuariosStore.erro }}
+        {{ usuariosStore.erro || erroManutencoes }}
       </div>
 
       <template v-else>
-
+        <!-- Indicadores de usuários -->
         <section class="report-section">
-
           <div class="section-heading">
-            <h2>
-              Usuários
-            </h2>
+            <h2>Usuários</h2>
           </div>
 
           <div class="indicators-grid">
-
             <Card
               title="Total de Usuários"
               :value="totalUsuarios"
@@ -156,25 +133,20 @@
               :footer-text="`${porcentagemProfessores}% dos usuários`"
               :icon="UserRound"
             />
-
           </div>
-
         </section>
 
+        <!-- Indicadores de manutenção -->
         <section class="report-section">
-
           <div class="section-heading">
-            <h2>
-              Ordens de Manutenção
-            </h2>
+            <h2>Ordens de Manutenção</h2>
           </div>
 
           <div class="indicators-grid">
-
             <Card
               title="Total de Ordens"
-              :value="totalManutencoes"
-              :footer-text="`${ordensAbertas} ordens abertas`"
+              :value="manutencaoTotal"
+              :footer-text="`${manutencaoTotal} ordens registradas`"
               :icon="ClipboardList"
             />
 
@@ -198,13 +170,11 @@
               :footer-text="`${porcentagemConcluidas}% das ordens`"
               :icon="CheckCircle"
             />
-
           </div>
-
         </section>
 
+        <!-- Gráficos -->
         <section class="charts-grid">
-
           <div class="report-card chart-card">
             <Chart
               type="bar"
@@ -222,18 +192,14 @@
               :values="statusValues"
             />
           </div>
-
         </section>
 
+        <!-- Relatório de usuários -->
         <section class="report-card table-card">
-
           <div class="table-header">
-            <h2>
-              Relatório Detalhado de Usuários
-            </h2>
+            <h2>Relatório Detalhado de Usuários</h2>
 
             <div class="export-actions">
-
               <button
                 type="button"
                 class="export-button excel"
@@ -249,7 +215,6 @@
               >
                 Exportar PDF
               </button>
-
             </div>
           </div>
 
@@ -261,15 +226,11 @@
 
           <div class="table-footer">
             <span>
-              Mostrando
-              {{ filteredUsuarios.length }}
-              de
-              {{ usuariosStore.usuarios.length }}
-              usuários
+              Mostrando {{ filteredUsuarios.length }}
+              de {{ usuariosStore.usuarios.length }} usuários
             </span>
 
             <div class="pagination">
-
               <button
                 type="button"
                 class="page-button"
@@ -285,21 +246,16 @@
               >
                 Próximo
               </button>
-
             </div>
           </div>
-
         </section>
 
+        <!-- Relatório de ordens de manutenção -->
         <section class="report-card table-card">
-
           <div class="table-header">
-            <h2>
-              Ordens de Manutenção
-            </h2>
+            <h2>Ordens de Manutenção</h2>
 
             <div class="export-actions">
-
               <button
                 type="button"
                 class="export-button excel"
@@ -315,7 +271,6 @@
               >
                 Exportar PDF
               </button>
-
             </div>
           </div>
 
@@ -326,43 +281,41 @@
             Carregando ordens de manutenção...
           </div>
 
-          <Table
-            v-else
-            title=""
-            :headers="manutencaoTableHeaders"
-            :rows="manutencaoTableRows"
-          />
+          <template v-else>
+            <Table
+              title=""
+              :headers="manutencaoTableHeaders"
+              :rows="manutencaoTableRows"
+              :show-actions="true"
+              @detail="handleDetail"
+            />
 
-          <div class="table-footer">
-            <span>
-              Mostrando
-              {{ manutencaoTableRows.length }}
-              ordens de manutenção
-            </span>
+            <div class="table-footer">
+              <span>
+                Mostrando {{ manutencaoTableRows.length }}
+                ordens de manutenção
+              </span>
 
-            <div class="pagination">
+              <div class="pagination">
+                <button
+                  type="button"
+                  class="page-button"
+                  disabled
+                >
+                  Anterior
+                </button>
 
-              <button
-                type="button"
-                class="page-button"
-                disabled
-              >
-                Anterior
-              </button>
-
-              <button
-                type="button"
-                class="page-button active"
-                disabled
-              >
-                Próximo
-              </button>
-
+                <button
+                  type="button"
+                  class="page-button active"
+                  disabled
+                >
+                  Próximo
+                </button>
+              </div>
             </div>
-          </div>
-
+          </template>
         </section>
-
       </template>
     </main>
   </div>
@@ -394,26 +347,121 @@ import Chart from '../components/Chart.vue'
 import Table from '../components/Table.vue'
 
 import { useUsuariosStore } from '../stores/usuarios'
+import { useOrdensStore } from '../stores/ordens'
+import { useRouter } from 'vue-router'
 
 import '../assets/css/Relatorios.css'
 
 const usuariosStore = useUsuariosStore()
+const manutencoesStore = useOrdensStore()
+const router = useRouter()
 
 const search = ref('')
+const carregandoManutencoes = ref(false)
+const erroManutencoes = ref('')
 
 const filters = reactive({
   papel: 'todos',
   status: 'todos'
 })
 
-const manutencoes = ref([])
+// Usa diretamente os dados reativos da store.
+const manutencoes = computed(
+  () => manutencoesStore.ordens || []
+)
 
-const carregandoManutencoes = ref(false)
-
+// Carrega os dados das duas stores.
 onMounted(async () => {
-  await usuariosStore.fetchUsuarios()
+  carregandoManutencoes.value = true
+  erroManutencoes.value = ''
+
+  try {
+    const resultados = await Promise.all([
+      usuariosStore.fetchUsuarios(),
+      manutencoesStore.fetchOrdens()
+    ])
+
+    // Caso fetchOrdens retorne false em caso de falha.
+    if (resultados[1] === false) {
+      erroManutencoes.value =
+        manutencoesStore.erro ||
+        'Não foi possível carregar as ordens de manutenção.'
+    }
+  } catch (error) {
+    console.error('Erro ao carregar relatórios:', error)
+
+    erroManutencoes.value =
+      manutencoesStore.erro ||
+      'Ocorreu um erro ao carregar os relatórios.'
+  } finally {
+    carregandoManutencoes.value = false
+  }
 })
 
+// Normaliza os status para tratar maiúsculas e acentos.
+const normalizarStatus = (status) => {
+  return String(status || '')
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toUpperCase()
+    .trim()
+}
+
+const manutencaoTotal = computed(
+  () => manutencoes.value.length
+)
+
+const totalManutencoes = computed(
+  () => manutencoes.value.length
+)
+
+const ordensAbertas = computed(() => {
+  return manutencoes.value.filter((ordem) => {
+    const status = normalizarStatus(ordem.status)
+
+    return status === 'PENDENTE' || status === 'ABERTA'
+  }).length
+})
+
+const ordensEmAndamento = computed(() => {
+  return manutencoes.value.filter(
+    (ordem) =>
+      normalizarStatus(ordem.status) === 'EM ANDAMENTO'
+  ).length
+})
+
+const ordensConcluidas = computed(() => {
+  return manutencoes.value.filter(
+    (ordem) =>
+      normalizarStatus(ordem.status) === 'CONCLUIDA'
+  ).length
+})
+
+const porcentagemAbertas = computed(() => {
+  if (!totalManutencoes.value) return 0
+
+  return Math.round(
+    (ordensAbertas.value / totalManutencoes.value) * 100
+  )
+})
+
+const porcentagemEmAndamento = computed(() => {
+  if (!totalManutencoes.value) return 0
+
+  return Math.round(
+    (ordensEmAndamento.value / totalManutencoes.value) * 100
+  )
+})
+
+const porcentagemConcluidas = computed(() => {
+  if (!totalManutencoes.value) return 0
+
+  return Math.round(
+    (ordensConcluidas.value / totalManutencoes.value) * 100
+  )
+})
+
+// Usuários
 const formatPapel = (papel) => {
   const papeis = {
     ALUNO: 'Aluno',
@@ -425,11 +473,9 @@ const formatPapel = (papel) => {
 }
 
 const filteredUsuarios = computed(() => {
-  const termo = search.value
-    .toLowerCase()
-    .trim()
+  const termo = search.value.toLowerCase().trim()
 
-  return usuariosStore.usuarios.filter((usuario) => {
+  return (usuariosStore.usuarios || []).filter((usuario) => {
     const nomeCompleto = [
       usuario.first_name,
       usuario.last_name
@@ -439,15 +485,9 @@ const filteredUsuarios = computed(() => {
 
     const correspondePesquisa =
       !termo ||
-      usuario.username
-        ?.toLowerCase()
-        .includes(termo) ||
-      nomeCompleto
-        .toLowerCase()
-        .includes(termo) ||
-      usuario.email
-        ?.toLowerCase()
-        .includes(termo)
+      usuario.username?.toLowerCase().includes(termo) ||
+      nomeCompleto.toLowerCase().includes(termo) ||
+      usuario.email?.toLowerCase().includes(termo)
 
     const correspondePapel =
       filters.papel === 'todos' ||
@@ -466,9 +506,9 @@ const filteredUsuarios = computed(() => {
   })
 })
 
-const totalUsuarios = computed(() => {
-  return filteredUsuarios.value.length
-})
+const totalUsuarios = computed(
+  () => filteredUsuarios.value.length
+)
 
 const usuariosAtivos = computed(() => {
   return filteredUsuarios.value.filter(
@@ -495,9 +535,7 @@ const totalProfessores = computed(() => {
 })
 
 const porcentagemAtivos = computed(() => {
-  if (!totalUsuarios.value) {
-    return 0
-  }
+  if (!totalUsuarios.value) return 0
 
   return Math.round(
     (usuariosAtivos.value / totalUsuarios.value) * 100
@@ -505,9 +543,7 @@ const porcentagemAtivos = computed(() => {
 })
 
 const porcentagemAlunos = computed(() => {
-  if (!totalUsuarios.value) {
-    return 0
-  }
+  if (!totalUsuarios.value) return 0
 
   return Math.round(
     (totalAlunos.value / totalUsuarios.value) * 100
@@ -515,67 +551,14 @@ const porcentagemAlunos = computed(() => {
 })
 
 const porcentagemProfessores = computed(() => {
-  if (!totalUsuarios.value) {
-    return 0
-  }
+  if (!totalUsuarios.value) return 0
 
   return Math.round(
     (totalProfessores.value / totalUsuarios.value) * 100
   )
 })
 
-const totalManutencoes = computed(() => {
-  return manutencoes.value.length
-})
-
-const ordensAbertas = computed(() => {
-  return manutencoes.value.filter(
-    (ordem) => ordem.status === 'ABERTA'
-  ).length
-})
-
-const ordensEmAndamento = computed(() => {
-  return manutencoes.value.filter(
-    (ordem) => ordem.status === 'EM_ANDAMENTO'
-  ).length
-})
-
-const ordensConcluidas = computed(() => {
-  return manutencoes.value.filter(
-    (ordem) => ordem.status === 'CONCLUIDA'
-  ).length
-})
-
-const porcentagemAbertas = computed(() => {
-  if (!totalManutencoes.value) {
-    return 0
-  }
-
-  return Math.round(
-    (ordensAbertas.value / totalManutencoes.value) * 100
-  )
-})
-
-const porcentagemEmAndamento = computed(() => {
-  if (!totalManutencoes.value) {
-    return 0
-  }
-
-  return Math.round(
-    (ordensEmAndamento.value / totalManutencoes.value) * 100
-  )
-})
-
-const porcentagemConcluidas = computed(() => {
-  if (!totalManutencoes.value) {
-    return 0
-  }
-
-  return Math.round(
-    (ordensConcluidas.value / totalManutencoes.value) * 100
-  )
-})
-
+// Dados dos gráficos
 const papelLabels = [
   'Aluno',
   'Professor',
@@ -610,6 +593,7 @@ const statusValues = computed(() => {
   ]
 })
 
+// Tabela de usuários
 const userTableHeaders = [
   'ID',
   'Usuário',
@@ -639,6 +623,7 @@ const userTableRows = computed(() => {
   })
 })
 
+// Tabela de ordens
 const manutencaoTableHeaders = [
   'Ordem',
   'Ativo',
@@ -650,57 +635,83 @@ const manutencaoTableHeaders = [
 ]
 
 const formatStatusManutencao = (status) => {
+  const statusNormalizado = normalizarStatus(status)
+    .replace(/\s+/g, '_')
+
   const statusMap = {
+    PENDENTE: 'Pendente',
     ABERTA: 'Aberta',
     EM_ANDAMENTO: 'Em andamento',
+    EM_MANUTENCAO: 'Em manutenção',
+    CONCLUIDO: 'Concluído',
     CONCLUIDA: 'Concluída',
     CANCELADA: 'Cancelada'
   }
 
-  return statusMap[status] || status || '-'
+  return statusMap[statusNormalizado] || status || '-'
 }
 
 const formatData = (data) => {
-  if (!data) {
+  if (!data) return '-'
+
+  const dataConvertida = new Date(data)
+
+  if (Number.isNaN(dataConvertida.getTime())) {
     return '-'
   }
 
-  return new Date(data).toLocaleDateString('pt-BR')
+  return dataConvertida.toLocaleDateString('pt-BR')
 }
 
 const manutencaoTableRows = computed(() => {
   return manutencoes.value.map((ordem) => {
+    // O serializer pode retornar o ativo como ID ou objeto.
+    const ativo =
+      typeof ordem.ativo === 'object' && ordem.ativo !== null
+        ? ordem.ativo
+        : null
+
+    const nomeAtivo = ativo
+      ? ativo.descricao || ativo.nome || ativo.numero_patrimonio
+      : ordem.ativo
+
+    const tipoAtivo = ativo?.tipo || ordem.tipo || '-'
+
+    const responsavel =
+      typeof ordem.responsavel === 'object' &&
+      ordem.responsavel !== null
+        ? ordem.responsavel.username ||
+          ordem.responsavel.nome ||
+          '-'
+        : ordem.responsavel || '-'
+
     return [
       ordem.id || '-',
-      ordem.ativo?.descricao || ordem.ativo || '-',
-      ordem.tipo || '-',
+      nomeAtivo || '-',
+      tipoAtivo,
       ordem.descricao || '-',
-      ordem.responsavel?.username ||
-        ordem.responsavel ||
-        '-',
+      responsavel,
       formatStatusManutencao(ordem.status),
       formatData(ordem.data_abertura)
     ]
   })
 })
 
+const handleDetail = (rowIndex) => {
+  const ordem = manutencoes.value[rowIndex]
+
+  if (!ordem) {
+    return
+  }
+
+  router.push(`/manutencao/detalhe/${ordem.id}`)
+}
+
+// Ações dos relatórios
 const generateReport = () => {
-  console.log(
-    'Filtros aplicados:',
-    {
-      ...filters
-    }
-  )
-
-  console.log(
-    'Usuários encontrados:',
-    filteredUsuarios.value
-  )
-
-  console.log(
-    'Ordens de manutenção:',
-    manutencoes.value
-  )
+  console.log('Filtros aplicados:', { ...filters })
+  console.log('Usuários encontrados:', filteredUsuarios.value)
+  console.log('Ordens de manutenção:', manutencoes.value)
 }
 
 const exportExcel = () => {
