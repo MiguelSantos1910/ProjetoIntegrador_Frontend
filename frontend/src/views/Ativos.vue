@@ -241,6 +241,7 @@ const editarAtivo = (rowIndex) => {
     return
   }
 
+  router.push(`/ativos/editar/${ativo.id}`)
 }
 
 const handleDetail = (rowIndex) => {
