@@ -1,11 +1,8 @@
 <template>
   <div class="detalhes-manutencao">
     <!-- CABEÇALHO -->
-
     <header class="manutencao-header">
-      <h1>
-        Detalhes da Manutenção
-      </h1>
+      <h1>Detalhes da Manutenção</h1>
 
       <div class="header-actions">
         <div class="search-box">
@@ -34,399 +31,305 @@
       </div>
     </header>
 
-
     <!-- CONTEÚDO -->
-
     <main class="manutencao-content">
-      <!-- COLUNA PRINCIPAL -->
-
-      <div class="manutencao-main">
-        <!-- CARD PRINCIPAL -->
-
-        <section class="maintenance-card">
-          <div class="maintenance-card-header">
-            <div>
-              <h2>
-                Manutenção
-              </h2>
-
-              <span class="maintenance-code">
-                Ordem de manutenção:
-                {{ manutencao.id || '-' }}
-              </span>
-            </div>
-
-            <span
-              class="maintenance-status"
-              :class="statusClass"
-            >
-              {{ statusLabel }}
-            </span>
-          </div>
-
-
-          <!-- ATIVO -->
-
-          <div class="section-block">
-            <h3 class="section-title">
-              Ativo
-            </h3>
-
-            <div class="asset-summary">
-              <div class="summary-field">
-                <span>
-                  Descrição
-                </span>
-
-                <strong>
-                  {{ manutencao.ativo.descricao || '-' }}
-                </strong>
-              </div>
-
-
-              <div class="summary-field">
-                <span>
-                  Patrimônio
-                </span>
-
-                <strong>
-                  {{ manutencao.ativo.numero_patrimonio || '-' }}
-                </strong>
-              </div>
-
-
-              <div class="summary-field">
-                <span>
-                  Tipo
-                </span>
-
-                <strong>
-                  {{ formatarTipo(manutencao.ativo.tipo) }}
-                </strong>
-              </div>
-
-
-              <div class="summary-field">
-                <span>
-                  Sala
-                </span>
-
-                <strong>
-                  {{ manutencao.ativo.sala || '-' }}
-                </strong>
-              </div>
-            </div>
-          </div>
-
-
-          <!-- INFORMAÇÕES DA MANUTENÇÃO -->
-
-          <div class="section-block">
-            <h3 class="section-title">
-              Informações da Manutenção
-            </h3>
-
-            <div class="maintenance-fields">
-              <div class="detail-field">
-                <label>
-                  Status
-                </label>
-
-                <div class="detail-value">
-                  <span
-                    class="maintenance-status"
-                    :class="statusClass"
-                  >
-                    {{ statusLabel }}
-                  </span>
-                </div>
-              </div>
-
-
-              <div class="detail-field">
-                <label>
-                  Responsável
-                </label>
-
-                <div class="detail-value">
-                  {{ manutencao.responsavel || '-' }}
-                </div>
-              </div>
-
-
-              <div class="detail-field">
-                <label>
-                  Data de Abertura
-                </label>
-
-                <div class="detail-value">
-                  {{ dataFormatada(manutencao.data_abertura) }}
-                </div>
-              </div>
-
-
-              <div class="detail-field">
-                <label>
-                  Data de Conclusão
-                </label>
-
-                <div class="detail-value">
-                  {{ dataFormatada(manutencao.data_conclusao) }}
-                </div>
-              </div>
-            </div>
-          </div>
-
-
-          <!-- DESCRIÇÃO -->
-
-          <div class="section-block">
-            <h3 class="section-title">
-              Descrição
-            </h3>
-
-            <div class="text-display">
-              {{ manutencao.descricao || 'Nenhuma descrição informada.' }}
-            </div>
-          </div>
-
-
-          <!-- SERVIÇO REALIZADO -->
-
-          <div class="section-block">
-            <h3 class="section-title">
-              Serviço Realizado
-            </h3>
-
-            <div class="text-display">
-              {{
-                manutencao.servico_realizado ||
-                  'Nenhum serviço realizado informado.'
-              }}
-            </div>
-          </div>
-
-
-          <!-- CUSTO -->
-
-          <div class="section-block">
-            <h3 class="section-title">
-              Custo
-            </h3>
-
-            <div class="cost-display">
-              <span>
-                R$
-              </span>
-
-              <strong>
-                {{ formatarCusto(manutencao.custo) }}
-              </strong>
-            </div>
-          </div>
-
-
-          <!-- OBSERVAÇÕES -->
-
-          <div class="section-block">
-            <h3 class="section-title">
-              Observações
-            </h3>
-
-            <div class="text-display">
-              {{
-                manutencao.observacoes ||
-                  'Nenhuma observação informada.'
-              }}
-            </div>
-          </div>
-
-
-          <!-- AÇÕES -->
-
-          <div class="maintenance-actions">
-            <button
-              type="button"
-              class="back-button"
-              @click="handleBack"
-            >
-              Voltar
-            </button>
-
-            <button
-              type="button"
-              class="delete-button"
-              @click="handleDelete"
-            >
-              Excluir Manutenção
-            </button>
-          </div>
-        </section>
+      <div
+        v-if="carregando"
+        class="status-message"
+      >
+        Carregando detalhes da manutenção...
       </div>
 
+      <div
+        v-else-if="erro"
+        class="status-message error"
+        role="alert"
+      >
+        {{ erro }}
+      </div>
 
-      <!-- SIDEBAR -->
+      <template v-else>
+        <!-- COLUNA PRINCIPAL -->
+        <div class="manutencao-main">
+          <section class="maintenance-card">
+            <div class="maintenance-card-header">
+              <div>
+                <h2>Manutenção</h2>
 
-      <aside class="manutencao-sidebar">
-        <!-- STATUS -->
+                <span class="maintenance-code">
+                  Ordem de manutenção: {{ manutencao.id || '-' }}
+                </span>
+              </div>
 
-        <section class="sidebar-card">
-          <div class="sidebar-header">
-            <h2>
-              Status da Manutenção
-            </h2>
-          </div>
+              <span
+                class="maintenance-status"
+                :class="statusClass"
+              >
+                {{ statusLabel }}
+              </span>
+            </div>
 
-          <div class="sidebar-status">
-            <span
-              class="maintenance-status large"
-              :class="statusClass"
-            >
-              {{ statusLabel }}
-            </span>
-          </div>
-        </section>
+            <!-- ATIVO -->
+            <div class="section-block">
+              <h3 class="section-title">
+                Ativo
+              </h3>
 
+              <div class="asset-summary">
+                <div class="summary-field">
+                  <span>Descrição</span>
+                  <strong>
+                    {{ manutencao.ativo.descricao || '-' }}
+                  </strong>
+                </div>
 
-        <!-- INFORMAÇÕES DO ATIVO -->
+                <div class="summary-field">
+                  <span>Patrimônio</span>
+                  <strong>
+                    {{ manutencao.ativo.numero_patrimonio || '-' }}
+                  </strong>
+                </div>
 
-        <section class="sidebar-card">
-          <div class="sidebar-header">
-            <h2>
-              Informações do Ativo
-            </h2>
-          </div>
+                <div class="summary-field">
+                  <span>Tipo</span>
+                  <strong>
+                    {{ formatarTipo(manutencao.ativo.tipo) }}
+                  </strong>
+                </div>
 
+                <div class="summary-field">
+                  <span>Sala</span>
+                  <strong>
+                    {{ manutencao.ativo.sala || '-' }}
+                  </strong>
+                </div>
+              </div>
+            </div>
 
-          <div class="asset-info-row">
-            <span>
-              Descrição
-            </span>
+            <!-- INFORMAÇÕES DA MANUTENÇÃO -->
+            <div class="section-block">
+              <h3 class="section-title">
+                Informações da Manutenção
+              </h3>
 
-            <strong>
-              {{ manutencao.ativo.descricao || '-' }}
-            </strong>
-          </div>
+              <div class="maintenance-fields">
+                <div class="detail-field">
+                  <label>Status</label>
+                  <div class="detail-value">
+                    <span
+                      class="maintenance-status"
+                      :class="statusClass"
+                    >
+                      {{ statusLabel }}
+                    </span>
+                  </div>
+                </div>
 
+                <div class="detail-field">
+                  <label>Responsável</label>
+                  <div class="detail-value">
+                    {{ formatarResponsavel(manutencao.responsavel) }}
+                  </div>
+                </div>
 
-          <div class="asset-info-row">
-            <span>
-              Tipo
-            </span>
+                <div class="detail-field">
+                  <label>Data de Abertura</label>
+                  <div class="detail-value">
+                    {{ dataFormatada(manutencao.data_abertura) }}
+                  </div>
+                </div>
 
-            <strong>
-              {{ formatarTipo(manutencao.ativo.tipo) }}
-            </strong>
-          </div>
+                <div class="detail-field">
+                  <label>Data de Conclusão</label>
+                  <div class="detail-value">
+                    {{ dataFormatada(manutencao.data_conclusao) }}
+                  </div>
+                </div>
+              </div>
+            </div>
 
+            <!-- DESCRIÇÃO -->
+            <div class="section-block">
+              <h3 class="section-title">
+                Descrição
+              </h3>
 
-          <div class="asset-info-row">
-            <span>
-              Patrimônio
-            </span>
+              <div class="text-display">
+                {{ manutencao.descricao || 'Nenhuma descrição informada.' }}
+              </div>
+            </div>
 
-            <strong>
-              {{ manutencao.ativo.numero_patrimonio || '-' }}
-            </strong>
-          </div>
+            <!-- SERVIÇO REALIZADO -->
+            <div class="section-block">
+              <h3 class="section-title">
+                Serviço Realizado
+              </h3>
 
+              <div class="text-display">
+                {{
+                  manutencao.servico_realizado ||
+                    'Nenhum serviço realizado informado.'
+                }}
+              </div>
+            </div>
 
-          <div class="asset-info-row">
-            <span>
-              Sala
-            </span>
+            <!-- CUSTO -->
+            <div class="section-block">
+              <h3 class="section-title">
+                Custo Estimado
+              </h3>
 
-            <strong>
-              {{ manutencao.ativo.sala || '-' }}
-            </strong>
-          </div>
+              <div class="cost-display">
+                <span>R$</span>
+                <strong>
+                  {{ formatarCusto(manutencao.custo_estimado) }}
+                </strong>
+              </div>
+            </div>
 
+            <!-- OBSERVAÇÕES -->
+            <div class="section-block">
+              <h3 class="section-title">
+                Observações
+              </h3>
 
-          <div class="asset-info-row">
-            <span>
-              Status do Ativo
-            </span>
+              <div class="text-display">
+                {{
+                  manutencao.observacoes ||
+                    'Nenhuma observação informada.'
+                }}
+              </div>
+            </div>
 
-            <strong>
-              {{ formatarStatusAtivo(manutencao.ativo.status) }}
-            </strong>
-          </div>
-        </section>
+            <!-- AÇÕES -->
+            <div class="maintenance-actions">
+              <button
+                type="button"
+                class="back-button"
+                @click="handleBack"
+              >
+                Voltar
+              </button>
 
+              <button
+                type="button"
+                class="delete-button"
+                :disabled="excluindo"
+                @click="handleDelete"
+              >
+                {{ excluindo ? 'Excluindo...' : 'Excluir Manutenção' }}
+              </button>
+            </div>
+          </section>
+        </div>
 
-        <!-- DATAS -->
+        <!-- SIDEBAR -->
+        <aside class="manutencao-sidebar">
+          <section class="sidebar-card">
+            <div class="sidebar-header">
+              <h2>Status da Manutenção</h2>
+            </div>
 
-        <section class="sidebar-card">
-          <div class="sidebar-header">
-            <h2>
-              Datas
-            </h2>
-          </div>
+            <div class="sidebar-status">
+              <span
+                class="maintenance-status large"
+                :class="statusClass"
+              >
+                {{ statusLabel }}
+              </span>
+            </div>
+          </section>
 
+          <!-- INFORMAÇÕES DO ATIVO -->
+          <section class="sidebar-card">
+            <div class="sidebar-header">
+              <h2>Informações do Ativo</h2>
+            </div>
 
-          <div class="asset-info-row">
-            <span>
-              Abertura
-            </span>
+            <div class="asset-info-row">
+              <span>Descrição</span>
+              <strong>
+                {{ manutencao.ativo.descricao || '-' }}
+              </strong>
+            </div>
 
-            <strong>
-              {{ dataFormatada(manutencao.data_abertura) }}
-            </strong>
-          </div>
+            <div class="asset-info-row">
+              <span>Tipo</span>
+              <strong>
+                {{ formatarTipo(manutencao.ativo.tipo) }}
+              </strong>
+            </div>
 
+            <div class="asset-info-row">
+              <span>Patrimônio</span>
+              <strong>
+                {{ manutencao.ativo.numero_patrimonio || '-' }}
+              </strong>
+            </div>
 
-          <div class="asset-info-row">
-            <span>
-              Conclusão
-            </span>
+            <div class="asset-info-row">
+              <span>Sala</span>
+              <strong>
+                {{ manutencao.ativo.sala || '-' }}
+              </strong>
+            </div>
 
-            <strong>
-              {{ dataFormatada(manutencao.data_conclusao) }}
-            </strong>
-          </div>
-        </section>
-      </aside>
+            <div class="asset-info-row">
+              <span>Status do Ativo</span>
+              <strong>
+                {{ formatarStatusAtivo(manutencao.ativo.status) }}
+              </strong>
+            </div>
+          </section>
+
+          <!-- DATAS -->
+          <section class="sidebar-card">
+            <div class="sidebar-header">
+              <h2>Datas</h2>
+            </div>
+
+            <div class="asset-info-row">
+              <span>Abertura</span>
+              <strong>
+                {{ dataFormatada(manutencao.data_abertura) }}
+              </strong>
+            </div>
+
+            <div class="asset-info-row">
+              <span>Conclusão</span>
+              <strong>
+                {{ dataFormatada(manutencao.data_conclusao) }}
+              </strong>
+            </div>
+          </section>
+        </aside>
+      </template>
     </main>
 
-
     <!-- MODAL -->
-
     <ConfirmModal
       v-model="showDeleteModal"
-
       title="Excluir Manutenção?"
-
       subtitle="Esta ação não poderá ser desfeita."
-
-      :item-name="
-        manutencao.ativo.descricao ||
-          'Manutenção'
-      "
-
-      :item-info="
-        `Patrimônio: ${
-          manutencao.ativo.numero_patrimonio || '-'
-        }`
-      "
-
+      :item-name="manutencao.ativo.descricao || 'Manutenção'"
+      :item-info="`Patrimônio: ${manutencao.ativo.numero_patrimonio || '-'}`"
       message="A manutenção será removida do sistema."
-
       confirm-text="Confirmar Exclusão"
-
       @confirm="confirmDelete"
     />
   </div>
 </template>
 
-
 <script setup>
-
 import {
   computed,
-  ref
+  onMounted,
+  ref,
+  watch
 } from 'vue'
 
 import {
+  useRoute,
   useRouter
 } from 'vue-router'
 
@@ -436,200 +339,208 @@ import {
 } from 'lucide-vue-next'
 
 import ConfirmModal from '../components/ConfirmModal.vue'
+import { useOrdensStore } from '../stores/ordens'
+import api from '../services/api'
 
-import {
-  STATUS_ATIVO
-} from '../composables/status.js'
-
-import {
-  dataFormatada
-} from '../composables/formatData.js'
+import { STATUS_ATIVO } from '../composables/status.js'
+import { dataFormatada } from '../composables/formatData.js'
 
 import '../assets/css/DetalheManutencao.css'
 
-
+const route = useRoute()
 const router = useRouter()
+const ordensStore = useOrdensStore()
 
 const search = ref('')
-
 const showDeleteModal = ref(false)
-
+const carregando = ref(false)
+const excluindo = ref(false)
+const erro = ref('')
 
 const manutencao = ref({
-
-  id: 1,
-
-  status: 'EM_ANDAMENTO',
-
-  responsavel: 'Suporte técnico',
-
-  data_abertura: '2026-10-03T10:00:00',
-
+  id: null,
+  status: 'Pendente',
+  responsavel: '',
+  data_abertura: null,
   data_conclusao: null,
-
-  descricao:
-    'O equipamento apresentou falha durante a utilização.',
-
-  servico_realizado:
-    'Verificação do equipamento e substituição do componente com defeito.',
-
-  custo: '150.00',
-
-  observacoes:
-    'Equipamento deverá ser testado novamente após a manutenção.',
-
-  ativo: {
-
-    id: 1,
-
-    descricao: 'Gabinete Dell',
-
-    tipo: 'GABINETE',
-
-    numero_patrimonio: 'PAT-001',
-
-    sala: 'B-111',
-
-    status: 'EM_MANUTENCAO'
-
-  }
-
+  descricao: '',
+  servico_realizado: '',
+  custo_estimado: null,
+  observacoes: '',
+  ativo: {}
 })
 
 const TIPOS_ATIVO = {
-
   GABINETE: 'Gabinete',
-
   MONITOR: 'Monitor',
-
   TECLADO: 'Teclado',
-
   MESA: 'Mesa'
-
 }
 
+const normalizarStatus = (status) => {
+  return String(status ?? '')
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .trim()
+    .toUpperCase()
+    .replace(/\s+/g, '_')
+}
 
-const STATUS_MANUTENCAO = {
+// Utiliza o composable compartilhado de status.
+const statusOrdem = computed(() => {
+  const chave = normalizarStatus(manutencao.value.status)
 
-  ABERTA: {
-    label: 'Aberta',
-    class: 'maintenance-aberta'
-  },
-
-  EM_ANDAMENTO: {
-    label: 'Em andamento',
-    class: 'maintenance-andamento'
-  },
-
-  CONCLUIDA: {
-    label: 'Concluída',
-    class: 'maintenance-concluida'
-  },
-
-  CANCELADA: {
-    label: 'Cancelada',
-    class: 'maintenance-cancelada'
+  return STATUS_ATIVO[chave] || {
+    label: manutencao.value.status || 'Não informado',
+    class: ''
   }
-
-}
-
-
-const statusLabel = computed(() => {
-
-  return (
-    STATUS_MANUTENCAO[
-      manutencao.value.status
-    ]?.label ||
-
-    manutencao.value.status ||
-
-    'Não informado'
-  )
-
 })
 
-
-const statusClass = computed(() => {
-
-  return (
-    STATUS_MANUTENCAO[
-      manutencao.value.status
-    ]?.class ||
-
-    ''
-  )
-
-})
-
+const statusLabel = computed(() => statusOrdem.value.label)
+const statusClass = computed(() => statusOrdem.value.class)
 
 const formatarTipo = (tipo) => {
-
-  return (
-    TIPOS_ATIVO[tipo] ||
-    tipo ||
-    'Não informado'
-  )
-
+  const chave = normalizarStatus(tipo)
+  return TIPOS_ATIVO[chave] || tipo || 'Não informado'
 }
-
 
 const formatarStatusAtivo = (status) => {
-
-  return (
-    STATUS_ATIVO[status]?.label ||
-    status ||
-    'Não informado'
-  )
-
+  const chave = normalizarStatus(status)
+  return STATUS_ATIVO[chave]?.label || status || 'Não informado'
 }
 
+const formatarResponsavel = (responsavel) => {
+  if (typeof responsavel === 'object' && responsavel !== null) {
+    return (
+      responsavel.username ||
+      responsavel.nome ||
+      responsavel.first_name ||
+      '-'
+    )
+  }
+
+  return responsavel || '-'
+}
 
 const formatarCusto = (valor) => {
-
-  if (
-    valor === null ||
-    valor === undefined ||
-    valor === ''
-  ) {
+  if (valor === null || valor === undefined || valor === '') {
     return '0,00'
   }
 
   const numero = Number(valor)
 
-  if (Number.isNaN(numero)) {
+  if (!Number.isFinite(numero)) {
     return '0,00'
   }
 
-  return numero.toLocaleString(
-    'pt-BR',
-    {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2
-    }
-  )
+  return numero.toLocaleString('pt-BR', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  })
+}
 
+const carregarManutencao = async () => {
+  carregando.value = true
+  erro.value = ''
+
+  try {
+    const id = String(route.params.id || '')
+
+    if (!/^\d+$/.test(id)) {
+      throw new Error('ID da manutenção inválido na URL.')
+    }
+
+    const ordem = await ordensStore.fetchOrdemById(id)
+
+    if (!ordem) {
+      throw new Error(
+        ordensStore.erro || 'Manutenção não encontrada.'
+      )
+    }
+
+    let ativo = {}
+
+    if (ordem.ativo && typeof ordem.ativo === 'object') {
+      ativo = ordem.ativo
+    } else if (
+      ordem.ativo !== null &&
+      ordem.ativo !== undefined
+    ) {
+      try {
+        const resposta = await api.get(`/ativos/${ordem.ativo}/`)
+        ativo = resposta.data
+      } catch (error) {
+        console.error('Erro ao carregar o ativo:', error)
+        ativo = { id: ordem.ativo }
+      }
+    }
+
+    manutencao.value = {
+      ...ordem,
+      custo_estimado: ordem.custo_estimado ?? null,
+      ativo
+    }
+  } catch (error) {
+    console.error('Erro ao carregar manutenção:', error)
+
+    erro.value =
+      error.response?.data?.detail ||
+      error.message ||
+      'Não foi possível carregar a manutenção.'
+  } finally {
+    carregando.value = false
+  }
 }
 
 const handleBack = () => {
-
   router.back()
-
 }
-
 
 const handleDelete = () => {
-
   showDeleteModal.value = true
-
 }
 
+const confirmDelete = async () => {
+  if (!manutencao.value.id || excluindo.value) return
 
-const confirmDelete = () => {
+  excluindo.value = true
+  erro.value = ''
 
-  showDeleteModal.value = false
+  try {
+    const sucesso = await ordensStore.deleteordens(
+      manutencao.value.id
+    )
 
-  router.back()
+    if (!sucesso) {
+      erro.value =
+        ordensStore.erro ||
+        'Não foi possível excluir a manutenção.'
+      showDeleteModal.value = false
+      return
+    }
 
+    showDeleteModal.value = false
+    await router.push('/relatorios')
+  } catch (error) {
+    console.error('Erro ao excluir manutenção:', error)
+
+    erro.value =
+      ordensStore.erro ||
+      'Ocorreu um erro ao excluir a manutenção.'
+    showDeleteModal.value = false
+  } finally {
+    excluindo.value = false
+  }
 }
 
+onMounted(carregarManutencao)
+
+watch(
+  () => route.params.id,
+  (novoId, idAnterior) => {
+    if (novoId !== idAnterior) {
+      carregarManutencao()
+    }
+  }
+)
 </script>

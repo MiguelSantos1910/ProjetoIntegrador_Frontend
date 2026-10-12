@@ -17,5 +17,25 @@ export const STATUS_ATIVO = {
   INATIVO: {
     label: 'Inativo',
     class: 'status-inativo'
+  },
+
+  EM_ANDAMENTO: {
+    label: 'Em andamento',
+    class: 'status-andamento'
+  },
+
+  PENDENTE: {
+    label: 'Pendente',
+    class: 'status-pendente'
+  },
+
+  CONCLUIDO: {
+    label: 'Concluído',
+    class: 'status-concluido'
+  },
+
+  CANCELADO: {
+    label: 'Cancelado',
+    class: 'status-cancelado'
   }
 }
