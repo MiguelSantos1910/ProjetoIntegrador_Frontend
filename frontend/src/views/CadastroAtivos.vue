@@ -8,6 +8,14 @@
       @submit="handleFormSubmit"
       @cancel="handleCancel"
     />
+
+    <Info
+      v-model="mostrarInfo"
+      :success="operacaoSucesso"
+      :message="mensagem"
+      :error-message="mensagemErro"
+      @close="handleInfoClose"
+    />
   </div>
 </template>
 
@@ -16,6 +24,7 @@ import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 
 import Form from '../components/Form.vue'
+import Info from '../components/Info.vue'
 import { useAtivosStore } from '../stores/ativos'
 
 import '../assets/css/Cadastro.css'
@@ -23,33 +32,25 @@ import '../assets/css/Cadastro.css'
 const router = useRouter()
 const ativosStore = useAtivosStore()
 
+const mensagem = ref('')
+const mensagemErro = ref('')
+const mostrarInfo = ref(false)
+const operacaoSucesso = ref(false)
+
 const formFields = ref([
   {
     name: 'tipo',
     label: 'Tipo',
     type: 'select',
     options: [
-      {
-        value: 'GABINETE',
-        label: 'Gabinete'
-      },
-      {
-        value: 'MONITOR',
-        label: 'Monitor'
-      },
-      {
-        value: 'TECLADO',
-        label: 'Teclado'
-      },
-      {
-        value: 'MESA',
-        label: 'Mesa'
-      }
+      { value: 'GABINETE', label: 'Gabinete' },
+      { value: 'MONITOR', label: 'Monitor' },
+      { value: 'TECLADO', label: 'Teclado' },
+      { value: 'MESA', label: 'Mesa' }
     ],
     placeholder: 'Selecione o tipo do ativo',
     required: true
   },
-
   {
     name: 'numero_patrimonio',
     label: 'Número de Patrimônio',
@@ -57,7 +58,6 @@ const formFields = ref([
     placeholder: 'Digite o número de patrimônio do ativo',
     required: false
   },
-
   {
     name: 'sala',
     label: 'Sala',
@@ -65,29 +65,18 @@ const formFields = ref([
     placeholder: 'Digite a sala onde o ativo está localizado',
     required: false
   },
-
   {
     name: 'status',
     label: 'Status',
     type: 'select',
     options: [
-      {
-        value: 'ATIVO',
-        label: 'Ativo'
-      },
-      {
-        value: 'EM_MANUTENCAO',
-        label: 'Em manutenção'
-      },
-      {
-        value: 'DEVOLVIDO',
-        label: 'Devolvido'
-      }
+      { value: 'ATIVO', label: 'Ativo' },
+      { value: 'EM_MANUTENCAO', label: 'Em manutenção' },
+      { value: 'DEVOLVIDO', label: 'Devolvido' }
     ],
     placeholder: 'Selecione o status do ativo',
     required: false
   },
-
   {
     name: 'descricao',
     label: 'Descrição',
@@ -106,16 +95,40 @@ const initialData = ref({
 })
 
 const handleFormSubmit = async (formData) => {
-  const sucesso = await ativosStore.registerAtivo(formData)
+  mostrarInfo.value = false
+  mensagem.value = ''
+  mensagemErro.value = ''
 
-  if (sucesso) {
-    alert('Ativo cadastrado com sucesso!')
+  try {
+    const sucesso = await ativosStore.registerAtivo(formData)
+
+    if (sucesso) {
+      operacaoSucesso.value = true
+      mensagem.value = 'Ativo cadastrado com sucesso!'
+      mensagemErro.value = ''
+      mostrarInfo.value = true
+    } else {
+      operacaoSucesso.value = false
+      mensagem.value = ''
+      mensagemErro.value =
+        ativosStore.errorMessage ||
+        'Ocorreu um erro ao cadastrar o ativo.'
+      mostrarInfo.value = true
+    }
+  } catch (error) {
+    operacaoSucesso.value = false
+    mensagemErro.value =
+      ativosStore.errorMessage ||
+      'Ocorreu um erro ao cadastrar o ativo.'
+    mostrarInfo.value = true
+
+    console.error('Erro ao cadastrar ativo:', error)
+  }
+}
+
+const handleInfoClose = () => {
+  if (operacaoSucesso.value) {
     router.push('/ativos')
-  } else {
-    alert(
-      ativosStore.erro ||
-      'Falha ao cadastrar ativo. Verifique os dados e tente novamente.'
-    )
   }
 }
 

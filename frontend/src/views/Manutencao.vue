@@ -8,6 +8,14 @@
       @submit="handleFormSubmit"
       @cancel="handleCancel"
     />
+
+    <Info
+      v-model="mostrarInfo"
+      :success="operacaoSucesso"
+      :message="mensagem"
+      :error-message="mensagemErro"
+      @close="handleClose"
+    />
   </div>
 </template>
 
@@ -28,10 +36,16 @@ import api from '../services/api'
 import { useOrdensStore } from '../stores/ordens'
 
 import '../assets/css/Manutencao.css'
+import Info from '../components/Info.vue'
 
 const ordensStore = useOrdensStore()
 
 const carregandoAtivos = ref(false)
+
+const mensagem = ref('')
+const mensagemErro = ref('')
+const mostrarInfo = ref(false)
+const operacaoSucesso = ref(false)
 
 const formSections = ref([
   {
@@ -273,16 +287,29 @@ async function handleFormSubmit(data) {
   const sucesso = await ordensStore.registerOrder(dadosOrdem)
 
   if (sucesso) {
-    alert('Manutenção cadastrada com sucesso!')
+    operacaoSucesso.value = true
+    mensagem.value = 'Ordem de manutenção cadastrada com sucesso!'
+    mensagemErro.value = ''
+    mostrarInfo.value = true
     initialData.value = criarDadosIniciais()
   } else {
-    alert(
-      ordensStore.erro || 'Erro ao cadastrar a manutenção.'
-    )
+    operacaoSucesso.value = false
+    mensagem.value = ''
+    mensagemErro.value =
+      ordensStore.errorMessage ||
+      'Ocorreu um erro ao cadastrar a ordem de manutenção.'
+    mostrarInfo.value = true
   }
 }
 
 function handleCancel() {
   initialData.value = criarDadosIniciais()
+}
+
+const handleClose = () => {
+  mostrarInfo.value = false
+  if (operacaoSucesso.value) {
+    initialData.value = criarDadosIniciais()
+  }
 }
 </script>

@@ -24,6 +24,14 @@
       @submit="handleFormSubmit"
       @cancel="handleCancel"
     />
+
+    <Info
+      v-model="mostrarInfo"
+      :success="operacaoSucesso"
+      :message="mensagem"
+      :error-message="mensagemErro"
+      @close="handleInfoClose"
+    />
   </div>
 </template>
 
@@ -33,6 +41,7 @@ import { useRouter, useRoute } from 'vue-router'
 
 import Form from '../components/Form.vue'
 import { useAtivosStore } from '../stores/ativos'
+import Info from '../components/Info.vue'
 
 import '../assets/css/Cadastro.css'
 
@@ -42,6 +51,11 @@ const ativosStore = useAtivosStore()
 
 const carregando = ref(true)
 const erro = ref('')
+
+const mensagem = ref('')
+const mensagemErro = ref('')
+const mostrarInfo = ref(false)
+const operacaoSucesso = ref(false)
 
 const initialData = ref({
   tipo: '',
@@ -141,18 +155,29 @@ const handleFormSubmit = async (formData) => {
   const sucesso = await ativosStore.updateAtivo(id, formData)
 
   if (sucesso) {
-    alert('Ativo atualizado com sucesso!')
-    router.push('/ativos')
+    operacaoSucesso.value = true
+    mensagem.value = 'Ativo atualizado com sucesso!'
+    mensagemErro.value = ''
+    mostrarInfo.value = true
   } else {
-    alert(
+    operacaoSucesso.value = false
+    mensagem.value = ''
+    mensagemErro.value =
       ativosStore.erro ||
       'Falha ao atualizar o ativo.'
-    )
+    mostrarInfo.value = true
   }
 }
 
 const handleCancel = () => {
   router.push('/ativos')
+}
+
+const handleInfoClose = () => {
+  mostrarInfo.value = false
+  if (operacaoSucesso.value) {
+    router.push('/ativos')
+  }
 }
 
 onMounted(carregarAtivo)
