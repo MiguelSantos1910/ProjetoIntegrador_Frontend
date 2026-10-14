@@ -190,6 +190,14 @@
       confirm-text="Confirmar Exclusão"
       @confirm="confirmDelete"
     />
+
+    <Info
+      v-model="mostrarInfo"
+      :success="operacaoSucesso"
+      :message="mensagem"
+      :error-message="mensagemErro"
+      @close="handleInfoClose"
+    />
   </div>
 </template>
 
@@ -209,13 +217,15 @@ import {
   Plus,
   Layers,
   Package,
-  CheckCircle
+  CheckCircle,
 } from 'lucide-vue-next'
 
 import Table from '../components/Table.vue'
 import ConfirmModal from '../components/ConfirmModal.vue'
 
 import { useAtivosStore } from '../stores/ativos'
+
+import Info from '../components/Info.vue'
 
 import '../assets/css/Categorias.css'
 
@@ -228,6 +238,10 @@ const search = ref('')
 const showDeleteModal = ref(false)
 const selectedCategory = ref(null)
 
+const mensagem = ref('')
+const mensagemErro = ref('')
+const mostrarInfo = ref(false)
+const operacaoSucesso = ref(false)
 
 onMounted(async () => {
   await ativosStore.fetchAtivos()
@@ -399,10 +413,19 @@ const confirmDelete = () => {
     return
   }
 
-  console.log(
-    'Categoria selecionada:',
-    selectedCategory.value
-  )
+   if (selectedCategory.value) {
+    operacaoSucesso.value = true
+    mensagem.value = 'Categoria removido com sucesso!'
+    mensagemErro.value = ''
+    mostrarInfo.value = true
+  } else {
+    operacaoSucesso.value = false
+    mensagem.value = ''
+    mensagemErro.value =
+      ativosStore.errorMessage ||
+      'Ocorreu um erro ao cadastrar o ativo.'
+    mostrarInfo.value = true
+  }
 
   showDeleteModal.value = false
   selectedCategory.value = null

@@ -69,7 +69,7 @@
               </span>
             </div>
 
-            <!-- ATIVO -->
+            <!-- INFORMAÇÕES DO ATIVO -->
             <div class="section-block">
               <h3 class="section-title">
                 Ativo
@@ -173,7 +173,7 @@
               </div>
             </div>
 
-            <!-- CUSTO -->
+            <!-- CUSTO ESTIMADO -->
             <div class="section-block">
               <h3 class="section-title">
                 Custo Estimado
@@ -225,6 +225,7 @@
 
         <!-- SIDEBAR -->
         <aside class="manutencao-sidebar">
+          <!-- STATUS -->
           <section class="sidebar-card">
             <div class="sidebar-header">
               <h2>Status da Manutenção</h2>
@@ -306,7 +307,7 @@
       </template>
     </main>
 
-    <!-- MODAL -->
+    <!-- MODAL DE CONFIRMAÇÃO -->
     <ConfirmModal
       v-model="showDeleteModal"
       title="Excluir Manutenção?"
@@ -316,6 +317,15 @@
       message="A manutenção será removida do sistema."
       confirm-text="Confirmar Exclusão"
       @confirm="confirmDelete"
+    />
+
+    <!-- POPUP DE RESULTADO -->
+    <Info
+      v-model="mostrarInfo"
+      :success="operacaoSucesso"
+      :message="mensagem"
+      :error-message="mensagemErro"
+      @close="handleInfoClose"
     />
   </div>
 </template>
@@ -339,6 +349,8 @@ import {
 } from 'lucide-vue-next'
 
 import ConfirmModal from '../components/ConfirmModal.vue'
+import Info from '../components/Info.vue'
+
 import { useOrdensStore } from '../stores/ordens'
 import api from '../services/api'
 
@@ -352,10 +364,17 @@ const router = useRouter()
 const ordensStore = useOrdensStore()
 
 const search = ref('')
+
 const showDeleteModal = ref(false)
+const mostrarInfo = ref(false)
+
 const carregando = ref(false)
 const excluindo = ref(false)
 const erro = ref('')
+
+const operacaoSucesso = ref(false)
+const mensagem = ref('')
+const mensagemErro = ref('')
 
 const manutencao = ref({
   id: null,
@@ -377,6 +396,7 @@ const TIPOS_ATIVO = {
   MESA: 'Mesa'
 }
 
+// Normaliza o texto para consultar as chaves do STATUS_ATIVO.
 const normalizarStatus = (status) => {
   return String(status ?? '')
     .normalize('NFD')
@@ -386,7 +406,7 @@ const normalizarStatus = (status) => {
     .replace(/\s+/g, '_')
 }
 
-// Utiliza o composable compartilhado de status.
+// Status compartilhados do projeto.
 const statusOrdem = computed(() => {
   const chave = normalizarStatus(manutencao.value.status)
 
@@ -401,11 +421,13 @@ const statusClass = computed(() => statusOrdem.value.class)
 
 const formatarTipo = (tipo) => {
   const chave = normalizarStatus(tipo)
+
   return TIPOS_ATIVO[chave] || tipo || 'Não informado'
 }
 
 const formatarStatusAtivo = (status) => {
   const chave = normalizarStatus(status)
+
   return STATUS_ATIVO[chave]?.label || status || 'Não informado'
 }
 
@@ -505,31 +527,52 @@ const confirmDelete = async () => {
 
   excluindo.value = true
   erro.value = ''
+  mostrarInfo.value = false
 
   try {
     const sucesso = await ordensStore.deleteordens(
       manutencao.value.id
     )
 
-    if (!sucesso) {
-      erro.value =
+    showDeleteModal.value = false
+
+    if (sucesso) {
+      operacaoSucesso.value = true
+      mensagem.value = 'Manutenção excluída com sucesso!'
+      mensagemErro.value = ''
+    } else {
+      operacaoSucesso.value = false
+      mensagem.value = ''
+      mensagemErro.value =
         ordensStore.erro ||
         'Não foi possível excluir a manutenção.'
-      showDeleteModal.value = false
-      return
     }
 
-    showDeleteModal.value = false
-    await router.push('/relatorios')
+    mostrarInfo.value = true
   } catch (error) {
     console.error('Erro ao excluir manutenção:', error)
 
-    erro.value =
-      ordensStore.erro ||
-      'Ocorreu um erro ao excluir a manutenção.'
     showDeleteModal.value = false
+    operacaoSucesso.value = false
+    mensagem.value = ''
+
+    mensagemErro.value =
+      ordensStore.erro ||
+      error.response?.data?.detail ||
+      'Ocorreu um erro ao excluir a manutenção.'
+
+    mostrarInfo.value = true
   } finally {
     excluindo.value = false
+  }
+}
+
+// Redireciona somente depois de fechar o popup de sucesso.
+const handleInfoClose = () => {
+  mostrarInfo.value = false
+
+  if (operacaoSucesso.value) {
+    router.push('/relatorios')
   }
 }
 

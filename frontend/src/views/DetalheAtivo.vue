@@ -439,6 +439,14 @@
 
       @confirm="confirmDelete"
     />
+
+    <Info
+      v-model="mostrarInfo"
+      :success="operacaoSucesso"
+      :message="mensagem"
+      :error-message="mensagemErro"
+      @close="handleClose"
+    />
   </div>
 </template>
 
@@ -481,6 +489,7 @@ import { dataFormatada } from '../composables/formatData.js'
 
 
 import '../assets/css/DetalhesAtivo.css'
+import Info from '../components/Info.vue'
 
 const route = useRoute()
 
@@ -497,6 +506,11 @@ const showDeleteModal = ref(false)
 const asset = ref(null)
 
 const assetOriginal = ref(null)
+
+const mensagem = ref('')
+const mensagemErro = ref('')
+const mostrarInfo = ref(false)
+const operacaoSucesso = ref(false)
 
 const assetEdit = reactive({
 
@@ -751,11 +765,21 @@ const handleUpdate = async () => {
       asset.value.id,
 
       dados
-
     )
+
+  if (sucesso) {
+    operacaoSucesso.value = true
+    mensagem.value = 'Ativo atualizado com sucesso!'
+    mensagemErro.value = ''
+    mostrarInfo.value = true
+  }
 
 
   if (!sucesso) {
+    operacaoSucesso.value = false
+    mensagem.value = ''
+    mensagemErro.value = 'Erro ao atualizar o ativo.'
+    mostrarInfo.value = true
     return
   }
 
@@ -810,8 +834,18 @@ const confirmDelete = async () => {
       asset.value.id
     )
 
-
+  if (sucesso) {
+    operacaoSucesso.value = true
+    mensagem.value = 'Ativo excluído com sucesso!'
+    mensagemErro.value = ''
+    mostrarInfo.value = true
+  }
+  
   if (!sucesso) {
+    operacaoSucesso.value = false
+    mensagem.value = ''
+    mensagemErro.value = 'Erro ao excluir o ativo.'
+    mostrarInfo.value = true
     return
   }
 
@@ -825,6 +859,12 @@ const confirmDelete = async () => {
 
   router.push('/ativos')
 
+}
+
+const handleClose = () => {
+  if (operacaoSucesso.value) {
+    router.push('/ativos')
+  }
 }
 
 onMounted(async () => {
