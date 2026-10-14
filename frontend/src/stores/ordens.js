@@ -87,17 +87,25 @@ export const useOrdensStore = defineStore('ordens', {
             this.erro = null
 
             try {
-                
                 await api.delete(`/ordens_manutencao/${id}/`)
 
-                this.ordens = this.ordens.id(
-                    (ordens) => ordens.id !== id
+                this.ordens = this.ordens.filter(
+                    (ordem) => ordem.id !== id
                 )
-                
+
+                if (this.ordem?.id === id) {
+                    this.ordem = null
+                }
+
                 return true
             } catch (error) {
-                this.erro.response?.data?.detail ||
-                "Erro ao deletar ordens"
+                console.error('Erro ao deletar ordem:', error)
+
+                this.erro =
+                    error.response?.data?.detail ||
+                    'Erro ao deletar ordem de manutenção'
+
+                return false
             } finally {
                 this.carregando = false
             }

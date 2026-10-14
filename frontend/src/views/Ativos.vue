@@ -143,6 +143,14 @@
       confirm-text="Confirmar Exclusão"
       @confirm="confirmDelete"
     />
+
+    <Info
+      v-model="mostrarInfo"
+      :success="operacaoSucesso"
+      :message="mensagem"
+      :error-message="mensagemErro"
+      @close="handleClose"
+    />
   </div>
 </template>
 
@@ -161,6 +169,7 @@ import ConfirmModal from '../components/ConfirmModal.vue'
 import { useAtivosStore } from '../stores/ativos'
 
 import '../assets/css/Ativos.css'
+import Info from '../components/Info.vue'
 
 const router = useRouter()
 const ativosStore = useAtivosStore()
@@ -171,6 +180,11 @@ const selectedRoom = ref('')
 
 const showDeleteModal = ref(false)
 const selectedAtivo = ref(null)
+
+const mensagem = ref('')
+const mensagemErro = ref('')
+const mostrarInfo = ref(false)
+const operacaoSucesso = ref(false)
 
 const tableHeaders = [
   'Descrição',
@@ -277,6 +291,24 @@ const confirmDelete = async () => {
   if (sucesso) {
     showDeleteModal.value = false
     selectedAtivo.value = null
+    operacaoSucesso.value = true
+    mensagem.value = 'Ativo excluído com sucesso!'
+    mensagemErro.value = ''
+    mostrarInfo.value = true
+  } else {
+    operacaoSucesso.value = false
+    mensagem.value = ''
+    mensagemErro.value =
+      ativosStore.errorMessage ||
+      'Ocorreu um erro ao excluir o ativo.'
+    mostrarInfo.value = true
+  }
+}
+
+const handleClose = () => {
+  mostrarInfo.value = false
+  if (operacaoSucesso.value) {
+    router.push('/ativos')
   }
 }
 </script>
