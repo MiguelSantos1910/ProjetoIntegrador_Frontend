@@ -77,7 +77,7 @@
           <button
             type="button"
             class="generate-button"
-            @click="generateReport"
+            @click="exportarRelatorioUsuarios"
           >
             Gerar Relatório
           </button>
@@ -349,6 +349,7 @@ import Table from '../components/Table.vue'
 import { useUsuariosStore } from '../stores/usuarios'
 import { useOrdensStore } from '../stores/ordens'
 import { useRouter } from 'vue-router'
+import { usePdf } from '../composables/gerarPdf.js'
 
 import '../assets/css/Relatorios.css'
 
@@ -359,6 +360,8 @@ const router = useRouter()
 const search = ref('')
 const carregandoManutencoes = ref(false)
 const erroManutencoes = ref('')
+
+const { gerarPdf } = usePdf()
 
 const filters = reactive({
   papel: 'todos',
@@ -708,37 +711,12 @@ const handleDetail = (rowIndex) => {
 }
 
 // Ações dos relatórios
-const generateReport = () => {
-  console.log('Filtros aplicados:', { ...filters })
-  console.log('Usuários encontrados:', filteredUsuarios.value)
-  console.log('Ordens de manutenção:', manutencoes.value)
-}
-
-const exportExcel = () => {
-  console.log(
-    'Exportando relatório de usuários:',
-    filteredUsuarios.value
-  )
-}
-
-const exportPdf = () => {
-  console.log(
-    'Exportando relatório de usuários:',
-    filteredUsuarios.value
-  )
-}
-
-const exportManutencaoExcel = () => {
-  console.log(
-    'Exportando ordens de manutenção:',
-    manutencoes.value
-  )
-}
-
-const exportManutencaoPdf = () => {
-  console.log(
-    'Exportando ordens de manutenção:',
-    manutencoes.value
-  )
+function exportarRelatorioUsuarios() {
+  gerarPdf({
+    titulo: 'Relatório de Usuários',
+    nomeArquivo: 'relatorio_usuarios.pdf',
+    colunas: ['ID', 'Usuário', 'Nome', 'E-mail', 'Papel', 'Status'],
+    dados: userTableRows.value
+  })
 }
 </script>

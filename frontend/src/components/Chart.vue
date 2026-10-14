@@ -90,6 +90,11 @@ const props = defineProps({
   values: {
     type: Array,
     required: true
+  },
+
+  color: {
+    type: String,
+    default: '#0D9F95'
   }
 })
 
@@ -99,7 +104,18 @@ const chartData = computed(() => ({
   datasets: [
     {
       label: 'Ativos',
-      data: props.values
+      data: props.values,
+
+      backgroundColor: props.color,
+      borderColor: props.color,
+      borderWidth: 1,
+
+      borderRadius: props.type === 'bar' ? 6 : 0,
+
+      // Estilo do gráfico de linha
+      pointBackgroundColor: props.color,
+      pointBorderColor: props.color,
+      tension: 0.3
     }
   ]
 }))
