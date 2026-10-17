@@ -35,19 +35,15 @@
         <option value="">
           Tipo: Todos
         </option>
-
         <option value="GABINETE">
           Gabinete
         </option>
-
         <option value="MONITOR">
           Monitor
         </option>
-
         <option value="TECLADO">
           Teclado
         </option>
-
         <option value="MESA">
           Mesa
         </option>
@@ -60,7 +56,6 @@
         <option value="">
           Sala: Todas
         </option>
-
         <option value="B-111">
           B-111
         </option>
@@ -88,8 +83,24 @@
       v-else
       class="assets-table"
     >
+      <!-- Cabeçalho da tabela e exportação -->
+      <div class="assets-table-header">
+        <h2>Lista de Ativos</h2>
+
+        <div class="export-actions">
+          <button
+            type="button"
+            class="export-button pdf"
+            :disabled="filteredRows.length === 0"
+            @click="exportarAtivosPdf"
+          >
+            Exportar PDF
+          </button>
+        </div>
+      </div>
+
       <Table
-        title="Lista de Ativos"
+        title=""
         :headers="tableHeaders"
         :rows="filteredRows"
         :show-actions="true"
@@ -165,14 +176,16 @@ import { useRouter } from 'vue-router'
 
 import Table from '../components/Table.vue'
 import ConfirmModal from '../components/ConfirmModal.vue'
+import Info from '../components/Info.vue'
 
 import { useAtivosStore } from '../stores/ativos'
+import { usePdf } from '../composables/gerarPdf.js'
 
 import '../assets/css/Ativos.css'
-import Info from '../components/Info.vue'
 
 const router = useRouter()
 const ativosStore = useAtivosStore()
+const { gerarPdf } = usePdf()
 
 const search = ref('')
 const selectedCategory = ref('')
@@ -194,24 +207,19 @@ const tableHeaders = [
   'Status'
 ]
 
-
 onMounted(async () => {
   await ativosStore.fetchAtivos()
 })
 
-
 const filteredAtivos = computed(() => {
-  const termo = search.value
-    .toLowerCase()
-    .trim()
+  const termo = search.value.toLowerCase().trim()
 
   return ativosStore.ativos.filter((ativo) => {
     const descricao =
       ativo.descricao?.toLowerCase() || ''
 
     const patrimonio =
-      ativo.numero_patrimonio
-        ?.toLowerCase() || ''
+      ativo.numero_patrimonio?.toLowerCase() || ''
 
     const correspondePesquisa =
       !termo ||
@@ -236,7 +244,6 @@ const filteredAtivos = computed(() => {
   })
 })
 
-
 const filteredRows = computed(() => {
   return filteredAtivos.value.map((ativo) => [
     ativo.descricao || '-',
@@ -247,13 +254,30 @@ const filteredRows = computed(() => {
   ])
 })
 
+/* Exportar PDF dos ativos filtrados */
+function exportarAtivosPdf() {
+  if (filteredRows.value.length === 0) {
+    window.alert('Não há ativos para exportar com os filtros atuais.')
+    return
+  }
+
+  try {
+    gerarPdf({
+      titulo: 'Relatório de Ativos — Easy Asset',
+      nomeArquivo: 'relatorio_ativos_easy_asset.pdf',
+      colunas: tableHeaders,
+      dados: filteredRows.value
+    })
+  } catch (error) {
+    console.error('Erro ao exportar os ativos:', error)
+    window.alert('Não foi possível gerar o relatório. Tente novamente.')
+  }
+}
 
 const editarAtivo = (rowIndex) => {
   const ativo = filteredAtivos.value[rowIndex]
 
-  if (!ativo) {
-    return
-  }
+  if (!ativo) return
 
   router.push(`/ativos/editar/${ativo.id}`)
 }
@@ -261,9 +285,7 @@ const editarAtivo = (rowIndex) => {
 const handleDetail = (rowIndex) => {
   const ativo = filteredAtivos.value[rowIndex]
 
-  if (!ativo) {
-    return
-  }
+  if (!ativo) return
 
   router.push(`/ativos/detalhe/${ativo.id}`)
 }
@@ -271,18 +293,14 @@ const handleDetail = (rowIndex) => {
 const handleDelete = (rowIndex) => {
   const ativo = filteredAtivos.value[rowIndex]
 
-  if (!ativo) {
-    return
-  }
+  if (!ativo) return
 
   selectedAtivo.value = ativo
   showDeleteModal.value = true
 }
 
 const confirmDelete = async () => {
-  if (!selectedAtivo.value) {
-    return
-  }
+  if (!selectedAtivo.value) return
 
   const sucesso = await ativosStore.deleteAtivo(
     selectedAtivo.value.id
@@ -307,6 +325,7 @@ const confirmDelete = async () => {
 
 const handleClose = () => {
   mostrarInfo.value = false
+
   if (operacaoSucesso.value) {
     router.push('/ativos')
   }
