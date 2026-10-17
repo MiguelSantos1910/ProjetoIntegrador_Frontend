@@ -52,8 +52,22 @@
 
     <!-- Histórico de Movimentação -->
     <div class="history-section">
+      <div class="history-header">
+        <h2>Histórico de Movimentação</h2>
+
+        <div class="export-actions">
+          <button
+            type="button"
+            class="export-button pdf"
+            @click="exportarRelatorioMovimentos"
+          >
+            Exportar PDF
+          </button>
+        </div>
+      </div>
+
       <Table
-        title="Histórico de Movimentação"
+        title=""
         :headers="historicoHeaders"
         :rows="historicoRows"
       />
@@ -70,8 +84,10 @@ import { useAuthStore } from '../stores/auth'
 import { useAtivosStore } from '../stores/ativos'
 import { useHistoricoStore } from '../stores/historico'
 import { useOrdensStore } from '../stores/ordens'
-import { computed, ref, onMounted } from 'vue' 
+import { computed, onMounted } from 'vue'
+import { usePdf } from '../composables/gerarPdf.js'
 import '../assets/css/Dashboard.css'
+
 import {
   Package,
   Wrench,
@@ -84,6 +100,9 @@ const authStore = useAuthStore()
 const ativosStore = useAtivosStore()
 const historicoStore = useHistoricoStore()
 const ordensStore = useOrdensStore()
+
+const { gerarPdf } = usePdf()
+
 const saudacao = computed(() => {
   const nome = authStore.usuario?.username || 'Usuário'
   return `Bem vindo, ${nome}!`
@@ -96,38 +115,52 @@ onMounted(() => {
 })
 
 const chartLabels = computed(() => {
-  const categorias = ativosStore.ativos.map((ativo) => ativo.tipo?.descricao || ativo.tipo)
+  const categorias = ativosStore.ativos.map(
+    (ativo) => ativo.tipo?.descricao || ativo.tipo
+  )
+
   return [...new Set(categorias)]
 })
 
 const chartValues = computed(() => {
   return chartLabels.value.map((label) => {
-    return ativosStore.ativos.filter((ativo) => ativo.tipo?.descricao === label || ativo.tipo === label).length
+    return ativosStore.ativos.filter(
+      (ativo) =>
+        ativo.tipo?.descricao === label ||
+        ativo.tipo === label
+    ).length
   })
 })
 
 const historicoHeaders = ['ID', 'Tipo', 'Descrição', 'Data']
 
 const historicoRows = computed(() => {
-  return historicoStore.historico
-    .map((historico) => [
-      historico.id || '-',
-      historico.tipo_evento || '-',
-      historico.descricao || '-',
-      dataFormatada(historico.data) || '-'
-    ])
+  return historicoStore.historico.map((historico) => [
+    historico.id || '-',
+    historico.tipo_evento || '-',
+    historico.descricao || '-',
+    dataFormatada(historico.data) || '-'
+  ])
 })
 
 const ativos = computed(() => {
-  return ativosStore.ativos.filter((ativo) => ativo.status === 'Ativo' || ativo.status === 'ATIVO').length
+  return ativosStore.ativos.filter(
+    (ativo) =>
+      ativo.status === 'Ativo' ||
+      ativo.status === 'ATIVO'
+  ).length
 })
 
 const manutencao = computed(() => {
-  return ativosStore.ativos.filter((ativo) => ativo.status === 'manutenção').length
+  return ativosStore.ativos.filter(
+    (ativo) => ativo.status === 'manutenção'
+  ).length
 })
 
 const atencao = computed(() => {
-  return ativosStore.ativos.filter((ativo) => ativo.status === 'atenção').length
+  return ativosStore.ativos.filter(
+    (ativo) => ativo.status === 'atenção'
+  ).length
 })
 
 const totalAtivos = computed(() => {
@@ -137,4 +170,23 @@ const totalAtivos = computed(() => {
 const totalOrdens = computed(() => {
   return ordensStore.ordens.length
 })
+
+function exportarRelatorioMovimentos() {
+  if (historicoRows.value.length === 0) {
+    window.alert('Não há movimentações para exportar.')
+    return
+  }
+
+  try {
+    gerarPdf({
+      titulo: 'Histórico de Movimentação — Easy Asset',
+      nomeArquivo: 'historico_movimentacoes_easy_asset.pdf',
+      colunas: historicoHeaders,
+      dados: historicoRows.value
+    })
+  } catch (error) {
+    console.error('Erro ao exportar o histórico:', error)
+    window.alert('Não foi possível gerar o relatório. Tente novamente.')
+  }
+}
 </script>
