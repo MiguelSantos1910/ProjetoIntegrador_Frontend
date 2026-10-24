@@ -326,6 +326,67 @@
             </div>
           </div>
         </section>
+
+        <section class="report-card table-card">
+          <div class="table-header">
+            <h2>Histórico de Ordens de Manutenção</h2>
+
+            <div class="export-actions">
+              <button
+                type="button"
+                class="export-button pdf"
+                @click="exportarRelatorioHistoricoOrdens"
+              >
+                Exportar PDF
+              </button>
+            </div>
+          </div>
+
+          <div
+            v-if="carregandoHistorico"
+            class="status-message"
+          >
+            Carregando histórico das ordens...
+          </div>
+
+          <div
+            v-else-if="erroHistorico"
+            class="status-message error"
+          >
+            {{ erroHistorico }}
+          </div>
+
+          <Table
+            v-else
+            title=""
+            :headers="historicoHeaders"
+            :rows="historicoRows"
+          />
+
+          <div class="table-footer">
+            <span>
+              Mostrando {{ filteredHistorico.length }}
+              de {{ todosHistorico.length }} registros de histórico
+            </span>
+
+            <div class="pagination">
+              <button
+                type="button"
+                class="page-button"
+                disabled
+              >
+                Anterior
+              </button>
+              <button
+                type="button"
+                class="page-button active"
+                disabled
+              >
+                Próximo
+              </button>
+            </div>
+          </div>
+        </section>
       </template>
     </main>
   </div>
@@ -360,6 +421,7 @@ import Table from '../components/Table.vue'
 
 import { useUsuariosStore } from '../stores/usuarios'
 import { useOrdensStore } from '../stores/ordens'
+import api from '../services/api'
 import { usePdf } from '../composables/gerarPdf.js'
 import { STATUS_ATIVO } from '../composables/status.js'
 import { dataFormatada } from '../composables/formatData.js'
@@ -374,8 +436,11 @@ const { gerarPdf } = usePdf()
 
 const search = ref('')
 const carregandoManutencoes = ref(false)
+const carregandoHistorico = ref(false)
 const gerandoRelatorio = ref(false)
 const erroManutencoes = ref('')
+const erroHistorico = ref('')
+const todosHistorico = ref([])
 
 const filters = reactive({
   papel: 'todos',
@@ -431,6 +496,10 @@ onMounted(async () => {
           resultados[1].reason
         )
       }
+    } else {
+      // O histórico é carregado separadamente para não bloquear
+      // os relatórios principais.
+      carregarHistoricoOrdens()
     }
   } finally {
     carregandoManutencoes.value = false
@@ -617,6 +686,130 @@ const filteredOrdens = computed(() => {
     return correspondePesquisa && correspondeStatus
   })
 })
+
+const historicoHeaders = [
+  'Log',
+  'Ordem',
+  'Ação',
+  'Descrição',
+  'Status anterior',
+  'Status novo',
+  'Usuário',
+  'Data',
+]
+
+const filteredHistorico = computed(() => {
+  const termo = search.value.toLowerCase().trim()
+
+  return todosHistorico.value.filter((log) => {
+    const texto = [
+      log.id,
+      log.ordem,
+      log.acao,
+      log.descricao,
+      log.status_anterior,
+      log.status_novo,
+      log.usuario_nome,
+      log.usuario,
+      log.data,
+    ]
+      .filter((valor) => valor !== null && valor !== undefined)
+      .join(' ')
+      .toLowerCase()
+
+    const correspondePesquisa = !termo || texto.includes(termo)
+
+    const statusNovo = normalizarStatus(log.status_novo)
+    const correspondeStatus =
+      filters.statusOrdens === 'todos' ||
+      (
+        filters.statusOrdens === 'pendentes' &&
+        ['PENDENTE', 'ABERTA'].includes(statusNovo)
+      ) ||
+      (
+        filters.statusOrdens === 'emAndamento' &&
+        statusNovo === 'EM_ANDAMENTO'
+      ) ||
+      (
+        filters.statusOrdens === 'concluidos' &&
+        ['CONCLUIDO', 'CONCLUIDA'].includes(statusNovo)
+      )
+
+    return correspondePesquisa && correspondeStatus
+  })
+})
+
+const historicoRows = computed(() =>
+  filteredHistorico.value.map((log) => [
+    log.id ?? '-',
+    log.ordem ? `#${log.ordem}` : '-',
+    log.acao || '-',
+    log.descricao || '-',
+    log.status_anterior || '-',
+    log.status_novo || '-',
+    log.usuario_nome || (log.usuario ? `ID ${log.usuario}` : 'Sistema'),
+    log.data ? dataFormatada(log.data) : '-',
+  ])
+)
+
+async function carregarHistoricoOrdens() {
+  carregandoHistorico.value = true
+  erroHistorico.value = ''
+
+  try {
+    const ordens = manutencoes.value.filter((ordem) => ordem?.id)
+
+    if (ordens.length === 0) {
+      todosHistorico.value = []
+      return
+    }
+
+    const resultados = await Promise.allSettled(
+      ordens.map((ordem) =>
+        api.get(`/ordens_manutencao/${ordem.id}/logs/`)
+      )
+    )
+
+    const logs = []
+    let falhas = 0
+
+    resultados.forEach((resultado) => {
+      if (resultado.status === 'fulfilled') {
+        const registros = Array.isArray(resultado.value.data)
+          ? resultado.value.data
+          : resultado.value.data?.results || []
+
+        logs.push(...registros)
+      } else {
+        falhas += 1
+        console.error(
+          'Não foi possível carregar o histórico de uma ordem:',
+          resultado.reason
+        )
+      }
+    })
+
+    todosHistorico.value = logs.sort(
+      (a, b) => new Date(b.data || 0) - new Date(a.data || 0)
+    )
+
+    if (falhas > 0 && logs.length === 0) {
+      erroHistorico.value =
+        'Não foi possível carregar o histórico. Verifique a autenticação e a rota da API.'
+    } else if (falhas > 0) {
+      // Mantém os registros carregados visíveis e informa falhas no console.
+      console.warn(
+        `${falhas} ordem(ns) não tiveram o histórico carregado.`
+      )
+    }
+  } catch (error) {
+    console.error('Erro ao carregar histórico das ordens:', error)
+    erroHistorico.value =
+      'Não foi possível carregar o histórico das ordens de manutenção.'
+  } finally {
+    carregandoHistorico.value = false
+  }
+}
 
 const totalUsuarios = computed(
   () => todosUsuarios.value.length
@@ -901,15 +1094,6 @@ const handleDetail = (rowIndex) => {
   router.push(`/manutencao/detalhe/${ordem.id}`)
 }
 
-const relatorioGeralHeaders = [
-  'Categoria',
-  'ID',
-  'Usuário / Ativo',
-  'E-mail / Descrição',
-  'Papel / Responsável',
-  'Status',
-  'Data'
-]
 
 const relatorioGeralRows = computed(() => {
   const linhasUsuarios = filteredUsuarios.value.map((usuario) => {
@@ -1001,4 +1185,20 @@ function exportarRelatorioOrdens() {
     dados: manutencaoTableRows.value
   })
 }
+function exportarRelatorioHistoricoOrdens() {
+  if (filteredHistorico.value.length === 0) {
+    window.alert(
+      'Não há registros de histórico para exportar com os filtros atuais.'
+    )
+    return
+  }
+
+  gerarPdf({
+    titulo: 'Histórico de Ordens de Manutenção',
+    nomeArquivo: 'historico_ordens_manutencao.pdf',
+    colunas: historicoHeaders,
+    dados: historicoRows.value,
+  })
+}
+
 </script>
