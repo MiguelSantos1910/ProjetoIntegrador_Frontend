@@ -1,41 +1,77 @@
 /* =========================
+   VARIÁVEIS
+   (mesmos valores de Relatórios e Dashboard)
+   ========================= */
+
+.ativos-page {
+  --atv-bg: #f8fafc;
+  --atv-surface: #ffffff;
+  --atv-border: #e2e8f0;
+  --atv-divider: #f1f5f9;
+  --atv-input-border: #cbd5e1;
+  --atv-input-border-hover: #94a3b8;
+
+  --atv-text: #0f172a;
+  --atv-text-body: #475569;
+  --atv-text-muted: #64748b;
+  --atv-placeholder: #94a3b8;
+
+  --atv-accent: #0d9488;
+  --atv-accent-hover: #0f766e;
+  --atv-focus-ring: rgba(13, 148, 136, 0.1);
+
+  --atv-radius: 8px;
+  --atv-radius-sm: 6px;
+}
+
+
+/* =========================
    PÁGINA DE ATIVOS
+   Sem padding no container: o cabeçalho
+   ocupa a largura toda, como em Relatórios.
+
+   Todas as regras abaixo começam com
+   .ativos-page para não vazar para outras
+   telas (.pagination e .export-actions
+   também existem em Relatórios e Dashboard).
    ========================= */
 
 .ativos-page {
   width: 100%;
   min-height: 100vh;
-
-  padding: 24px;
-
   box-sizing: border-box;
-
-  background-color: #f8fafc;
+  background-color: var(--atv-bg);
+  color: var(--atv-text);
 }
 
 
 /* =========================
    CABEÇALHO
+   (barra branca, igual ao .relatorios-header)
    ========================= */
 
-.ativos-header {
-  display: flex;
+.ativos-page .ativos-header {
+  width: 100%;
+  min-height: 72px;
+  margin: 0;
+  padding: 18px 24px;
+  box-sizing: border-box;
 
+  display: flex;
   align-items: center;
   justify-content: space-between;
-
   gap: 20px;
 
-  margin-bottom: 20px;
+  background-color: var(--atv-surface);
+  border-bottom: 1px solid var(--atv-border);
 }
 
-.ativos-title {
+.ativos-page .ativos-title {
   margin: 0;
-
-  color: #0f172a;
-
-  font-size: 18px;
+  color: var(--atv-text);
+  font-size: 20px;
   font-weight: 700;
+  line-height: 1.3;
 }
 
 
@@ -43,81 +79,96 @@
    AÇÕES DO CABEÇALHO
    ========================= */
 
-.ativos-actions {
+.ativos-page .ativos-actions {
   display: flex;
-
   align-items: center;
-
   gap: 10px;
 }
 
 
 /* =========================
    PESQUISA
+   (igual ao .search-box do Relatórios)
    ========================= */
 
-.search-container {
+.ativos-page .search-container {
   position: relative;
-
   width: 250px;
 }
 
-.search-input {
+.ativos-page .search-input {
   width: 100%;
-
-  height: 34px;
-
+  height: 36px;
   padding: 0 12px 0 34px;
-
   box-sizing: border-box;
 
-  border: 1px solid #e2e8f0;
-  border-radius: 6px;
-
+  border: 1px solid var(--atv-input-border);
+  border-radius: var(--atv-radius-sm);
   outline: none;
 
-  background-color: #ffffff;
-
+  background-color: var(--atv-surface);
   color: #334155;
-
+  font-family: inherit;
   font-size: 11px;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
-.search-input::placeholder {
-  color: #94a3b8;
+.ativos-page .search-input::placeholder {
+  color: var(--atv-placeholder);
 }
 
-.search-input:focus {
-  border-color: #0d9488;
+.ativos-page .search-input:hover {
+  border-color: var(--atv-input-border-hover);
+}
+
+.ativos-page .search-input:focus {
+  border-color: var(--atv-accent);
+  box-shadow: 0 0 0 2px var(--atv-focus-ring);
 }
 
 
 /* =========================
    BOTÃO NOVO ATIVO
+   (igual ao .generate-button)
    ========================= */
 
-.btn-new-asset {
-  height: 34px;
+.ativos-page .btn-new-asset {
+  height: 36px;
+  padding: 0 18px;
+  box-sizing: border-box;
 
-  padding: 0 14px;
+  border: 1px solid var(--atv-accent);
+  border-radius: var(--atv-radius-sm);
 
-  border: none;
-  border-radius: 6px;
-
-  background-color: #0d9488;
-
+  background-color: var(--atv-accent);
   color: #ffffff;
-
+  font-family: inherit;
   font-size: 11px;
   font-weight: 600;
-
+  white-space: nowrap;
   cursor: pointer;
 
-  white-space: nowrap;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.1s ease;
 }
 
-.btn-new-asset:hover {
-  background-color: #0f766e;
+.ativos-page .btn-new-asset:hover {
+  background-color: var(--atv-accent-hover);
+  border-color: var(--atv-accent-hover);
+}
+
+.ativos-page .btn-new-asset:active {
+  transform: translateY(1px);
+}
+
+.ativos-page .btn-new-asset:focus-visible {
+  outline: 2px solid rgba(13, 148, 136, 0.25);
+  outline-offset: 2px;
 }
 
 
@@ -125,53 +176,70 @@
    FILTROS
    ========================= */
 
-.filters {
+.ativos-page .filters {
   display: flex;
-
   align-items: center;
-
-  gap: 8px;
-
-  margin-bottom: 14px;
+  gap: 10px;
+  margin: 24px 24px 16px;
 }
 
-.filter-select {
-  height: 32px;
+.ativos-page .filter-select {
+  height: 36px;
+  padding: 0 30px 0 12px;
+  box-sizing: border-box;
 
-  padding: 0 30px 0 10px;
-
-  border: 1px solid #e2e8f0;
-  border-radius: 5px;
-
+  border: 1px solid var(--atv-input-border);
+  border-radius: var(--atv-radius-sm);
   outline: none;
 
-  background-color: #ffffff;
-
-  color: #475569;
-
-  font-size: 10px;
-
+  background-color: var(--atv-surface);
+  color: var(--atv-text-body);
+  font-family: inherit;
+  font-size: 11px;
   cursor: pointer;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
-.filter-select:focus {
-  border-color: #0d9488;
+.ativos-page .filter-select:hover {
+  border-color: var(--atv-input-border-hover);
+}
+
+.ativos-page .filter-select:focus {
+  border-color: var(--atv-accent);
+  box-shadow: 0 0 0 2px var(--atv-focus-ring);
 }
 
 
 /* =========================
    TABELA
+   (mesmo padrão do .history-section do Dashboard:
+   card com padding e tabela com borda própria)
    ========================= */
 
-.assets-table {
-  width: 100%;
+.ativos-page .assets-table {
+  width: auto;
+  margin: 0 24px 24px;
+  padding: 20px;
+  box-sizing: border-box;
 
-  background-color: #ffffff;
-
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
+  background-color: var(--atv-surface);
+  border: 1px solid var(--atv-border);
+  border-radius: var(--atv-radius);
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.03);
 
   overflow: hidden;
+}
+
+/* sem filtros acima, o card não precisa de margem extra no topo */
+.ativos-page .ativos-header + .assets-table {
+  margin-top: 24px;
+}
+
+.ativos-page .assets-table .table-container {
+  overflow-x: auto;
 }
 
 
@@ -179,228 +247,276 @@
    CABEÇALHO DA TABELA
    ========================= */
 
-.assets-table-header {
+.ativos-page .assets-table-header {
   display: flex;
-
   align-items: center;
   justify-content: space-between;
-
-  gap: 12px;
-
-  padding: 12px;
-  margin: 0;
-
+  gap: 16px;
+  margin: 0 0 16px;
+  padding: 0;
   box-sizing: border-box;
-
-  background-color: #ffffff;
-
-  border-bottom: 1px solid #e2e8f0;
+  background-color: transparent;
+  border: 0;
 }
 
-.assets-table-header h2 {
+.ativos-page .assets-table-header h2 {
   margin: 0;
-
-  color: #0f172a;
-
+  color: var(--atv-text);
   font-size: 14px;
-  font-weight: 700;
-
-  line-height: 34px;
+  font-weight: 600;
+  line-height: 1.4;
 }
 
 
 /* =========================
-   AÇÕES / EXPORTAR PDF
+   EXPORTAR PDF
+   (idêntico ao Dashboard e Relatórios)
    ========================= */
 
-.export-actions {
+.ativos-page .export-actions {
   display: flex;
-
   align-items: center;
   justify-content: flex-end;
-
+  gap: 8px;
   flex-shrink: 0;
 }
 
-.export-button.pdf {
+.ativos-page .export-button.pdf {
   height: 34px;
-
   padding: 0 12px;
+  box-sizing: border-box;
 
-  border: 1px solid #e2e8f0;
-  border-radius: 6px;
+  border: 1px solid var(--atv-border);
+  border-radius: var(--atv-radius-sm);
 
-  background-color: #ffffff;
-
-  color: #475569;
-
+  background-color: var(--atv-surface);
+  color: var(--atv-text-body);
+  font-family: inherit;
   font-size: 10px;
   font-weight: 600;
-
+  white-space: nowrap;
   cursor: pointer;
 
-  white-space: nowrap;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease,
+    transform 0.1s ease;
 }
 
-.export-button.pdf:hover:not(:disabled) {
-  background-color: #f8fafc;
-
-  border-color: #cbd5e1;
+.ativos-page .export-button.pdf:hover:not(:disabled) {
+  background-color: var(--atv-bg);
+  border-color: var(--atv-input-border);
 }
 
-.export-button.pdf:disabled {
+.ativos-page .export-button.pdf:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+.ativos-page .export-button.pdf:disabled {
   opacity: 0.5;
-
   cursor: not-allowed;
 }
 
-.export-button.pdf:focus-visible {
-  outline: 2px solid #0d9488;
-
+.ativos-page .export-button.pdf:focus-visible {
+  outline: 2px solid rgba(13, 148, 136, 0.2);
   outline-offset: 2px;
 }
 
 
 /* =========================
    PAGINAÇÃO
+   (rodapé da tabela, como o .table-footer do Relatórios)
    ========================= */
 
-.pagination {
+.ativos-page .pagination {
   display: flex;
-
   align-items: center;
   justify-content: space-between;
-
-  padding: 10px 12px;
-
-  background-color: #ffffff;
-
-  border-top: 1px solid #e2e8f0;
+  gap: 16px;
+  margin: 0;
+  padding: 16px 0 0;
+  background-color: transparent;
+  border: 0;
 }
 
-.pagination-info {
-  color: #64748b;
-
+.ativos-page .pagination-info {
+  color: var(--atv-text-muted);
   font-size: 10px;
 }
 
-.pagination-buttons {
+.ativos-page .pagination-buttons {
   display: flex;
-
+  align-items: center;
   gap: 6px;
 }
 
-.pagination-button {
-  height: 28px;
-
+.ativos-page .pagination-button {
+  height: 30px;
   padding: 0 10px;
+  box-sizing: border-box;
 
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--atv-input-border);
   border-radius: 5px;
 
-  background-color: #ffffff;
-
-  color: #475569;
-
+  background-color: var(--atv-surface);
+  color: var(--atv-text-body);
+  font-family: inherit;
   font-size: 10px;
-
+  font-weight: 600;
   cursor: pointer;
+
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease;
 }
 
-.pagination-button:hover:not(:disabled) {
-  background-color: #f8fafc;
+.ativos-page .pagination-button:hover:not(:disabled) {
+  background-color: var(--atv-bg);
+  border-color: var(--atv-input-border-hover);
 }
 
-.pagination-button:disabled {
-  opacity: 0.6;
+.ativos-page .pagination-button:focus-visible {
+  outline: 2px solid rgba(13, 148, 136, 0.2);
+  outline-offset: 2px;
+}
 
+.ativos-page .pagination-button:disabled {
+  opacity: 0.65;
   cursor: not-allowed;
 }
 
-.pagination-button.active {
-  background-color: #0d9488;
-
-  border-color: #0d9488;
-
+.ativos-page .pagination-button.active {
+  background-color: var(--atv-accent);
+  border-color: var(--atv-accent);
   color: #ffffff;
 }
 
 
 /* =========================
    RESPONSIVIDADE
+   (mesmos breakpoints do Relatórios: 900 / 650 / 400)
    ========================= */
 
 @media (max-width: 900px) {
-
-  .ativos-header {
-    align-items: flex-start;
-
-    flex-direction: column;
+  .ativos-page .ativos-header {
+    padding: 18px 20px;
   }
 
-  .ativos-actions {
-    width: 100%;
+  .ativos-page .filters {
+    margin: 20px 20px 16px;
   }
 
-  .search-container {
-    flex: 1;
-
-    width: auto;
+  .ativos-page .assets-table {
+    margin: 0 20px 20px;
   }
 
+  .ativos-page .ativos-header + .assets-table {
+    margin-top: 20px;
+  }
 }
 
 
-@media (max-width: 600px) {
-
-  .ativos-page {
-    padding: 16px;
-  }
-
-  .ativos-actions {
+@media (max-width: 650px) {
+  .ativos-page .ativos-header {
     flex-direction: column;
-
     align-items: stretch;
+    gap: 14px;
   }
 
-  .search-container {
+  .ativos-page .ativos-title {
+    font-size: 18px;
+  }
+
+  .ativos-page .ativos-actions {
+    flex-direction: column;
+    align-items: stretch;
     width: 100%;
   }
 
-  .btn-new-asset {
+  .ativos-page .search-container {
     width: 100%;
   }
 
-  .filters {
+  .ativos-page .btn-new-asset {
+    width: 100%;
+  }
+
+  .ativos-page .filters {
     flex-wrap: wrap;
+    margin: 16px 16px 14px;
   }
 
-  .filter-select {
+  .ativos-page .filter-select {
     flex: 1;
-
     min-width: 140px;
   }
 
-  .assets-table-header {
-    align-items: center;
+  .ativos-page .assets-table {
+    margin: 0 16px 16px;
+    padding: 16px;
+  }
 
+  .ativos-page .ativos-header + .assets-table {
+    margin-top: 16px;
+  }
+
+  .ativos-page .assets-table-header {
     flex-wrap: wrap;
   }
 
-  .assets-table-header h2 {
+  .ativos-page .assets-table-header h2 {
     font-size: 13px;
   }
 
-  .export-actions {
-    flex-shrink: 0;
-  }
-
-  .pagination {
+  .ativos-page .pagination {
     flex-direction: column;
-
     align-items: flex-start;
-
     gap: 10px;
+    padding-top: 14px;
+  }
+}
+
+
+@media (max-width: 400px) {
+  .ativos-page .filters {
+    margin: 12px 12px 12px;
   }
 
+  .ativos-page .assets-table {
+    margin: 0 12px 12px;
+    padding: 12px;
+  }
+
+  .ativos-page .ativos-header + .assets-table {
+    margin-top: 12px;
+  }
+
+  .ativos-page .export-actions {
+    width: 100%;
+  }
+
+  .ativos-page .export-button.pdf {
+    width: 100%;
+  }
+
+  .ativos-page .pagination-buttons {
+    width: 100%;
+  }
+
+  .ativos-page .pagination-button {
+    flex: 1;
+  }
+}
+
+
+/* =========================
+   ACESSIBILIDADE
+   ========================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .ativos-page * {
+    transition: none !important;
+  }
 }

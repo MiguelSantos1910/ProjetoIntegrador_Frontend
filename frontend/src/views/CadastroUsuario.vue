@@ -1,5 +1,11 @@
 <template>
   <div class="auth-view">
+    <img
+      class="auth-logo"
+      src="../assets/easy-asset-logo-verde.svg"
+      alt="Easy Asset - Gestão de Ativos"
+    />
+    
     <Form
       title="Cadastro de Usuário"
       :fields="formFields"

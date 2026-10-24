@@ -1,14 +1,44 @@
 /* ========================================
+   VARIÁVEIS
+   (mesmos valores de Relatórios e Configurações)
+   ======================================== */
+
+.manutencao {
+  --man-bg: #f8fafc;
+  --man-surface: #ffffff;
+  --man-border: #e2e8f0;
+  --man-divider: #f1f5f9;
+  --man-input-border: #cbd5e1;
+  --man-input-border-hover: #94a3b8;
+
+  --man-text: #0f172a;
+  --man-text-label: #334155;
+  --man-text-muted: #64748b;
+  --man-placeholder: #94a3b8;
+
+  --man-accent: #0d9488;
+  --man-accent-hover: #0f766e;
+  --man-accent-soft: #f0fdfa;
+  --man-focus-ring: rgba(13, 148, 136, 0.1);
+
+  --man-danger: #dc2626;
+  --man-radius: 8px;
+  --man-radius-sm: 6px;
+}
+
+
+/* ========================================
    PÁGINA DE MANUTENÇÃO
+   Sem padding no container: o cabeçalho
+   ocupa a largura toda, como em Relatórios.
    ======================================== */
 
 .manutencao {
   width: 100%;
   min-height: 100vh;
-  padding: 24px;
   box-sizing: border-box;
-  background-color: #f8fafc;
-  color: #0f172a;
+  background-color: var(--man-bg);
+  color: var(--man-text);
 }
 
 
@@ -18,14 +48,14 @@
 
 .manutencao .form {
   width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
+  max-width: none; /* anula qualquer max-width de .form vindo de outro CSS */
+  min-width: 0;
+  margin: 0;
   padding: 0;
   box-sizing: border-box;
 
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 18px;
+  display: flex;
+  flex-direction: column;
 
   background-color: transparent;
   border: none;
@@ -36,19 +66,27 @@
 
 /* ========================================
    CABEÇALHO
+   (barra branca, igual ao .relatorios-header)
    ======================================== */
 
 .manutencao .form-header {
   width: 100%;
-  margin-bottom: 2px;
+  min-height: 72px;
+  margin: 0;
+  padding: 18px 24px;
+  box-sizing: border-box;
+
+  display: flex;
+  align-items: center;
+
+  background-color: var(--man-surface);
+  border-bottom: 1px solid var(--man-border);
 }
 
 .manutencao .form-title {
   margin: 0;
-
-  color: #0f172a;
-
-  font-size: 22px;
+  color: var(--man-text);
+  font-size: 20px;
   font-weight: 700;
   line-height: 1.3;
 }
@@ -59,119 +97,77 @@
    ======================================== */
 
 .manutencao .form-sections {
-  grid-column: 1 / -1;
-
   width: 100%;
+  padding: 28px 28px 0;
+  box-sizing: border-box;
 
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 280px;
-
-  gap: 18px;
-
+  grid-template-columns: minmax(0, 1fr) 320px;
+  gap: 28px;
   align-items: start;
 }
 
-
-/* ========================================
-   COLUNA PRINCIPAL
-   ======================================== */
-
-.manutencao .form-main-sections {
-  min-width: 0;
-
-  display: flex;
-  flex-direction: column;
-
-  gap: 18px;
-}
-
-
-/* ========================================
-   COLUNA LATERAL
-   ======================================== */
-
+.manutencao .form-main-sections,
 .manutencao .form-sidebar-sections {
   min-width: 0;
-
   display: flex;
   flex-direction: column;
-
-  gap: 18px;
+  gap: 28px;
 }
 
 
 /* ========================================
    CARDS DAS SEÇÕES
+   (igual ao .report-card)
    ======================================== */
 
 .manutencao .form-section {
   width: 100%;
-
-  padding: 20px;
-
+  padding: 24px;
   box-sizing: border-box;
 
-  background-color: #ffffff;
-
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
-
-  box-shadow:
-    0 1px 3px rgba(15, 23, 42, 0.04);
+  background-color: var(--man-surface);
+  border: 1px solid var(--man-border);
+  border-radius: var(--man-radius);
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.03);
 }
-
-
-/* ========================================
-   CABEÇALHO DA SEÇÃO
-   ======================================== */
 
 .manutencao .form-section-header {
   width: 100%;
-
   min-height: 24px;
-
-  margin-bottom: 18px;
+  margin-bottom: 24px;
 
   display: flex;
   align-items: center;
   justify-content: space-between;
-
   gap: 12px;
 }
 
 .manutencao .form-section-title {
   margin: 0;
-
   display: flex;
   align-items: center;
-
   gap: 8px;
 
-  color: #0f172a;
-
-  font-size: 13px;
-  font-weight: 700;
-
+  color: var(--man-text);
+  font-size: 15px;
+  font-weight: 600;
   line-height: 1.4;
 }
 
 .manutencao .form-section-icon {
   flex-shrink: 0;
-
-  color: #0d9488;
+  color: var(--man-accent);
 }
 
 .manutencao .form-section-badge {
-  padding: 4px 8px;
-
+  padding: 4px 10px;
   box-sizing: border-box;
-
   border-radius: 999px;
 
-  background-color: #f0fdfa;
-  color: #0f766e;
-
-  font-size: 10px;
+  background-color: var(--man-accent-soft);
+  color: var(--man-accent-hover);
+  font-size: 11px;
   font-weight: 600;
 }
 
@@ -182,33 +178,22 @@
 
 .manutencao .form-section-fields {
   width: 100%;
-
   display: grid;
-
-  grid-template-columns:
-    repeat(2, minmax(0, 1fr));
-
-  gap: 18px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px 24px;
+  align-items: end; /* inputs alinhados, mesmo se um label quebrar em 2 linhas */
 }
 
 .manutencao .form-section-fields.three-columns {
-  grid-template-columns:
-    repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
 }
-
-
-/* ========================================
-   CAMPOS
-   ======================================== */
 
 .manutencao .form-field {
   width: 100%;
   min-width: 0;
-
   display: flex;
   flex-direction: column;
-
-  gap: 6px;
+  gap: 8px;
 }
 
 .manutencao .form-field.full {
@@ -216,21 +201,20 @@
 }
 
 .manutencao .form-field label {
-  color: #334155;
-
-  font-size: 11px;
+  color: var(--man-text-label);
+  font-size: 12px;
   font-weight: 600;
-
   line-height: 1.4;
 }
 
 .manutencao .required {
-  color: #dc2626;
+  color: var(--man-danger);
 }
 
 
 /* ========================================
-   INPUTS E SELECTS
+   INPUTS, SELECTS E TEXTAREA
+   (igual ao .filter-field select)
    ======================================== */
 
 .manutencao .form-field input,
@@ -238,156 +222,156 @@
 .manutencao .form-field textarea {
   width: 100%;
   min-width: 0;
-
   box-sizing: border-box;
 
-  border: 1px solid #cbd5e1;
-  border-radius: 6px;
-
+  border: 1px solid var(--man-input-border);
+  border-radius: var(--man-radius-sm);
   outline: none;
 
-  background-color: #ffffff;
-  color: #0f172a;
-
+  background-color: var(--man-surface);
+  color: var(--man-text);
   font-family: inherit;
-  font-size: 12px;
+  font-size: 13px;
 
   transition:
-    border-color 0.15s ease,
-    box-shadow 0.15s ease;
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .manutencao .form-field input,
 .manutencao .form-field select {
-  height: 38px;
+  height: 44px;
+  padding: 0 14px;
+}
 
-  padding: 0 12px;
+.manutencao .form-field select {
+  cursor: pointer;
 }
 
 .manutencao .form-field textarea {
-  min-height: 105px;
-
-  padding: 10px 12px;
-
+  min-height: 130px;
+  padding: 12px 14px;
   line-height: 1.5;
-
   resize: vertical;
 }
 
-
-/* ========================================
-   PLACEHOLDER
-   ======================================== */
-
 .manutencao .form-field input::placeholder,
 .manutencao .form-field textarea::placeholder {
-  color: #94a3b8;
+  color: var(--man-placeholder);
 }
-
-
-/* ========================================
-   HOVER
-   ======================================== */
 
 .manutencao .form-field input:hover,
 .manutencao .form-field select:hover,
 .manutencao .form-field textarea:hover {
-  border-color: #94a3b8;
+  border-color: var(--man-input-border-hover);
 }
-
-
-/* ========================================
-   FOCUS
-   ======================================== */
 
 .manutencao .form-field input:focus,
 .manutencao .form-field select:focus,
 .manutencao .form-field textarea:focus {
-  border-color: #0d9488;
+  border-color: var(--man-accent);
+  box-shadow: 0 0 0 2px var(--man-focus-ring);
+}
 
-  box-shadow:
-    0 0 0 2px rgba(13, 148, 136, 0.10);
+/* erro (use aria-invalid="true") */
+
+.manutencao .form-field input[aria-invalid="true"],
+.manutencao .form-field select[aria-invalid="true"],
+.manutencao .form-field textarea[aria-invalid="true"] {
+  border-color: var(--man-danger);
+}
+
+/* somente leitura / desabilitado */
+
+.manutencao .form-field input:read-only,
+.manutencao .form-field input:disabled,
+.manutencao .form-field select:disabled,
+.manutencao .form-field textarea:disabled {
+  background-color: var(--man-bg);
+  color: var(--man-text-muted);
+  cursor: default;
 }
 
 
 /* ========================================
    UPLOAD DE DOCUMENTOS
+   O input fica oculto visualmente (não com
+   display: none), para continuar acessível
+   pelo teclado.
    ======================================== */
 
 .manutencao .file-upload {
+  position: relative;
   width: 100%;
-
   display: flex;
   flex-direction: column;
-
   gap: 8px;
 }
 
 .manutencao .file-upload input[type="file"] {
-  display: none;
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: 0;
+  padding: 0;
+  opacity: 0;
+  overflow: hidden;
 }
 
 .manutencao .file-label {
   width: 100%;
-
-  min-height: 110px;
-
-  padding: 18px;
-
+  min-height: 140px;
+  padding: 24px;
   box-sizing: border-box;
 
   display: flex;
   flex-direction: column;
-
   align-items: center;
   justify-content: center;
+  gap: 10px;
 
-  gap: 8px;
-
-  border: 1px dashed #cbd5e1;
-  border-radius: 7px;
-
-  background-color: #f8fafc;
-
+  border: 1px dashed var(--man-input-border);
+  border-radius: var(--man-radius-sm);
+  background-color: var(--man-bg);
   color: #475569;
-
   text-align: center;
-
   cursor: pointer;
 
   transition:
-    border-color 0.15s ease,
-    background-color 0.15s ease;
+    border-color 0.2s ease,
+    background-color 0.2s ease;
 }
 
-.manutencao .file-label:hover {
-  border-color: #0d9488;
+.manutencao .file-label:hover,
+.manutencao .file-upload:focus-within .file-label {
+  border-color: var(--man-accent);
+  background-color: var(--man-accent-soft);
+}
 
-  background-color: #f0fdfa;
+.manutencao .file-upload:focus-within .file-label {
+  outline: 2px solid rgba(13, 148, 136, 0.25);
+  outline-offset: 2px;
 }
 
 .manutencao .file-icon {
-  color: #0d9488;
+  color: var(--man-accent);
 }
 
 .manutencao .file-upload-text {
-  color: #334155;
-
-  font-size: 11px;
+  color: var(--man-text-label);
+  font-size: 13px;
   font-weight: 600;
 }
 
 .manutencao .file-upload-info {
-  color: #94a3b8;
-
-  font-size: 9px;
+  color: var(--man-text-muted);
+  font-size: 11px;
 }
 
 .manutencao .file-name {
-  color: #64748b;
-
-  font-size: 10px;
-
+  max-width: 100%;
+  color: var(--man-text-muted);
+  font-size: 11px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -409,22 +393,17 @@
 
 .manutencao .summary-content {
   width: 100%;
-
   display: flex;
   flex-direction: column;
-
-  gap: 12px;
+  gap: 16px;
 }
 
 .manutencao .summary-item {
   display: flex;
   flex-direction: column;
-
-  gap: 4px;
-
-  padding-bottom: 12px;
-
-  border-bottom: 1px solid #f1f5f9;
+  gap: 6px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--man-divider);
 }
 
 .manutencao .summary-item:last-of-type {
@@ -432,16 +411,14 @@
 }
 
 .manutencao .summary-label {
-  color: #64748b;
-
-  font-size: 10px;
+  color: var(--man-text-muted);
+  font-size: 12px;
   font-weight: 500;
 }
 
 .manutencao .summary-value {
-  color: #0f172a;
-
-  font-size: 13px;
+  color: var(--man-text);
+  font-size: 15px;
   font-weight: 700;
 }
 
@@ -452,52 +429,40 @@
 
 .manutencao .summary-status {
   width: 100%;
-
-  padding: 11px;
-
+  padding: 14px;
   box-sizing: border-box;
 
   display: flex;
   align-items: flex-start;
-
-  gap: 9px;
+  gap: 10px;
 
   border: 1px solid #ccfbf1;
-  border-radius: 7px;
-
-  background-color: #f0fdfa;
+  border-radius: var(--man-radius-sm);
+  background-color: var(--man-accent-soft);
 }
 
 .manutencao .status-dot {
   width: 8px;
   height: 8px;
-
   flex-shrink: 0;
-
   margin-top: 4px;
-
   border-radius: 50%;
-
-  background-color: #0d9488;
+  background-color: var(--man-accent);
 }
 
 .manutencao .summary-status strong {
   display: block;
-
   margin-bottom: 2px;
-
   color: #115e59;
-
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 700;
 }
 
 .manutencao .summary-status span:not(.status-dot) {
   display: block;
-
-  color: #5f766f;
-
-  font-size: 9px;
+  color: #4b6660;
+  font-size: 12px;
+  line-height: 1.4;
 }
 
 
@@ -507,39 +472,29 @@
 
 .manutencao .summary-warning {
   width: 100%;
-
-  padding: 10px;
-
+  padding: 14px;
   box-sizing: border-box;
 
   display: flex;
   align-items: flex-start;
-
-  gap: 7px;
+  gap: 8px;
 
   border: 1px solid #fde68a;
-  border-radius: 7px;
-
+  border-radius: var(--man-radius-sm);
   background-color: #fffbeb;
 }
 
 .manutencao .summary-warning > span {
   flex-shrink: 0;
-
   color: #d97706;
-
-  font-size: 13px;
-
+  font-size: 15px;
   line-height: 1;
 }
 
 .manutencao .summary-warning p {
   margin: 0;
-
   color: #92400e;
-
-  font-size: 9px;
-
+  font-size: 12px;
   line-height: 1.5;
 }
 
@@ -549,157 +504,160 @@
    ======================================== */
 
 .manutencao .form-actions {
-  grid-column: 1 / -1;
-
-  width: 100%;
-
-  margin-top: 0;
-
-  padding-top: 18px;
+  margin: 28px;
+  padding-top: 24px;
+  box-sizing: border-box;
 
   display: flex;
   align-items: center;
   justify-content: flex-end;
-
   gap: 8px;
 
-  border-top: 1px solid #e2e8f0;
+  border-top: 1px solid var(--man-border);
 }
 
 .manutencao .btn-cancel,
 .manutencao .btn-submit {
-  height: 36px;
-
-  padding: 0 18px;
-
+  height: 42px;
+  padding: 0 24px;
   box-sizing: border-box;
+  border-radius: var(--man-radius-sm);
 
-  border-radius: 6px;
-
-  font-size: 11px;
+  font-family: inherit;
+  font-size: 12px;
   font-weight: 600;
-
+  white-space: nowrap;
   cursor: pointer;
 
   transition:
-    background-color 0.15s ease,
-    border-color 0.15s ease;
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.1s ease;
 }
 
+.manutencao .btn-cancel:active,
+.manutencao .btn-submit:active:not(:disabled) {
+  transform: translateY(1px);
+}
 
-/* ========================================
-   BOTÃO CANCELAR
-   ======================================== */
+.manutencao .btn-cancel:focus-visible,
+.manutencao .btn-submit:focus-visible {
+  outline: 2px solid rgba(13, 148, 136, 0.25);
+  outline-offset: 2px;
+}
+
+/* cancelar */
 
 .manutencao .btn-cancel {
-  border: 1px solid #cbd5e1;
-
-  background-color: #ffffff;
-
+  border: 1px solid var(--man-input-border);
+  background-color: var(--man-surface);
   color: #475569;
 }
 
 .manutencao .btn-cancel:hover {
-  border-color: #94a3b8;
-
-  background-color: #f8fafc;
+  border-color: var(--man-input-border-hover);
+  background-color: var(--man-bg);
 }
 
-
-/* ========================================
-   BOTÃO CADASTRAR
-   ======================================== */
+/* cadastrar */
 
 .manutencao .btn-submit {
-  border: 1px solid #0d9488;
-
-  background-color: #0d9488;
-
+  border: 1px solid var(--man-accent);
+  background-color: var(--man-accent);
   color: #ffffff;
 }
 
-.manutencao .btn-submit:hover {
-  border-color: #0f766e;
+.manutencao .btn-submit:hover:not(:disabled) {
+  border-color: var(--man-accent-hover);
+  background-color: var(--man-accent-hover);
+}
 
-  background-color: #0f766e;
+.manutencao .btn-submit:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
 }
 
 
 /* ========================================
    RESPONSIVIDADE
+   Os dois primeiros pontos são mais largos
+   que 900px porque a sidebar (220px) divide
+   o espaço com a coluna lateral do formulário.
    ======================================== */
 
-@media (max-width: 1050px) {
-  .manutencao {
-    padding: 20px;
-  }
-
-  .manutencao .form {
-    max-width: 100%;
-  }
-
+@media (max-width: 1200px) {
   .manutencao .form-sections {
-    grid-template-columns:
-      minmax(0, 1fr) 260px;
-
-    gap: 16px;
-  }
-
-  .manutencao .form-section {
-    padding: 18px;
+    grid-template-columns: minmax(0, 1fr) 300px;
   }
 }
 
 
-/* ========================================
-   TABLET
-   ======================================== */
-
-@media (max-width: 850px) {
+@media (max-width: 1000px) {
   .manutencao .form-sections {
     grid-template-columns: 1fr;
   }
+}
 
-  .manutencao .form-sidebar-sections {
-    width: 100%;
+
+@media (max-width: 900px) {
+  .manutencao .form-header {
+    padding: 18px 20px;
   }
 
-  .manutencao .form-section-fields.three-columns {
-    grid-template-columns:
-      repeat(2, minmax(0, 1fr));
+  .manutencao .form-sections {
+    padding: 24px 24px 0;
+    gap: 24px;
+  }
+
+  .manutencao .form-main-sections,
+  .manutencao .form-sidebar-sections {
+    gap: 24px;
+  }
+
+  .manutencao .form-actions {
+    margin: 24px;
   }
 }
 
 
-/* ========================================
-   MOBILE
-   ======================================== */
-
 @media (max-width: 650px) {
-  .manutencao {
-    padding: 16px;
+  .manutencao .form-title {
+    font-size: 18px;
   }
 
-  .manutencao .form-title {
-    font-size: 20px;
+  .manutencao .form-sections {
+    padding: 16px 16px 0;
+    gap: 20px;
+  }
+
+  .manutencao .form-main-sections,
+  .manutencao .form-sidebar-sections {
+    gap: 20px;
   }
 
   .manutencao .form-section {
-    padding: 16px;
+    padding: 20px;
   }
 
   .manutencao .form-section-fields,
   .manutencao .form-section-fields.three-columns {
     grid-template-columns: 1fr;
-
-    gap: 14px;
+    gap: 18px;
   }
 
   .manutencao .form-field.full {
     grid-column: auto;
   }
 
+  /* 16px evita o zoom automático do iOS ao focar o campo */
+  .manutencao .form-field input,
+  .manutencao .form-field select,
+  .manutencao .form-field textarea {
+    font-size: 16px;
+  }
+
   .manutencao .form-actions {
+    margin: 16px;
     flex-direction: column-reverse;
     align-items: stretch;
   }
@@ -711,20 +669,31 @@
 }
 
 
-/* ========================================
-   TELAS MUITO PEQUENAS
-   ======================================== */
-
 @media (max-width: 400px) {
-  .manutencao {
-    padding: 12px;
+  .manutencao .form-header {
+    padding: 14px 12px;
+  }
+
+  .manutencao .form-sections {
+    padding: 12px 12px 0;
   }
 
   .manutencao .form-section {
-    padding: 14px;
+    padding: 16px;
   }
 
-  .manutencao .form-section-title {
-    font-size: 12px;
+  .manutencao .form-actions {
+    margin: 12px;
+  }
+}
+
+
+/* ========================================
+   ACESSIBILIDADE
+   ======================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .manutencao * {
+    transition: none !important;
   }
 }
