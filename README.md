@@ -1,422 +1,445 @@
-# Sistema de Gestão de Ativos
+# Easy Asset — Frontend
 
-Sistema para **gestão, rastreamento e controle de ativos** de uma organização, centralizando informações sobre equipamentos, localização, movimentações, manutenção, usuários e histórico dos ativos.
+**Sistema de Gestão de Ativos | Projeto Integrador**
 
-A solução é composta por uma **aplicação web**, responsável pela gestão administrativa e operacional, e um **aplicativo mobile**, utilizado como extensão do sistema para operações em campo.
+Frontend web do Easy Asset, um sistema de gestão de ativos desenvolvido para centralizar o cadastro, a consulta, o acompanhamento e a manutenção de equipamentos.
 
-## 📋 Sobre o projeto
+A aplicação é construída com **Vue.js, Vite, Tailwind CSS e Pinia**, consumindo uma API REST desenvolvida em Django e Django REST Framework. A arquitetura também prevê a integração com um aplicativo mobile desenvolvido em Flutter, compartilhando a mesma API.
 
-O projeto tem como objetivo facilitar o controle do ciclo de vida dos ativos de uma empresa, permitindo registrar, consultar e acompanhar equipamentos e outros bens de forma centralizada.
+O projeto está sendo desenvolvido de forma incremental, com foco em uma interface organizada, componentes reutilizáveis e separação entre apresentação, gerenciamento de estado e comunicação com o backend.
 
-A aplicação permite que cada ativo possua uma identificação única, possibilitando seu acompanhamento desde o cadastro até suas movimentações, manutenções e alterações de status.
+## Sumário
 
-A arquitetura foi pensada para utilizar uma **API centralizada**, compartilhada entre o sistema web e o aplicativo mobile.
+- [Sobre o projeto](#sobre-o-projeto)
+- [Tecnologias](#tecnologias)
+- [Funcionalidades](#funcionalidades)
+- [Páginas da aplicação](#páginas-da-aplicação)
+- [Arquitetura do frontend](#arquitetura-do-frontend)
+- [Integração com a API](#integração-com-a-api)
+- [Gerenciamento de estado](#gerenciamento-de-estado)
+- [Relatórios e indicadores](#relatórios-e-indicadores)
+- [Persistência de configurações](#persistência-de-configurações)
+- [Executando localmente](#executando-localmente)
+- [Estrutura do projeto](#estrutura-do-projeto)
+- [Próximas melhorias](#próximas-melhorias)
+- [Status do projeto](#status-do-projeto)
 
-```text
-                    ┌─────────────────┐
-                    │   Aplicação Web │
-                    │   Gestão/Admin  │
-                    └────────┬────────┘
-                             │
-                             ▼
-                    ┌─────────────────┐
-                    │       API       │
-                    │ Regras de negócio│
-                    └────────┬────────┘
-                             │
-                             ▼
-                    ┌─────────────────┐
-                    │    Banco de     │
-                    │     Dados       │
-                    └─────────────────┘
-                             ▲
-                             │
-                    ┌────────┴────────┐
-                    │  Aplicativo     │
-                    │     Mobile      │
-                    │   Operação      │
-                    └─────────────────┘
-```
+## Sobre o projeto
 
-## 🎯 Objetivos
+O Easy Asset tem como objetivo facilitar o gerenciamento do ciclo de vida dos ativos, reunindo em uma única aplicação informações sobre equipamentos, categorias, disponibilidade e manutenção.
 
-* Centralizar o cadastro e gerenciamento de ativos.
-* Facilitar a localização e identificação dos ativos.
-* Registrar movimentações e alterações de status.
-* Manter um histórico das operações realizadas.
-* Controlar processos de manutenção.
-* Permitir acompanhamento dos ativos em campo.
-* Disponibilizar informações para relatórios e tomada de decisão.
-* Integrar operações realizadas pelo aplicativo mobile com a plataforma web.
+A interface web funciona como o ambiente principal de consulta e administração, permitindo acompanhar os indicadores do sistema, gerenciar ativos e ordens de manutenção, consultar históricos e gerar relatórios.
 
-## 🚀 Funcionalidades
+A aplicação foi estruturada para consumir uma API centralizada, evitando que o frontend mantenha regras de negócio ou acesso ao banco de dados de forma independente.
 
-### Gestão de ativos
+## Tecnologias
 
-* Cadastro de ativos.
-* Edição e atualização de informações.
-* Consulta e pesquisa de ativos.
-* Visualização detalhada do ativo.
-* Controle de status.
-* Identificação única.
-* Associação de localização.
-* Registro de movimentações.
-* Histórico do ativo.
-* Histórico de manutenção.
+| Tecnologia | Finalidade |
+|---|---|
+| Vue.js 3 | Construção da interface baseada em componentes |
+| Vite | Ambiente de desenvolvimento e build |
+| Tailwind CSS | Estilização da interface |
+| Pinia | Gerenciamento de estado compartilhado |
+| Vue Router | Navegação entre páginas |
+| Axios | Comunicação HTTP com a API |
+| Lucide Vue Next | Ícones da interface |
+| `localStorage` | Persistência local das preferências da interface |
+| Django REST Framework | Backend consumido pela aplicação |
 
-### Identificação dos ativos
+O backend e o aplicativo mobile são projetos separados. O frontend web não acessa diretamente o banco de dados: todas as operações remotas são realizadas por meio da API.
 
-Cada ativo pode possuir um identificador único, permitindo sua localização e consulta de forma rápida.
+## Funcionalidades
 
-Entre as possibilidades previstas estão:
-
-* QR Code.
-* Código de identificação.
-* NFC.
-
-O QR Code pode ser utilizado para identificar rapidamente um equipamento através do aplicativo mobile.
-
-### 📍 Localização e movimentação
-
-O sistema permite registrar onde determinado ativo está localizado e acompanhar suas movimentações.
-
-Exemplos de informações:
-
-```text
-Ativo
- ├── Localização atual
- ├── Localização anterior
- ├── Data da movimentação
- ├── Responsável
- └── Histórico de movimentações
-```
-
-Isso permite manter uma rastreabilidade do deslocamento dos ativos dentro da organização.
-
-### 🔧 Manutenção
-
-O sistema também possui suporte ao gerenciamento de manutenção dos ativos.
-
-É possível trabalhar com:
-
-* Histórico de manutenções.
-* Ordens de serviço.
-* Status da manutenção.
-* Registro de intervenções.
-* Associação da manutenção ao ativo.
-* Histórico de serviços realizados.
-
-### 👥 Usuários e permissões
-
-O sistema possui estrutura para controle de usuários e permissões.
-
-As permissões podem ser utilizadas para determinar quais funcionalidades cada usuário pode acessar e quais operações pode realizar.
-
-Exemplo:
-
-```text
-Administrador
-    ├── Gerenciar usuários
-    ├── Gerenciar ativos
-    ├── Visualizar relatórios
-    └── Gerenciar configurações
-
-Operador
-    ├── Consultar ativos
-    ├── Movimentar ativos
-    └── Registrar operações
-```
-
-### 📊 Dashboard
+### Dashboard
 
 O dashboard apresenta uma visão geral dos ativos e das operações do sistema.
 
-Informações que podem ser apresentadas:
+Os indicadores trabalhados na interface incluem:
 
-* Quantidade total de ativos.
-* Ativos por status.
-* Ativos por localização.
-* Ativos em manutenção.
-* Movimentações recentes.
-* Ordens de serviço.
-* Indicadores operacionais.
+- Total de ativos cadastrados.
+- Ativos em manutenção.
+- Ativos disponíveis.
+- Ativos que exigem atenção.
+- Visualizações gráficas para acompanhamento dos dados.
 
-### 📑 Relatórios
+Os valores exibidos devem ser alimentados pelos dados disponíveis no backend, evitando manter indicadores definitivos apenas em valores fixos no frontend.
 
-O sistema permite organizar informações para acompanhamento e análise dos ativos.
+### Gestão de ativos
 
-Exemplos:
+O módulo de ativos permite organizar as informações dos equipamentos cadastrados.
 
-* Relatório de ativos.
-* Relatório de movimentações.
-* Relatório de manutenção.
-* Relatório por localização.
-* Histórico de um ativo.
+Funcionalidades contempladas na interface:
 
-## 📱 Aplicativo Mobile
+- Listagem e consulta de ativos.
+- Cadastro de novos ativos.
+- Edição das informações.
+- Visualização dos detalhes do equipamento.
+- Identificação por categoria e status.
+- Consulta de informações relacionadas ao ativo.
 
-O aplicativo mobile funciona como uma **extensão da plataforma web**, sendo voltado principalmente para operações realizadas diretamente no ambiente onde os ativos estão localizados.
+A disponibilidade de cada operação depende da integração com a API e das permissões do usuário autenticado.
 
-Entre as possibilidades de utilização estão:
+### Categorias
 
-* Consulta de ativos.
-* Identificação através de QR Code.
-* Registro de movimentações.
-* Atualização de informações.
-* Consulta do histórico.
-* Registro de operações em campo.
-* Acesso às informações do ativo através da API.
+O módulo de categorias permite organizar os ativos por classificação.
 
-### Realidade Aumentada
+A interface contempla páginas para:
 
-Uma das funcionalidades planejadas para o aplicativo é a utilização de **Realidade Aumentada (RA)**.
+- Listagem de categorias.
+- Cadastro de novas categorias.
 
-A RA pode ser utilizada para fornecer informações sobre um ativo diretamente no ambiente físico.
+As operações de persistência dependem dos endpoints correspondentes no backend.
 
-Exemplo de fluxo:
+### Manutenção
 
-```text
-Usuário aponta a câmera
-        ↓
-Identificação do ativo
-        ↓
-Consulta à API
-        ↓
-Informações do ativo
-        ↓
-Informações exibidas em RA
+O módulo de manutenção permite acompanhar as ordens relacionadas aos ativos.
+
+O modelo de ordem de manutenção utilizado no backend contempla:
+
+- Ativo relacionado.
+- Descrição do serviço.
+- Responsável.
+- Status da ordem.
+- Custo estimado.
+- Data de abertura.
+- Data de conclusão.
+
+Os status definidos no modelo são `Pendente`, `Em andamento`, `Concluída` e `Cancelada`.
+
+A interface de manutenção e os relatórios devem refletir os dados efetivamente retornados pela API.
+
+### Histórico das ordens de manutenção
+
+O frontend também contempla a integração com o histórico de alterações das ordens.
+
+A consulta utiliza o endpoint:
+
+```http
+GET /api/ordens_manutencao/<id>/logs/
 ```
 
-Dessa forma, o aplicativo pode funcionar como uma ferramenta operacional, permitindo que o usuário consulte informações sem precisar retornar ao sistema web.
+O histórico pode apresentar informações como:
 
-> A utilização de Realidade Aumentada faz parte da evolução do projeto e não necessariamente do MVP inicial.
+- Identificação da ordem.
+- Ação registrada.
+- Descrição da alteração.
+- Status anterior.
+- Novo status.
+- Usuário relacionado.
+- Data do evento.
 
-## 🔄 Fluxo geral
+A exibição depende de os registros estarem disponíveis no backend e de o usuário ter autorização para consultar os dados.
 
-O fluxo principal da aplicação pode ser representado da seguinte forma:
+### Usuários e autenticação
+
+A aplicação possui páginas de login e cadastro de usuários.
+
+A integração com o backend utiliza autenticação por JWT. O token de acesso deve acompanhar as requisições protegidas da API.
+
+O frontend também precisa tratar situações como credenciais inválidas, sessão expirada, falhas de comunicação e respostas de acesso negado.
+
+A autorização definitiva deve ser aplicada pelo backend; a interface não substitui as permissões do servidor.
+
+### Configurações
+
+A página de configurações permite ajustar preferências da interface.
+
+As preferências que precisam permanecer após a navegação ou a atualização da página podem ser persistidas no `localStorage` do navegador.
+
+Esse armazenamento é destinado às configurações locais da interface e não deve ser utilizado como substituto do banco de dados central para ativos, usuários ou ordens de manutenção.
+
+### Relatórios
+
+A página de relatórios reúne informações para acompanhamento dos ativos e das operações de manutenção.
+
+Entre os recursos trabalhados estão:
+
+- Tabelas de dados.
+- Indicadores e gráficos.
+- Visualização de ordens por status.
+- Filtros para consulta.
+- Histórico das ordens de manutenção.
+- Exportação de relatórios em PDF.
+
+A exportação em PDF é realizada pela aplicação web utilizando os dados disponíveis na interface. Ela não implica necessariamente a existência de um endpoint específico de exportação no backend.
+
+## Páginas da aplicação
+
+A aplicação possui páginas organizadas por responsabilidade.
+
+| Página | Responsabilidade |
+|---|---|
+| `Login.vue` | Autenticação do usuário |
+| `CadastroUsuario.vue` | Cadastro de usuários |
+| `Dashboard.vue` | Indicadores e visão geral |
+| `Ativos.vue` | Listagem e gerenciamento de ativos |
+| `CadastroAtivo.vue` | Cadastro de ativos |
+| `DetalheAtivo.vue` | Detalhes do equipamento |
+| `ManutencaoAtivo.vue` | Gestão de manutenção |
+| `Relatorios.vue` | Indicadores, tabelas, histórico e exportação em PDF |
+| `Categorias.vue` | Consulta de categorias |
+| `NovaCategoria.vue` | Cadastro de categorias |
+| `Configuracoes.vue` | Preferências da interface |
+
+Os nomes acima correspondem às páginas trabalhadas no projeto; os nomes e a organização definitivos devem seguir os arquivos existentes no repositório.
+
+## Arquitetura do frontend
+
+A arquitetura separa a interface visual, o gerenciamento de estado e a comunicação com o backend.
 
 ```text
-Cadastro do ativo
-       ↓
-Identificação única
-       ↓
-Localização do ativo
-       ↓
-Movimentação / utilização
-       ↓
-Manutenção
-       ↓
-Atualização do histórico
-       ↓
-Relatórios e acompanhamento
+┌───────────────────────────────────┐
+│             Vue.js                │
+│                                   │
+│  Views                            │
+│  ├── Dashboard                    │
+│  ├── Ativos                       │
+│  ├── Manutenção                   │
+│  ├── Categorias                   │
+│  ├── Relatórios                   │
+│  └── Configurações                │
+└─────────────────┬─────────────────┘
+                  │
+                  ▼
+┌───────────────────────────────────┐
+│       Componentes reutilizáveis   │
+│                                   │
+│  Formulários                      │
+│  Cards                            │
+│  Navegação                        │
+│  Tabelas e elementos visuais      │
+└─────────────────┬─────────────────┘
+                  │
+                  ▼
+┌───────────────────────────────────┐
+│        Pinia e serviços            │
+│                                   │
+│  Estado compartilhado             │
+│  Requisições HTTP                 │
+│  Tratamento de respostas          │
+└─────────────────┬─────────────────┘
+                  │
+                  │ HTTP / REST
+                  ▼
+┌───────────────────────────────────┐
+│      Django REST Framework        │
+│                                   │
+│  Autenticação e permissões        │
+│  Ativos e categorias              │
+│  Ordens e histórico               │
+└───────────────────────────────────┘
 ```
 
-Todos os módulos utilizam a mesma fonte central de dados através da API.
+A separação permite que os componentes visuais sejam reutilizados e que as chamadas à API não precisem ser implementadas individualmente em cada página.
 
-## 🏗️ Arquitetura
+## Gerenciamento de estado
 
-A arquitetura utiliza uma separação entre apresentação, regras de negócio e persistência de dados.
+O projeto utiliza Pinia para compartilhar informações entre componentes e páginas quando necessário.
 
-```text
-┌──────────────────────────────┐
-│          FRONTEND            │
-│                              │
-│        Aplicação Web         │
-└──────────────┬───────────────┘
-               │
-               │ HTTP / REST
-               ▼
-┌──────────────────────────────┐
-│             API              │
-│                              │
-│  Autenticação                │
-│  Usuários                    │
-│  Ativos                      │
-│  Movimentações               │
-│  Manutenção                  │
-│  Ordens de Serviço           │
-│  Relatórios                  │
-└──────────────┬───────────────┘
-               │
-               ▼
-┌──────────────────────────────┐
-│          DATABASE            │
-│                              │
-│  Usuários                    │
-│  Ativos                      │
-│  Localizações                │
-│  Movimentações               │
-│  Manutenções                 │
-│  Ordens de Serviço           │
-└──────────────────────────────┘
-               ▲
-               │
-          HTTP / REST
-               │
-┌──────────────┴───────────────┐
-│       APLICATIVO MOBILE       │
-│                              │
-│  Consulta                    │
-│  QR Code                     │
-│  Operações em campo          │
-│  Realidade Aumentada         │
-└──────────────────────────────┘
+O gerenciamento de estado pode ser utilizado para:
+
+- Armazenar os dados carregados da API.
+- Compartilhar listas e indicadores.
+- Centralizar operações de consulta, cadastro, edição e exclusão.
+- Controlar estados de carregamento e erros.
+- Evitar requisições duplicadas desnecessárias.
+
+Por exemplo, a store de ativos pode disponibilizar os ativos cadastrados e o total de registros para diferentes partes do dashboard e das páginas de consulta.
+
+O estado em memória e a persistência são conceitos diferentes: os dados do servidor devem ser carregados ou atualizados conforme necessário, enquanto preferências locais podem ser mantidas no navegador.
+
+## Integração com a API
+
+O frontend utiliza Axios para realizar requisições HTTP ao backend.
+
+A configuração da API deve ficar centralizada em um serviço, evitando URLs repetidas em diferentes arquivos.
+
+Exemplos de operações utilizadas pela aplicação:
+
+| Operação | Método | Endpoint |
+|---|---|---|
+| Login | `POST` | `/api/token/` |
+| Consultar usuário autenticado | `GET` | `/api/contas/me/` |
+| Listar ativos | `GET` | `/api/ativos/` |
+| Cadastrar ativo | `POST` | `/api/ativos/` |
+| Consultar detalhes de um ativo | `GET` | `/api/ativos/<id>/` |
+| Listar ordens de manutenção | `GET` | `/api/ordens_manutencao/` |
+| Criar ordem de manutenção | `POST` | `/api/ordens_manutencao/` |
+| Consultar logs de uma ordem | `GET` | `/api/ordens_manutencao/<id>/logs/` |
+
+Esses caminhos devem corresponder às rotas configuradas no backend.
+
+### Configuração da URL base
+
+A URL base deve ser configurada de acordo com o ambiente de execução, por exemplo, utilizando variáveis de ambiente do Vite.
+
+```env
+VITE_API_URL=http://127.0.0.1:8000/api
 ```
 
-## 🧩 Estrutura conceitual
+O serviço Axios pode utilizar essa variável para definir sua `baseURL`.
 
-O sistema é organizado em torno de algumas entidades principais:
+Em produção, a variável deve apontar para a URL publicada da API. Não coloque senhas, chaves secretas ou outras credenciais privadas em variáveis `VITE_*`, pois elas podem ser incorporadas ao código enviado ao navegador.
 
-```text
-Usuário
-   │
-   ├── Permissões
-   │
-   └── Operações
-          │
-          ▼
-        Ativo
-          │
-          ├── Localização
-          ├── Status
-          ├── Movimentações
-          ├── Manutenções
-          └── Ordens de Serviço
+### Tratamento de requisições
+
+As chamadas à API devem tratar adequadamente:
+
+- Erros de validação.
+- Falhas de conexão.
+- Respostas `401 Unauthorized`.
+- Respostas `403 Forbidden`.
+- Recursos inexistentes.
+- Estados de carregamento.
+- Respostas vazias ou listas sem resultados.
+
+Quando a API exigir autenticação, o token de acesso deve ser enviado no cabeçalho `Authorization`.
+
+## Relatórios e indicadores
+
+A página `Relatorios.vue` concentra as visualizações e a exportação de dados.
+
+O desenvolvimento dessa página inclui a integração de tabelas de ordens de manutenção e usuários, filtros e geração de PDFs.
+
+Também trabalhamos na integração do histórico das ordens de manutenção com o endpoint de logs, incluindo o tratamento de carregamento e erros dessa consulta.
+
+Os gráficos devem utilizar os dados efetivamente carregados. Recursos ainda parciais, como a visualização de ordens por status, devem ser considerados em desenvolvimento até que sua implementação e seus resultados sejam validados.
+
+## Persistência de configurações
+
+As preferências da página `Configuracoes.vue` podem ser salvas no `localStorage`.
+
+Esse mecanismo permite manter opções da interface entre visitas e atualizações da página no mesmo navegador.
+
+É importante distinguir os dados armazenados localmente dos dados persistidos no backend:
+
+- **`localStorage`:** preferências locais da interface.
+- **Pinia:** estado compartilhado durante a execução da aplicação, salvo se houver persistência adicional configurada.
+- **API Django:** dados centrais de ativos, usuários, categorias e ordens de manutenção.
+
+Dados sensíveis, especialmente credenciais e tokens, exigem cuidados específicos e não devem ser armazenados indiscriminadamente no `localStorage`.
+
+## Executando localmente
+
+### Pré-requisitos
+
+- Node.js em uma versão compatível com o projeto.
+- npm.
+- Backend Django configurado e disponível para testar as operações que dependem da API.
+
+### 1. Acessar a pasta do frontend
+
+Entre no diretório que contém o `package.json`:
+
+```bash
+cd frontend
 ```
 
-## 🔐 Segurança
+Ajuste o caminho conforme a organização do seu repositório.
 
-A aplicação deve utilizar autenticação e autorização para controlar o acesso às funcionalidades.
+### 2. Instalar as dependências
 
-Principais pontos:
+```bash
+npm install
+```
 
-* Autenticação de usuários.
-* Controle de permissões.
-* Proteção das rotas da API.
-* Validação dos dados enviados.
-* Controle de acesso às operações.
-* Registro de informações relevantes para rastreabilidade.
+### 3. Configurar a API
 
-## 🛠️ Tecnologias
+Crie ou ajuste o arquivo `.env` na raiz do frontend:
 
-A stack pode ser organizada da seguinte forma:
+```env
+VITE_API_URL=http://127.0.0.1:8000/api
+```
 
-### Frontend Web
+Utilize a URL correspondente à configuração do serviço Axios do projeto.
 
-* Vue.js
-* Vite
-* Tailwind CSS
-* Pinia
+### 4. Iniciar o ambiente de desenvolvimento
 
-### Backend
+```bash
+npm run dev
+```
 
-*Django 
-* API REST
+O Vite exibirá no terminal o endereço local da aplicação.
 
-### Banco de dados
+### 5. Gerar a versão de produção
 
-* MySQL
+```bash
+npm run build
+```
 
-### Mobile
+O comando gera os arquivos de produção no diretório configurado pelo Vite, normalmente `dist/`.
 
-Aplicativo mobile integrado à mesma API utilizada pelo sistema web.
+Para conferir os scripts e comandos disponíveis, consulte o `package.json` do projeto.
 
-### Recursos adicionais
+## Estrutura do projeto
 
-* QR Code.
-* Chatbot.
-* Geolocalização.
-* Realidade Aumentada.
-
-> As tecnologias específicas do aplicativo mobile e da camada de RA podem ser definidas conforme a implementação do projeto.
-
-## 📁 Estrutura do projeto
-
-Uma possível organização:
+A estrutura conceitual do frontend é organizada em componentes, páginas, stores, serviços e rotas.
 
 ```text
-gestao-ativos/
-│
-├── frontend/
-│   ├── src/
-│   │   ├── components/
-│   │   ├── views/
-│   │   ├── stores/
-│   │   ├── services/
-│   │   └── router/
-│   └── ...
-│
-├── backend/
-│   ├── src/
-│   │   ├── controllers/
-│   │   ├── services/
-│   │   ├── routes/
-│   │   ├── models/
-│   │   ├── middlewares/
-│   │   └── ...
-│   └── ...
-│
-├── mobile/
-│   ├── src/
-│   └── ...
-│
+frontend/
+├── public/
+├── src/
+│   ├── assets/
+│   ├── components/
+│   ├── views/
+│   ├── stores/
+│   ├── services/
+│   ├── router/
+│   ├── App.vue
+│   └── main.js
+├── .env
+├── package.json
+├── vite.config.js
 └── README.md
 ```
 
-## 🗺️ MVP
+### Responsabilidade dos diretórios
 
-A primeira versão do sistema tem como foco as funcionalidades essenciais de gestão.
+| Diretório | Responsabilidade |
+|---|---|
+| `components/` | Componentes visuais reutilizáveis |
+| `views/` | Páginas da aplicação |
+| `stores/` | Estado compartilhado gerenciado pelo Pinia |
+| `services/` | Comunicação com a API e serviços auxiliares |
+| `router/` | Definição das rotas de navegação |
+| `assets/` | Recursos visuais utilizados pela interface |
+| `public/` | Arquivos estáticos disponibilizados diretamente |
 
-### Incluído no MVP
+A estrutura é ilustrativa e deve ser ajustada aos diretórios efetivamente presentes no repositório.
 
-* [ ] Dashboard.
-* [ ] Cadastro de ativos.
-* [ ] Consulta e busca de ativos.
-* [ ] Atualização de ativos.
-* [ ] Controle de status.
-* [ ] Identificação por QR Code.
-* [ ] Cadastro e gerenciamento de usuários.
-* [ ] Controle de permissões.
-* [ ] Registro de movimentações.
-* [ ] Localização dos ativos.
-* [ ] Histórico de movimentações.
-* [ ] Histórico de manutenção.
-* [ ] Ordens de serviço.
-* [ ] Relatórios.
-* [ ] Integração com aplicativo mobile.
+## Aplicativo mobile e Realidade Aumentada
 
-### Evoluções futuras
+O aplicativo mobile é uma extensão planejada do Easy Asset, desenvolvida separadamente em Flutter e integrada à mesma API.
 
-* [ ] Realidade Aumentada.
-* [ ] Recursos avançados de localização.
-* [ ] Melhorias na operação em campo.
-* [ ] Suporte a múltiplos usuários simultâneos em maior escala.
+Entre as possibilidades de evolução estão:
 
-## 📌 Status do projeto
+- Consulta de ativos em campo.
+- Identificação por QR Code.
+- Consulta do histórico do equipamento.
+- Registro de movimentações.
+- Integração com recursos de Realidade Aumentada.
 
-**Em desenvolvimento 🚧**
+## Próximas melhorias
 
-O projeto está sendo desenvolvido de forma incremental, começando pelas funcionalidades principais de gestão e posteriormente incorporando recursos avançados para operação em campo.
+- Consolidar o tratamento de autenticação e expiração de sessão.
+- Ampliar o tratamento de erros das requisições.
+- Finalizar e validar os gráficos de relatórios.
+- Melhorar a atualização dos indicadores do dashboard.
+- Validar todas as operações de categorias com a API.
+- Revisar as permissões de navegação conforme o papel do usuário.
+- Ampliar os testes dos componentes e das páginas.
+- Validar a interface em diferentes tamanhos de tela.
+- Configurar e testar o build para publicação.
+- Evoluir a integração com o aplicativo mobile.
 
-## 💡 Possíveis aplicações
+## Repositórios e tecnologias relacionadas
 
-O sistema pode ser utilizado para gerenciamento de:
-
-* Equipamentos industriais.
-* Máquinas.
-* Ferramentas.
-* Equipamentos de TI.
-* Veículos.
-* Infraestrutura.
-* Patrimônio empresarial.
-* Outros tipos de ativos físicos.
-
-## 📄 Licença
-
-Este projeto pode receber uma licença específica conforme a finalidade de publicação e distribuição do sistema.
+- **Frontend web:** Vue.js, Vite, Tailwind CSS e Pinia.
+- **Backend:** Django e Django REST Framework.
+- **Aplicativo mobile:** Flutter.
 
 ---
 
-**Projeto de Gestão de Ativos**
+**Easy Asset — Sistema de Gestão de Ativos**
 
-Uma plataforma integrada para **controle, rastreamento, manutenção e operação de ativos**, combinando gestão web com recursos mobile para utilização em campo.
+Uma aplicação web para centralizar o gerenciamento de equipamentos, acompanhar manutenções e consultar informações operacionais por meio de uma API compartilhada.
