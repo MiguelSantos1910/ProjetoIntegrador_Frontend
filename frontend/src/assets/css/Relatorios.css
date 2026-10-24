@@ -352,10 +352,12 @@
 
 /* ========================================
    TABELAS
+   (mesmo padrão do .history-section do Dashboard)
    ======================================== */
 
 .table-card {
   min-width: 0;
+  padding: 20px;
   overflow: hidden;
 }
 
@@ -364,7 +366,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  padding: 20px 20px 0;
+  margin-bottom: 16px;
 }
 
 .table-header h2 {
@@ -374,6 +376,12 @@
   font-weight: 600;
   line-height: 1.4;
 }
+
+
+/* ========================================
+   BOTÕES DE EXPORTAR
+   (idêntico ao Dashboard)
+   ======================================== */
 
 .export-actions {
   display: flex;
@@ -399,10 +407,6 @@
     transform 0.1s ease;
 }
 
-.export-button:active {
-  transform: translateY(1px);
-}
-
 .export-button.excel {
   border: 1px solid #0d9488;
   background-color: #ffffff;
@@ -424,17 +428,13 @@
   background-color: #f8fafc;
 }
 
+.export-button:active {
+  transform: translateY(1px);
+}
+
 .export-button:focus-visible {
   outline: 2px solid rgba(13, 148, 136, 0.2);
   outline-offset: 2px;
-}
-
-.table-card > .table-container {
-  width: 100%;
-  margin-top: 16px;
-  border: 0;
-  border-radius: 0;
-  box-shadow: none;
 }
 
 
@@ -447,8 +447,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  padding: 14px 20px 20px;
-  border-top: 1px solid #f1f5f9;
+  padding: 16px 0 0;
 }
 
 .table-footer > span {
@@ -538,10 +537,6 @@
   .chart-card {
     min-height: 260px;
   }
-
-  .table-header {
-    align-items: flex-start;
-  }
 }
 
 
@@ -597,10 +592,13 @@
     padding: 16px;
   }
 
+  .table-card {
+    padding: 16px;
+  }
+
   .table-header {
     flex-direction: column;
     align-items: stretch;
-    padding: 16px 16px 0;
   }
 
   .table-header h2 {
@@ -615,14 +613,14 @@
     flex: 1;
   }
 
-  .table-card > .table-container {
+  .table-card .table-container {
     overflow-x: auto;
   }
 
   .table-footer {
     flex-direction: column;
     align-items: stretch;
-    padding: 14px 16px 16px;
+    padding: 14px 0 0;
   }
 
   .pagination {
@@ -642,6 +640,10 @@
 
   .chart-card {
     min-height: 220px;
+    padding: 12px;
+  }
+
+  .table-card {
     padding: 12px;
   }
 

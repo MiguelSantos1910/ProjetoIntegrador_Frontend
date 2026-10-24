@@ -1,3 +1,4 @@
+
 import { defineStore } from 'pinia'
 import api from '../services/api'
 
@@ -5,6 +6,7 @@ export const useOrdensStore = defineStore('ordens', {
     state: () => ({
         ordens: [],
         ordem: null,
+        logs: [],
         carregando: false,
         erro: null,
     }),
@@ -12,7 +14,8 @@ export const useOrdensStore = defineStore('ordens', {
     getters: {
         ordensCount: (state) => state.ordens.length,
 
-        ordensList: (state) => (status) => state.ordens.filter((ordens) => ordens.status === status)
+        ordensList: (state) => (status) =>
+            state.ordens.filter((ordem) => ordem.status === status),
     },
 
     actions: {
@@ -22,13 +25,12 @@ export const useOrdensStore = defineStore('ordens', {
 
             try {
                 const response = await api.get('/ordens_manutencao/')
-
                 this.ordens = response.data
-
                 return true
             } catch (error) {
-                this.erro = error.response?.data?.detail ||
-                "Erro ao buscar as ordens"
+                this.erro =
+                    error.response?.data?.detail ||
+                    'Erro ao buscar as ordens'
 
                 return false
             } finally {
@@ -41,14 +43,17 @@ export const useOrdensStore = defineStore('ordens', {
             this.erro = null
 
             try {
-                const response = await api.post('/ordens_manutencao/', dados)
+                const response = await api.post(
+                    '/ordens_manutencao/',
+                    dados
+                )
 
                 this.ordens.push(response.data)
-
                 return true
             } catch (error) {
-                this.erro = error.response?.data?.detail ||
-                "Erro ao cadastrar ordens"
+                this.erro =
+                    error.response?.data?.detail ||
+                    'Erro ao cadastrar ordem de manutenção'
 
                 return false
             } finally {
@@ -61,20 +66,28 @@ export const useOrdensStore = defineStore('ordens', {
             this.erro = null
 
             try {
-                const response = await api.patch(`/ordens_manutencao/${id}`, dados)
+                const response = await api.patch(
+                    `/ordens_manutencao/${id}/`,
+                    dados
+                )
 
                 const index = this.ordens.findIndex(
-                    (ordens) => ordens.id === id
+                    (ordem) => ordem.id === id
                 )
 
                 if (index !== -1) {
                     this.ordens[index] = response.data
                 }
 
+                if (this.ordem?.id === id) {
+                    this.ordem = response.data
+                }
+
                 return true
             } catch (error) {
-                this.erro.response?.data?.detail ||
-                "Erro ao atualizar ordens"
+                this.erro =
+                    error.response?.data?.detail ||
+                    'Erro ao atualizar ordem de manutenção'
 
                 return false
             } finally {
@@ -82,7 +95,7 @@ export const useOrdensStore = defineStore('ordens', {
             }
         },
 
-        async deleteordens(id) {
+        async deleteOrder(id) {
             this.carregando = true
             this.erro = null
 
@@ -95,15 +108,14 @@ export const useOrdensStore = defineStore('ordens', {
 
                 if (this.ordem?.id === id) {
                     this.ordem = null
+                    this.logs = []
                 }
 
                 return true
             } catch (error) {
-                console.error('Erro ao deletar ordem:', error)
-
                 this.erro =
                     error.response?.data?.detail ||
-                    'Erro ao deletar ordem de manutenção'
+                    'Erro ao excluir ordem de manutenção'
 
                 return false
             } finally {
@@ -125,12 +137,35 @@ export const useOrdensStore = defineStore('ordens', {
             } catch (error) {
                 this.erro =
                     error.response?.data?.detail ||
-                    'Erro ao buscar a ordem de manutenção'
+                    'Erro ao buscar ordem de manutenção'
 
                 return null
             } finally {
                 this.carregando = false
             }
         },
-    }
+
+        async fetchLogsOrdem(id) {
+            this.carregando = true
+            this.erro = null
+            this.logs = []
+
+            try {
+                const response = await api.get(
+                    `/ordens_manutencao/${id}/logs/`
+                )
+
+                this.logs = response.data
+                return true
+            } catch (error) {
+                this.erro =
+                    error.response?.data?.detail ||
+                    'Erro ao buscar histórico da ordem'
+
+                return false
+            } finally {
+                this.carregando = false
+            }
+        },
+    },
 })
