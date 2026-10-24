@@ -1,14 +1,13 @@
 /* =========================================
    CONTEÚDO PRINCIPAL
+   (--nav-width e --nav-width-compact vêm
+   do :root, definido no Navbar.css)
 ========================================= */
 
 .main-content {
-  width: calc(100% - 191px);
-
+  width: calc(100% - var(--nav-width));
   min-height: 100vh;
-
-  margin-left: 191px;
-
+  margin-left: var(--nav-width);
   box-sizing: border-box;
 }
 
@@ -20,7 +19,6 @@
 .main-content.login-content,
 .main-content.cadastro-content {
   width: 100%;
-
   margin-left: 0;
 }
 
@@ -30,20 +28,16 @@
 ========================================= */
 
 @media (max-width: 900px) {
-
   .main-content {
-    width: calc(100% - 70px);
-
-    margin-left: 70px;
+    width: calc(100% - var(--nav-width-compact));
+    margin-left: var(--nav-width-compact);
   }
 
   .main-content.login-content,
   .main-content.cadastro-content {
     width: 100%;
-
     margin-left: 0;
   }
-
 }
 
 
@@ -52,11 +46,8 @@
 ========================================= */
 
 @media (max-width: 600px) {
-
   .main-content {
     width: 100%;
-
     margin-left: 0;
   }
-
 }

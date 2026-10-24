@@ -1,54 +1,125 @@
 /* =========================================
+   VARIÁVEIS
+   (mesma paleta da sidebar: navy + teal)
+========================================= */
+
+.login-view,
+.auth-view {
+  --auth-bg: #0d1628;
+  --auth-grid: rgba(148, 163, 184, 0.07);
+  --auth-card-bg: #ffffff;
+  --auth-text: #0f172a;
+  --auth-muted: #64748b;
+  --auth-accent: #0d9488;
+  --auth-accent-hover: #0f766e;
+  --auth-on-dark: #5eead4;
+  --auth-error-bg: #fef2f2;
+  --auth-error-border: #fecaca;
+  --auth-error-text: #b91c1c;
+
+  /* logo: altura e compensação da margem transparente da imagem */
+  --auth-logo-height: 84px;
+  --auth-logo-shift: 0.51; /* fração da altura; ajuste fino aqui */
+}
+
+
+/* =========================================
    TELAS DE AUTENTICAÇÃO
+   Fundo navy com grade discreta, como uma
+   planilha de inventário.
 ========================================= */
 
 .login-view,
 .auth-view {
   width: 100%;
   min-height: 100vh;
-
+  min-height: 100dvh;
   box-sizing: border-box;
 
   display: flex;
   flex-direction: column;
-
   align-items: center;
   justify-content: center;
 
   padding: 24px;
 
-  background-color: #f8fafc;
+  background-color: var(--auth-bg);
+  background-image:
+    linear-gradient(var(--auth-grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--auth-grid) 1px, transparent 1px);
+  background-size: 32px 32px;
+  background-position: center top;
 
-  color: #0f172a;
+  color: #f8fafc;
 }
 
 
 /* =========================================
-   FORMULÁRIO
+   LOGO (opcional)
+   <img class="auth-logo" ... /> antes do .form
+========================================= */
+
+.login-view .auth-logo,
+.auth-view .auth-logo {
+  display: block;
+  width: auto;
+  max-width: 100%;
+  height: var(--auth-logo-height);
+  margin: 0 auto 32px;
+
+  /* centraliza o desenho, não a caixa da imagem */
+  transform: translateX(calc(var(--auth-logo-height) * var(--auth-logo-shift)));
+}
+
+
+/* =========================================
+   FORMULÁRIO (card)
 ========================================= */
 
 .login-view .form,
 .auth-view .form {
   width: 100%;
-  max-width: 400px;
-
+  max-width: 420px;
+  box-sizing: border-box;
   margin: 0 auto;
+  padding: 36px 32px 32px;
+
+  background-color: var(--auth-card-bg);
+  color: var(--auth-text);
+
+  border: 0;
+  border-top: 3px solid var(--auth-accent);
+  border-radius: 10px;
+  box-shadow:
+    0 2px 4px rgba(0, 0, 0, 0.2),
+    0 24px 48px rgba(0, 0, 0, 0.35);
 }
 
 
 /* =========================================
-   TÍTULO
+   TÍTULO E SUBTÍTULO
 ========================================= */
 
 .login-view .form-title,
 .auth-view .form-title {
-  margin-bottom: 24px;
+  margin: 0 0 24px;
 
-  color: #0f172a;
-
+  color: var(--auth-text);
   font-size: 24px;
   font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  text-align: center;
+}
 
+/* opcional: <p class="form-subtitle">Acesse sua conta</p> */
+.login-view .form-subtitle,
+.auth-view .form-subtitle {
+  margin: -16px 0 24px;
+
+  color: var(--auth-muted);
+  font-size: 13px;
+  line-height: 1.5;
   text-align: center;
 }
 
@@ -60,11 +131,30 @@
 .login-view .form-fields,
 .auth-view .form-fields {
   width: 100%;
-
   display: flex;
   flex-direction: column;
-
   gap: 18px;
+}
+
+
+/* =========================================
+   MENSAGEM DE ERRO
+   (opcional: <p class="form-error" role="alert">)
+========================================= */
+
+.login-view .form-error,
+.auth-view .form-error {
+  margin: 0 0 16px;
+  padding: 10px 12px;
+  box-sizing: border-box;
+
+  background-color: var(--auth-error-bg);
+  border: 1px solid var(--auth-error-border);
+  border-radius: 6px;
+
+  color: var(--auth-error-text);
+  font-size: 12px;
+  line-height: 1.4;
 }
 
 
@@ -74,25 +164,37 @@
 
 .register-link {
   display: block;
+  margin-top: 20px;
 
-  margin-top: 16px;
-
-  color: #0d9488;
-
+  color: var(--auth-accent, #0d9488);
   font-size: 12px;
   font-weight: 500;
-
   text-align: center;
-
   text-decoration: none;
 
   transition: color 0.15s ease;
 }
 
 .register-link:hover {
-  color: #0f766e;
-
+  color: var(--auth-accent-hover, #0f766e);
   text-decoration: underline;
+}
+
+.register-link:focus-visible {
+  outline: 2px solid rgba(13, 148, 136, 0.45);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* se o link estiver FORA do card, sobre o fundo navy */
+.login-view > .register-link,
+.auth-view > .register-link {
+  color: var(--auth-on-dark);
+}
+
+.login-view > .register-link:hover,
+.auth-view > .register-link:hover {
+  color: #ffffff;
 }
 
 
@@ -101,19 +203,58 @@
 ========================================= */
 
 @media (max-width: 600px) {
-
   .login-view,
   .auth-view {
     padding: 16px;
+    background-size: 24px 24px;
+  }
+
+  .login-view,
+  .auth-view {
+    --auth-logo-height: 68px;
+  }
+
+  .login-view .auth-logo,
+  .auth-view .auth-logo {
+    margin-bottom: 24px;
   }
 
   .login-view .form,
   .auth-view .form {
     max-width: 100%;
+    padding: 28px 20px 24px;
   }
 
   .login-view .form-title,
   .auth-view .form-title {
     font-size: 22px;
+  }
+}
+
+
+/* =========================================
+   CELULAR PEQUENO
+========================================= */
+
+@media (max-width: 400px) {
+  .login-view,
+  .auth-view {
+    padding: 12px;
+  }
+
+  .login-view .form,
+  .auth-view .form {
+    padding: 24px 16px 20px;
+  }
+}
+
+
+/* =========================================
+   ACESSIBILIDADE
+========================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .register-link {
+    transition: none;
   }
 }
