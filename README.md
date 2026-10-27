@@ -381,6 +381,7 @@ frontend/
 ├── src/
 │   ├── assets/
 │   ├── components/
+|   ├── composables/
 │   ├── views/
 │   ├── stores/
 │   ├── services/
@@ -398,6 +399,7 @@ frontend/
 | Diretório | Responsabilidade |
 |---|---|
 | `components/` | Componentes visuais reutilizáveis |
+| `composables/` | Lógica reutilizável | 
 | `views/` | Páginas da aplicação |
 | `stores/` | Estado compartilhado gerenciado pelo Pinia |
 | `services/` | Comunicação com a API e serviços auxiliares |
