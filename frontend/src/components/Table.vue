@@ -70,10 +70,10 @@
               <button
                 type="button"
                 class="btn-delete"
-                title="Excluir"
-                @click="emit('delete', rowIndex)"
+                title="Inativar"
+                @click="emit('inactive', rowIndex)"
               >
-                <Trash2 :size="16" />
+                <Ban :size="16" />
               </button>
             </td>
           </tr>
@@ -95,7 +95,7 @@
 <script setup>
 import {
   Pencil,
-  Trash2,
+  Ban,
   Eye
 } from 'lucide-vue-next'
 
@@ -126,7 +126,7 @@ defineProps({
 
 const emit = defineEmits([
   'edit',
-  'delete',
+  'inactive',
   'detail'
 ])
 

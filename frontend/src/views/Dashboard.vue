@@ -20,7 +20,7 @@
 
       <Card
         title="Em Manutenção"
-        :value="totalOrdens"
+        :value="manutencao"
         footer-text="Ativos em manutenção"
         :icon="Wrench"
       />
@@ -33,10 +33,17 @@
       />
 
       <Card
-        title="Atenção"
-        :value="atencao"
+        title="Inativos"
+        :value="inativos"
         footer-text="Necessitam de atenção"
-        :icon="AlertTriangle"
+        :icon="Ban"
+      />
+
+      <Card
+        title="Devolvidos"
+        :value="devolvidos"
+        footer-text="Ativos devolvidos"
+        :icon="Undo2"
       />
     </div>
 
@@ -92,7 +99,8 @@ import {
   Package,
   Wrench,
   CheckCircle,
-  AlertTriangle,
+  Ban,
+  Undo2,
   User
 } from 'lucide-vue-next'
 
@@ -153,22 +161,24 @@ const ativos = computed(() => {
 
 const manutencao = computed(() => {
   return ativosStore.ativos.filter(
-    (ativo) => ativo.status === 'manutenção'
+    (ativo) => ativo.status === 'EM_MANUTENCAO'
   ).length
 })
 
-const atencao = computed(() => {
+const inativos = computed(() => {
   return ativosStore.ativos.filter(
-    (ativo) => ativo.status === 'atenção'
+    (ativo) => ativo.status === 'INATIVO'
+  ).length
+})
+
+const devolvidos = computed(() => {
+  return ativosStore.ativos.filter(
+    (ativo) => ativo.status === "DEVOLVIDO"
   ).length
 })
 
 const totalAtivos = computed(() => {
   return ativosStore.ativos.length
-})
-
-const totalOrdens = computed(() => {
-  return ordensStore.ordens.length
 })
 
 function exportarRelatorioMovimentos() {
