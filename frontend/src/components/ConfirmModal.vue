@@ -4,11 +4,16 @@
       v-if="modelValue"
       class="confirm-modal-overlay"
       @click.self="handleCancel"
+      @keydown.esc="handleCancel"
     >
       <div
         class="confirm-modal"
-        role="dialog"
+        :class="`confirm-modal--${variant}`"
+        role="alertdialog"
         aria-modal="true"
+        aria-labelledby="confirm-modal-title"
+        :aria-describedby="message ? 'confirm-modal-message' : undefined"
+        @keydown.tab="trapFocus"
       >
         <!-- CABEÇALHO -->
 
@@ -21,11 +26,11 @@
           </div>
 
           <div class="confirm-modal-title-area">
-            <h2>
+            <h2 id="confirm-modal-title">
               {{ title }}
             </h2>
 
-            <p>
+            <p v-if="subtitle">
               {{ subtitle }}
             </p>
           </div>
@@ -34,12 +39,15 @@
 
         <!-- INFORMAÇÕES -->
 
-        <div class="confirm-modal-item">
-          <strong>
+        <div
+          v-if="itemName || itemInfo"
+          class="confirm-modal-item"
+        >
+          <strong v-if="itemName">
             {{ itemName }}
           </strong>
 
-          <span>
+          <span v-if="itemInfo">
             {{ itemInfo }}
           </span>
         </div>
@@ -47,7 +55,11 @@
 
         <!-- MENSAGEM -->
 
-        <div class="confirm-modal-message">
+        <div
+          v-if="message"
+          id="confirm-modal-message"
+          class="confirm-modal-message"
+        >
           {{ message }}
         </div>
 
@@ -56,19 +68,32 @@
 
         <div class="confirm-modal-actions">
           <button
+            ref="cancelRef"
             type="button"
             class="confirm-modal-cancel"
+            :disabled="loading"
             @click="handleCancel"
           >
             {{ cancelText }}
           </button>
 
           <button
+            ref="confirmRef"
             type="button"
             class="confirm-modal-confirm"
+            :disabled="loading"
+            :aria-busy="loading"
             @click="handleConfirm"
           >
-            <Trash2
+            <span
+              v-if="loading"
+              class="confirm-modal-spinner"
+              aria-hidden="true"
+            />
+
+            <component
+              :is="variant === 'warning' ? Archive : Trash2"
+              v-else
               :size="14"
               :stroke-width="2"
             />
@@ -83,13 +108,16 @@
 
 
 <script setup>
+import { nextTick, ref, watch } from 'vue'
+
 import {
+  Archive,
   TriangleAlert,
   Trash2
 } from 'lucide-vue-next'
 
 
-defineProps({
+const props = defineProps({
   modelValue: {
     type: Boolean,
     default: false
@@ -128,6 +156,17 @@ defineProps({
   confirmText: {
     type: String,
     default: 'Confirmar'
+  },
+
+  variant: {
+    type: String,
+    default: 'danger',
+    validator: (value) => ['danger', 'warning'].includes(value)
+  },
+
+  loading: {
+    type: Boolean,
+    default: false
   }
 })
 
@@ -139,13 +178,56 @@ const emit = defineEmits([
 ])
 
 
+const cancelRef = ref(null)
+const confirmRef = ref(null)
+
+watch(
+  () => props.modelValue,
+  async (aberto) => {
+    if (!aberto) return
+
+    await nextTick()
+
+    cancelRef.value?.focus()
+  },
+  { immediate: true }
+)
+
+
+// Mantém o Tab dentro do modal
+const trapFocus = (event) => {
+  const botoes = [cancelRef.value, confirmRef.value]
+    .filter((botao) => botao && !botao.disabled)
+
+  if (botoes.length === 0) {
+    event.preventDefault()
+    return
+  }
+
+  const primeiro = botoes[0]
+  const ultimo = botoes[botoes.length - 1]
+
+  if (event.shiftKey && document.activeElement === primeiro) {
+    event.preventDefault()
+    ultimo.focus()
+  } else if (!event.shiftKey && document.activeElement === ultimo) {
+    event.preventDefault()
+    primeiro.focus()
+  }
+}
+
+
 const handleCancel = () => {
+  if (props.loading) return
+
   emit('update:modelValue', false)
   emit('cancel')
 }
 
 
 const handleConfirm = () => {
+  if (props.loading) return
+
   emit('confirm')
 }
 </script>
