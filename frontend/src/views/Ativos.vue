@@ -105,7 +105,7 @@
         :rows="filteredRows"
         :show-actions="true"
         @edit="editarAtivo"
-        @delete="handleDelete"
+        @inactive="handleInactive"
         @detail="handleDetail"
       />
 
@@ -139,20 +139,20 @@
       </div>
     </div>
 
-    <!-- Modal de exclusão -->
+    <!-- Modal de inativação -->
     <ConfirmModal
-      v-model="showDeleteModal"
-      title="Excluir Ativo?"
-      subtitle="Esta ação não poderá ser desfeita."
+      v-model="showInactiveModal"
+      title="Inativar o Ativo?"
+      subtitle="Esta ação poderá ser desfeita."
       :item-name="selectedAtivo?.descricao || ''"
       :item-info="
         selectedAtivo
           ? `${selectedAtivo.tipo || 'Ativo'} • ${selectedAtivo.sala || '-'}`
           : ''
       "
-      message="O ativo será removido do sistema."
-      confirm-text="Confirmar Exclusão"
-      @confirm="confirmDelete"
+      message="O ativo será inativado do sistema."
+      confirm-text="Confirmar Inativação"
+      @confirm="confirmInactive"
     />
 
     <Info
@@ -191,7 +191,7 @@ const search = ref('')
 const selectedCategory = ref('')
 const selectedRoom = ref('')
 
-const showDeleteModal = ref(false)
+const showInactiveModal = ref(false)
 const selectedAtivo = ref(null)
 
 const mensagem = ref('')
@@ -290,27 +290,28 @@ const handleDetail = (rowIndex) => {
   router.push(`/ativos/detalhe/${ativo.id}`)
 }
 
-const handleDelete = (rowIndex) => {
+const handleInactive = (rowIndex) => {
   const ativo = filteredAtivos.value[rowIndex]
 
   if (!ativo) return
 
   selectedAtivo.value = ativo
-  showDeleteModal.value = true
+  showInactiveModal.value = true
 }
 
-const confirmDelete = async () => {
+const confirmInactive = async () => {
   if (!selectedAtivo.value) return
 
-  const sucesso = await ativosStore.deleteAtivo(
-    selectedAtivo.value.id
+  const sucesso = await ativosStore.updateAtivo(
+    selectedAtivo.value.id,
+    { status: 'INATIVO' }
   )
 
   if (sucesso) {
-    showDeleteModal.value = false
+    showInactiveModal.value = false
     selectedAtivo.value = null
     operacaoSucesso.value = true
-    mensagem.value = 'Ativo excluído com sucesso!'
+    mensagem.value = 'Ativo inativado com sucesso!'
     mensagemErro.value = ''
     mostrarInfo.value = true
   } else {
@@ -318,7 +319,7 @@ const confirmDelete = async () => {
     mensagem.value = ''
     mensagemErro.value =
       ativosStore.errorMessage ||
-      'Ocorreu um erro ao excluir o ativo.'
+      'Ocorreu um erro ao inativar o ativo.'
     mostrarInfo.value = true
   }
 }
