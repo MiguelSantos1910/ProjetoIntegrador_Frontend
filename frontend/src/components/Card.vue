@@ -30,6 +30,10 @@
         icon: {
             type: Object,
             required: true
-        }
+        },
+       size: {
+        type: Number,
+        default: 20
+       }
     })
 </script>

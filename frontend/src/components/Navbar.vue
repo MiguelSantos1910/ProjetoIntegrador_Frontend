@@ -75,6 +75,18 @@
           </router-link>
         </li>
 
+        <!-- Gestão de Perfis -->
+        <li v-if="podeGerenciarPerfis">
+          <router-link to="/perfis">
+            <ShieldCheck
+              class="nav-icon"
+              :size="15"
+              :stroke-width="1.8"
+            />
+            <span>Perfis Usuários</span>
+          </router-link>
+        </li>
+
         <!-- Configurações -->
         <li>
           <router-link to="/configuracoes">
@@ -92,9 +104,7 @@
       <div class="user-menu">
         <!-- Avatar -->
         <div class="user-avatar">
-          <span>
-            {{ primeiraLetra }}
-          </span>
+          <span>{{ primeiraLetra }}</span>
         </div>
 
         <!-- Informações -->
@@ -122,6 +132,7 @@
 
 <script setup>
 import { computed } from 'vue'
+import { useRouter } from 'vue-router'
 
 import {
   Settings,
@@ -129,10 +140,10 @@ import {
   Package,
   Wrench,
   Grid2X2,
-  ChartNoAxesColumnIncreasing
+  ChartNoAxesColumnIncreasing,
+  ShieldCheck
 } from 'lucide-vue-next'
 
-import { useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
 
 import '../assets/css/Navbar.css'
@@ -140,9 +151,7 @@ import '../assets/css/Navbar.css'
 const router = useRouter()
 const authStore = useAuthStore()
 
-/*
- * Nome do usuário
- */
+// Nome do usuário
 const nomeUsuario = computed(() => {
   return (
     authStore.usuario?.first_name ||
@@ -151,27 +160,39 @@ const nomeUsuario = computed(() => {
   )
 })
 
-/*
- * Papel do usuário
- */
+// Papel do usuário
 const papelUsuario = computed(() => {
-  return authStore.usuario?.papel || 'Usuário'
+  const papel = authStore.papelUsuario
+
+  if (!papel) return 'Usuário'
+
+  const papeis = {
+    PROFESSOR: 'Professor',
+    SUPORTE: 'Suporte',
+    ALUNO: 'Aluno'
+  }
+
+  return papeis[String(papel).toUpperCase()] || papel
 })
 
-/*
- * Primeira letra para o avatar
- */
+// Papel normalizado para verificação
+const papelAtual = computed(() => {
+  return String(authStore.papelUsuario || '').toUpperCase()
+})
+
+// Permissão para gerenciamento de perfis
+const podeGerenciarPerfis = computed(() => {
+  return ['PROFESSOR', 'SUPORTE'].includes(papelAtual.value)
+})
+
+// Primeira letra do nome
 const primeiraLetra = computed(() => {
-  return nomeUsuario.value
-    .charAt(0)
-    .toUpperCase()
+  return nomeUsuario.value.charAt(0).toUpperCase()
 })
 
-/*
- * Logout
- */
+// Logout
 const handleLogout = () => {
   authStore.logout()
-  router.push('/login')
+  router.replace('/login')
 }
 </script>
