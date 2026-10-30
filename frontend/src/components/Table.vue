@@ -50,6 +50,7 @@
               class="actions"
             >
               <button
+                v-if="showDetail"
                 type="button"
                 class="btn-detail"
                 title="Detalhes"
@@ -59,6 +60,7 @@
               </button>
 
               <button
+                v-if="showEdit"
                 type="button"
                 class="btn-edit"
                 title="Editar"
@@ -68,6 +70,7 @@
               </button>
 
               <button
+                v-if="showInactive"
                 type="button"
                 class="btn-delete"
                 title="Inativar"
@@ -121,6 +124,21 @@ defineProps({
   showActions: {
     type: Boolean,
     default: false
+  },
+
+  showDetail: {
+    type: Boolean,
+    default: true
+  },
+
+  showEdit: {
+    type: Boolean,
+    default: true
+  },
+
+  showInactive: {
+    type: Boolean,
+    default: true
   }
 })
 
@@ -138,7 +156,7 @@ const normalizarStatus = (status) => {
     .replace(/[\u0300-\u036f]/g, '')
     .trim()
     .toUpperCase()
-    .replace(/\s+/g, '_')
+    .replace(/[\s-]+/g, '_')
 }
 
 const getStatusClass = (status) => {
