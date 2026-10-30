@@ -15,6 +15,14 @@ export const useAuthStore = defineStore('auth', {
 
     nomeUsuario: (state) => {
       return state.usuario?.first_name || 'Usuário'
+    },
+
+    papelUsuario: (state) => {
+      return (
+        state.usuario?.papel ||
+        state.usuario?.perfil?.papel ||
+        ''
+      )
     }
   },
 
@@ -26,13 +34,13 @@ export const useAuthStore = defineStore('auth', {
       try {
         // 1. Faz login no Django
         const response = await api.post('/token/', {
-          username: username,
+          username,
           password: senha
         })
 
         const { access, refresh } = response.data
 
-        // 2. Salva o JWT
+        // 2. Salva os tokens
         this.token = access
         this.refreshToken = refresh
 
@@ -43,7 +51,9 @@ export const useAuthStore = defineStore('auth', {
         const usuarioCarregado = await this.buscarUsuario()
 
         if (!usuarioCarregado) {
-          throw new Error('Não foi possível carregar os dados do usuário.')
+          throw new Error(
+            'Não foi possível carregar os dados do usuário e seu papel.'
+          )
         }
 
         return true
@@ -54,10 +64,13 @@ export const useAuthStore = defineStore('auth', {
           error.response?.data || error
         )
 
-        this.erro =
+        const mensagem =
           error.response?.data?.detail ||
           error.message ||
           'Não foi possível realizar o login.'
+
+        this.logout()
+        this.erro = mensagem
 
         return false
 
@@ -68,13 +81,36 @@ export const useAuthStore = defineStore('auth', {
 
     async buscarUsuario() {
       try {
+        // Busca os dados do usuário autenticado
         const response = await api.get('/contas/me/')
 
-        this.usuario = response.data
+        const usuario = response.data
+
+        // O papel pode vir diretamente ou dentro do perfil
+        const papel =
+          usuario?.papel ||
+          usuario?.perfil?.papel ||
+          null
+
+        if (!papel) {
+          throw new Error(
+            'O endpoint /contas/me/ não retornou o papel do usuário.'
+          )
+        }
+
+        this.usuario = {
+          ...usuario,
+          papel: String(papel).toUpperCase()
+        }
 
         localStorage.setItem(
           'usuario',
-          JSON.stringify(response.data)
+          JSON.stringify(this.usuario)
+        )
+
+        localStorage.setItem(
+          'papel',
+          this.usuario.papel
         )
 
         return true
@@ -87,8 +123,12 @@ export const useAuthStore = defineStore('auth', {
 
         this.usuario = null
 
+        localStorage.removeItem('usuario')
+        localStorage.removeItem('papel')
+
         this.erro =
           error.response?.data?.detail ||
+          error.message ||
           'Não foi possível carregar os dados do usuário.'
 
         return false
@@ -104,6 +144,7 @@ export const useAuthStore = defineStore('auth', {
       localStorage.removeItem('access_token')
       localStorage.removeItem('refresh_token')
       localStorage.removeItem('usuario')
+      localStorage.removeItem('papel')
     }
   }
 })
