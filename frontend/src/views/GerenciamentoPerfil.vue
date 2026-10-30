@@ -1,3 +1,4 @@
+
 <template>
   <div class="perfis">
     <header class="perfis-header">
@@ -8,7 +9,10 @@
 
       <div class="header-actions">
         <div class="search-box">
-          <Search :size="14" :stroke-width="2" />
+          <Search
+            :size="14"
+            :stroke-width="2"
+          />
           <input
             v-model="search"
             type="text"
@@ -31,6 +35,7 @@
         class="status-message error"
       >
         {{ erro }}
+
         <button
           type="button"
           class="retry-button"
@@ -78,6 +83,7 @@
             <h2>Gerenciamento</h2>
           </div>
 
+          <!-- Abas -->
           <div class="perfil-tabs">
             <button
               type="button"
@@ -93,6 +99,14 @@
               @click="abaAtiva = 'usuarios'"
             >
               Usuários
+            </button>
+
+            <button
+              type="button"
+              :class="{ active: abaAtiva === 'logs' }"
+              @click="abrirAba('logs')"
+            >
+              Auditoria
             </button>
           </div>
 
@@ -116,6 +130,7 @@
               <div class="role-content">
                 <h3>{{ perfil.label }}</h3>
                 <p>{{ perfil.description }}</p>
+
                 <span class="role-count">
                   {{ contarPorPapel(perfil.value) }}
                   {{ contarPorPapel(perfil.value) === 1 ? 'usuário' : 'usuários' }}
@@ -126,7 +141,7 @@
 
           <!-- Usuários -->
           <section
-            v-else
+            v-else-if="abaAtiva === 'usuarios'"
             class="report-card table-card"
           >
             <div class="table-header perfil-table-header">
@@ -139,26 +154,42 @@
             <div class="perfil-filters">
               <div class="filter-field">
                 <label for="filtro-papel">Papel</label>
+
                 <select
                   id="filtro-papel"
                   v-model="filtroPapel"
                 >
-                  <option value="todos">Todos os papéis</option>
-                  <option value="ALUNO">Aluno</option>
-                  <option value="PROFESSOR">Professor</option>
-                  <option value="SUPORTE">Suporte técnico</option>
+                  <option value="todos">
+                    Todos os papéis
+                  </option>
+                  <option value="ALUNO">
+                    Aluno
+                  </option>
+                  <option value="PROFESSOR">
+                    Professor
+                  </option>
+                  <option value="SUPORTE">
+                    Suporte técnico
+                  </option>
                 </select>
               </div>
 
               <div class="filter-field">
                 <label for="filtro-status">Status</label>
+
                 <select
                   id="filtro-status"
                   v-model="filtroStatus"
                 >
-                  <option value="todos">Todos os status</option>
-                  <option value="ativo">Ativos</option>
-                  <option value="inativo">Inativos</option>
+                  <option value="todos">
+                    Todos os status
+                  </option>
+                  <option value="ativo">
+                    Ativos
+                  </option>
+                  <option value="inativo">
+                    Inativos
+                  </option>
                 </select>
               </div>
             </div>
@@ -180,6 +211,167 @@
               </span>
             </div>
           </section>
+
+          <!-- Auditoria -->
+          <section
+            v-else
+            class="report-card table-card logs-card"
+          >
+            <div class="table-header perfil-table-header">
+              <div>
+                <h2>Auditoria de contas</h2>
+                <p>
+                  Acompanhe os registros de cadastro, login e logout dos usuários.
+                </p>
+              </div>
+
+              <button
+                type="button"
+                class="save-button"
+                :disabled="logsStore.carregando"
+                @click="carregarLogs"
+              >
+                {{ logsStore.carregando ? 'Atualizando...' : 'Atualizar logs' }}
+              </button>
+            </div>
+
+            <!-- Filtros de auditoria -->
+            <div class="perfil-filters">
+              <div class="filter-field">
+                <label for="filtro-log-usuario">Usuário</label>
+
+                <select
+                  id="filtro-log-usuario"
+                  v-model="filtroLogUsuario"
+                  @change="carregarLogs"
+                >
+                  <option value="">
+                    Todos os usuários
+                  </option>
+
+                  <option
+                    v-for="usuario in usuarios"
+                    :key="usuario.id"
+                    :value="String(usuario.id)"
+                  >
+                    {{ usuario.username }}
+                  </option>
+                </select>
+              </div>
+
+              <div class="filter-field">
+                <label for="filtro-log-evento">Tipo de evento</label>
+
+                <select
+                  id="filtro-log-evento"
+                  v-model="filtroLogEvento"
+                  @change="carregarLogs"
+                >
+                  <option value="">
+                    Todos os eventos
+                  </option>
+                  <option value="CADASTRO">
+                    Cadastro
+                  </option>
+                  <option value="LOGIN">
+                    Login
+                  </option>
+                  <option value="LOGOUT">
+                    Logout
+                  </option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Carregamento -->
+            <div
+              v-if="logsStore.carregando"
+              class="status-message"
+            >
+              Carregando registros de auditoria...
+            </div>
+
+            <!-- Erro -->
+            <div
+              v-else-if="logsStore.erro"
+              class="status-message error"
+            >
+              {{ logsStore.erro }}
+
+              <button
+                type="button"
+                class="retry-button"
+                @click="carregarLogs"
+              >
+                Tentar novamente
+              </button>
+            </div>
+
+            <!-- Tabela de logs -->
+            <div
+              v-else
+              class="logs-table-wrapper"
+            >
+              <table class="logs-table">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Usuário</th>
+                    <th>Evento</th>
+                    <th>Descrição</th>
+                    <th>Endereço IP</th>
+                    <th>Data e horário</th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  <tr
+                    v-for="log in logsStore.logs"
+                    :key="log.id"
+                  >
+                    <td>{{ log.id }}</td>
+
+                    <td>
+                      {{ log.usuario_nome || 'Usuário removido' }}
+                    </td>
+
+                    <td>
+                      <span
+                        class="log-event"
+                        :class="`log-${log.tipo_evento?.toLowerCase()}`"
+                      >
+                        {{ log.tipo_evento_display || formatarEvento(log.tipo_evento) }}
+                      </span>
+                    </td>
+
+                    <td>{{ log.descricao || '-' }}</td>
+
+                    <td>{{ log.ip || '-' }}</td>
+
+                    <td>{{ formatarData(log.data) }}</td>
+                  </tr>
+
+                  <tr v-if="logsStore.logs.length === 0">
+                    <td
+                      colspan="6"
+                      class="logs-empty"
+                    >
+                      Nenhum registro encontrado.
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="table-footer">
+              <span>
+                {{ logsStore.logs.length }}
+                {{ logsStore.logs.length === 1
+                  ? 'registro encontrado'
+                  : 'registros encontrados' }}
+              </span>
+            </div>
+          </section>
         </section>
       </template>
     </main>
@@ -198,7 +390,9 @@
       >
         <div class="modal-header">
           <div>
-            <h2 id="modal-title">Alterar papel do usuário</h2>
+            <h2 id="modal-title">
+              Alterar papel do usuário
+            </h2>
             <p>Atualize o papel associado à conta.</p>
           </div>
 
@@ -223,19 +417,28 @@
 
             <div>
               <strong>{{ nomeUsuario(usuarioSelecionado) }}</strong>
-              <span>{{ usuarioSelecionado.email || 'E-mail não informado' }}</span>
+              <span>
+                {{ usuarioSelecionado.email || 'E-mail não informado' }}
+              </span>
             </div>
           </div>
 
           <div class="filter-field">
             <label for="novo-papel">Papel de acesso</label>
+
             <select
               id="novo-papel"
               v-model="novoPapel"
             >
-              <option value="ALUNO">Aluno</option>
-              <option value="PROFESSOR">Professor</option>
-              <option value="SUPORTE">Suporte técnico</option>
+              <option value="ALUNO">
+                Aluno
+              </option>
+              <option value="PROFESSOR">
+                Professor
+              </option>
+              <option value="SUPORTE">
+                Suporte técnico
+              </option>
             </select>
           </div>
         </div>
@@ -284,9 +487,14 @@ import {
 
 import Card from '../components/Card.vue'
 import Table from '../components/Table.vue'
+
 import api from '../services/api'
 
+import { useLogsContaStore } from '../stores/logsUser'
+
 import '../assets/css/Perfis.css'
+
+const logsStore = useLogsContaStore()
 
 const usuarios = ref([])
 const carregando = ref(false)
@@ -298,6 +506,9 @@ const abaAtiva = ref('perfis')
 
 const filtroPapel = ref('todos')
 const filtroStatus = ref('todos')
+
+const filtroLogUsuario = ref('')
+const filtroLogEvento = ref('')
 
 const modalAberto = ref(false)
 const usuarioSelecionado = ref(null)
@@ -333,7 +544,9 @@ const tableHeaders = [
   'Status'
 ]
 
-const totalUsuarios = computed(() => usuarios.value.length)
+const totalUsuarios = computed(() =>
+  usuarios.value.length
+)
 
 const usuariosAtivos = computed(() =>
   usuarios.value.filter(usuario => usuario.is_active).length
@@ -357,7 +570,9 @@ function nomeUsuario(usuario) {
   return [
     usuario.first_name,
     usuario.last_name
-  ].filter(Boolean).join(' ') || usuario.username || 'Usuário'
+  ]
+    .filter(Boolean)
+    .join(' ') || usuario.username || 'Usuário'
 }
 
 const usuariosFiltrados = computed(() => {
@@ -427,15 +642,60 @@ async function carregarUsuarios() {
     usuarios.value = Array.isArray(response.data)
       ? response.data
       : response.data?.results || []
+
   } catch (error) {
     console.error('Erro ao carregar usuários:', error)
 
     erro.value =
       error.response?.data?.detail ||
       'Não foi possível carregar os usuários. Verifique a conexão com a API.'
+
   } finally {
     carregando.value = false
   }
+}
+
+async function abrirAba(aba) {
+  abaAtiva.value = aba
+
+  if (aba === 'logs') {
+    await carregarLogs()
+  }
+}
+
+async function carregarLogs() {
+  logsStore.filtros.usuario =
+    filtroLogUsuario.value || null
+
+  logsStore.filtros.tipo_evento =
+    filtroLogEvento.value || null
+
+  await logsStore.fetchLogs()
+}
+
+function formatarEvento(evento) {
+  const eventos = {
+    CADASTRO: 'Cadastro',
+    LOGIN: 'Login',
+    LOGOUT: 'Logout'
+  }
+
+  return eventos[evento] || evento || '-'
+}
+
+function formatarData(data) {
+  if (!data) return '-'
+
+  const dataFormatada = new Date(data)
+
+  if (Number.isNaN(dataFormatada.getTime())) {
+    return '-'
+  }
+
+  return dataFormatada.toLocaleString('pt-BR', {
+    dateStyle: 'short',
+    timeStyle: 'short'
+  })
 }
 
 function editarUsuario(index) {
@@ -488,6 +748,7 @@ async function salvarPapel() {
     }
 
     fecharModal()
+
   } catch (error) {
     console.error('Erro ao atualizar papel:', error)
 
@@ -495,6 +756,7 @@ async function salvarPapel() {
       error.response?.data?.detail ||
       'Não foi possível atualizar o papel do usuário.'
     )
+
   } finally {
     salvando.value = false
   }

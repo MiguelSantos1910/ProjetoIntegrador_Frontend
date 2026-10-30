@@ -155,6 +155,7 @@
       @confirm="confirmInactive"
     />
 
+    <!-- Feedback -->
     <Info
       v-model="mostrarInfo"
       :success="operacaoSucesso"
@@ -184,7 +185,9 @@ import { usePdf } from '../composables/gerarPdf.js'
 import '../assets/css/Ativos.css'
 
 const router = useRouter()
+
 const ativosStore = useAtivosStore()
+
 const { gerarPdf } = usePdf()
 
 const search = ref('')
@@ -212,25 +215,42 @@ onMounted(async () => {
 })
 
 const filteredAtivos = computed(() => {
-  const termo = search.value.toLowerCase().trim()
+  const termo = search.value
+    .toLowerCase()
+    .trim()
 
   return ativosStore.ativos.filter((ativo) => {
-    const descricao =
-      ativo.descricao?.toLowerCase() || ''
+    const descricao = String(
+      ativo.descricao || ''
+    ).toLowerCase()
 
-    const patrimonio =
-      ativo.numero_patrimonio?.toLowerCase() || ''
+    const patrimonio = String(
+      ativo.numero_patrimonio ?? ''
+    ).toLowerCase()
+
+    const tipo = String(
+      ativo.tipo || ''
+    ).toLowerCase()
+
+    const sala = String(
+      ativo.sala || ''
+    ).toLowerCase()
+
+    const status = String(
+      ativo.status || ''
+    ).toLowerCase()
 
     const correspondePesquisa =
       !termo ||
       descricao.includes(termo) ||
-      patrimonio.includes(termo)
-
-    const tipo = ativo.tipo || ''
+      patrimonio.includes(termo) ||
+      tipo.includes(termo) ||
+      sala.includes(termo) ||
+      status.includes(termo)
 
     const correspondeTipo =
       !selectedCategory.value ||
-      tipo === selectedCategory.value
+      ativo.tipo === selectedCategory.value
 
     const correspondeSala =
       !selectedRoom.value ||
@@ -254,10 +274,12 @@ const filteredRows = computed(() => {
   ])
 })
 
-/* Exportar PDF dos ativos filtrados */
 function exportarAtivosPdf() {
   if (filteredRows.value.length === 0) {
-    window.alert('Não há ativos para exportar com os filtros atuais.')
+    window.alert(
+      'Não há ativos para exportar com os filtros atuais.'
+    )
+
     return
   }
 
@@ -269,8 +291,14 @@ function exportarAtivosPdf() {
       dados: filteredRows.value
     })
   } catch (error) {
-    console.error('Erro ao exportar os ativos:', error)
-    window.alert('Não foi possível gerar o relatório. Tente novamente.')
+    console.error(
+      'Erro ao exportar os ativos:',
+      error
+    )
+
+    window.alert(
+      'Não foi possível gerar o relatório. Tente novamente.'
+    )
   }
 }
 
@@ -295,40 +323,62 @@ const handleInactive = (rowIndex) => {
 
   if (!ativo) return
 
+  if (ativo.status === 'INATIVO') {
+    return
+  }
+
   selectedAtivo.value = ativo
+
   showInactiveModal.value = true
 }
 
 const confirmInactive = async () => {
-  if (!selectedAtivo.value) return
+  if (!selectedAtivo.value) {
+    return
+  }
+
+  const ativoId = selectedAtivo.value.id
 
   const sucesso = await ativosStore.updateAtivo(
-    selectedAtivo.value.id,
-    { status: 'INATIVO' }
+    ativoId,
+    {
+      status: 'INATIVO'
+    }
   )
 
-  if (sucesso) {
-    showInactiveModal.value = false
-    selectedAtivo.value = null
-    operacaoSucesso.value = true
-    mensagem.value = 'Ativo inativado com sucesso!'
-    mensagemErro.value = ''
-    mostrarInfo.value = true
-  } else {
+  showInactiveModal.value = false
+
+  if (!sucesso) {
     operacaoSucesso.value = false
     mensagem.value = ''
+
     mensagemErro.value =
       ativosStore.errorMessage ||
+      ativosStore.erro ||
       'Ocorreu um erro ao inativar o ativo.'
+
     mostrarInfo.value = true
+
+    return
   }
+
+  await ativosStore.fetchAtivos()
+
+  selectedAtivo.value = null
+
+  operacaoSucesso.value = true
+  mensagem.value = 'Ativo inativado com sucesso!'
+  mensagemErro.value = ''
+
+  mostrarInfo.value = true
 }
 
 const handleClose = () => {
   mostrarInfo.value = false
 
-  if (operacaoSucesso.value) {
-    router.push('/ativos')
-  }
+  mensagem.value = ''
+  mensagemErro.value = ''
+
+  operacaoSucesso.value = false
 }
 </script>
