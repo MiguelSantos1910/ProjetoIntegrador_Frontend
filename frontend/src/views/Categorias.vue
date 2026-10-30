@@ -167,7 +167,7 @@
           :rows="filteredCategories"
           :show-actions="true"
           @edit="handleEdit"
-          @delete="handleDelete"
+          @inactive="handleInactive"
           @detail="handleDetail"
         />
       </section>
@@ -178,17 +178,17 @@
 
     <ConfirmModal
       v-model="showDeleteModal"
-      title="Excluir Categoria?"
-      subtitle="Esta ação não poderá ser desfeita."
+      title="Inativar Categoria?"
+      subtitle="Esta ação poderá ser desfeita."
       :item-name="selectedCategory?.name || ''"
       :item-info="
         selectedCategory
           ? `${selectedCategory.assets} ativos associados`
           : ''
       "
-      message="A categoria será removida do sistema. Certifique-se de que não existem ativos vinculados a ela antes de confirmar."
-      confirm-text="Confirmar Exclusão"
-      @confirm="confirmDelete"
+      message="A categoria será inativada do sistema. Certifique-se de que não existem ativos vinculados a ela antes de confirmar."
+      confirm-text="Confirmar Inativação"
+      @confirm="confirmInactive"
     />
 
     <Info
@@ -385,29 +385,16 @@ const handleEdit = (rowIndex) => {
 }
 
 
-const handleDelete = (rowIndex) => {
+const handleInactive = (rowIndex) => {
+  const ativo = filteredAtivos.value[rowIndex]
 
-  const row = filteredCategories.value[rowIndex]
+  if (!ativo) return
 
-  if (!row) {
-    return
-  }
-
-  const category = categories.value.find(
-    (item) => item.name === row[0]
-  )
-
-  if (!category) {
-    return
-  }
-
-  selectedCategory.value = category
-
-  showDeleteModal.value = true
-
+  selectedAtivo.value = ativo
+  showInactiveModal.value = true
 }
 
-const confirmDelete = () => {
+const confirmInactive = () => {
 
   if (!selectedCategory.value) {
     return
@@ -423,7 +410,7 @@ const confirmDelete = () => {
     mensagem.value = ''
     mensagemErro.value =
       ativosStore.errorMessage ||
-      'Ocorreu um erro ao cadastrar o ativo.'
+      'Ocorreu um erro ao inativar o ativo.'
     mostrarInfo.value = true
   }
 

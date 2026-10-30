@@ -299,6 +299,9 @@
             :headers="manutencaoTableHeaders"
             :rows="manutencaoTableRows"
             :show-actions="true"
+            :show-detail="true"
+            :show-edit="false"
+            :show-inactive="false"
             @detail="handleDetail"
           />
 
