@@ -1,6 +1,9 @@
-
 <template>
   <div class="perfis">
+    <!-- ========================================
+         CABEÇALHO
+    ======================================== -->
+
     <header class="perfis-header">
       <div>
         <h1>Gerenciamento de Perfis</h1>
@@ -13,16 +16,19 @@
             :size="14"
             :stroke-width="2"
           />
+
           <input
             v-model="search"
             type="text"
             placeholder="Pesquisar usuários..."
+            aria-label="Pesquisar usuários"
           >
         </div>
       </div>
     </header>
 
     <main class="perfis-content">
+      <!-- Carregamento dos usuários -->
       <div
         v-if="carregando"
         class="status-message"
@@ -30,6 +36,7 @@
         Carregando usuários...
       </div>
 
+      <!-- Erro ao carregar usuários -->
       <div
         v-else-if="erro"
         class="status-message error"
@@ -46,6 +53,10 @@
       </div>
 
       <template v-else>
+        <!-- ========================================
+             VISÃO GERAL
+        ======================================== -->
+
         <section class="perfil-section">
           <div class="section-heading">
             <h2>Visão geral</h2>
@@ -78,6 +89,10 @@
           </div>
         </section>
 
+        <!-- ========================================
+             GERENCIAMENTO
+        ======================================== -->
+
         <section class="perfil-section">
           <div class="section-heading">
             <h2>Gerenciamento</h2>
@@ -88,7 +103,7 @@
             <button
               type="button"
               :class="{ active: abaAtiva === 'perfis' }"
-              @click="abaAtiva = 'perfis'"
+              @click="abrirAba('perfis')"
             >
               Tipos de perfil
             </button>
@@ -96,7 +111,7 @@
             <button
               type="button"
               :class="{ active: abaAtiva === 'usuarios' }"
-              @click="abaAtiva = 'usuarios'"
+              @click="abrirAba('usuarios')"
             >
               Usuários
             </button>
@@ -110,7 +125,10 @@
             </button>
           </div>
 
-          <!-- Tipos de perfil -->
+          <!-- ========================================
+               TIPOS DE PERFIL
+          ======================================== -->
+
           <div
             v-if="abaAtiva === 'perfis'"
             class="perfil-roles-grid"
@@ -129,17 +147,23 @@
 
               <div class="role-content">
                 <h3>{{ perfil.label }}</h3>
+
                 <p>{{ perfil.description }}</p>
 
                 <span class="role-count">
                   {{ contarPorPapel(perfil.value) }}
-                  {{ contarPorPapel(perfil.value) === 1 ? 'usuário' : 'usuários' }}
+                  {{ contarPorPapel(perfil.value) === 1
+                    ? 'usuário'
+                    : 'usuários' }}
                 </span>
               </div>
             </article>
           </div>
 
-          <!-- Usuários -->
+          <!-- ========================================
+               USUÁRIOS
+          ======================================== -->
+
           <section
             v-else-if="abaAtiva === 'usuarios'"
             class="report-card table-card"
@@ -147,10 +171,13 @@
             <div class="table-header perfil-table-header">
               <div>
                 <h2>Usuários cadastrados</h2>
-                <p>Consulte as contas e altere os papéis de acesso.</p>
+                <p>
+                  Consulte as contas e altere os papéis de acesso.
+                </p>
               </div>
             </div>
 
+            <!-- Filtros -->
             <div class="perfil-filters">
               <div class="filter-field">
                 <label for="filtro-papel">Papel</label>
@@ -162,12 +189,15 @@
                   <option value="todos">
                     Todos os papéis
                   </option>
+
                   <option value="ALUNO">
                     Aluno
                   </option>
+
                   <option value="PROFESSOR">
                     Professor
                   </option>
+
                   <option value="SUPORTE">
                     Suporte técnico
                   </option>
@@ -184,9 +214,11 @@
                   <option value="todos">
                     Todos os status
                   </option>
+
                   <option value="ativo">
                     Ativos
                   </option>
+
                   <option value="inativo">
                     Inativos
                   </option>
@@ -194,6 +226,7 @@
               </div>
             </div>
 
+            <!-- Tabela de usuários -->
             <Table
               title=""
               :headers="tableHeaders"
@@ -201,6 +234,7 @@
               :show-actions="true"
               :show-detail="false"
               :show-inactive="false"
+              :max-height="450"
               @edit="editarUsuario"
             />
 
@@ -212,7 +246,10 @@
             </div>
           </section>
 
-          <!-- Auditoria -->
+          <!-- ========================================
+               AUDITORIA
+          ======================================== -->
+
           <section
             v-else
             class="report-card table-card logs-card"
@@ -220,25 +257,37 @@
             <div class="table-header perfil-table-header">
               <div>
                 <h2>Auditoria de contas</h2>
+
                 <p>
-                  Acompanhe os registros de cadastro, login e logout dos usuários.
+                  Acompanhe registros de cadastro, autenticação,
+                  bloqueios e alterações de senha dos usuários.
                 </p>
               </div>
 
               <button
                 type="button"
                 class="save-button"
-                :disabled="logsStore.carregando"
+                :disabled="
+                  logsStore.carregando ||
+                    logsStore.atualizandoAutomaticamente
+                "
                 @click="carregarLogs"
               >
-                {{ logsStore.carregando ? 'Atualizando...' : 'Atualizar logs' }}
+                {{
+                  logsStore.carregando ||
+                    logsStore.atualizandoAutomaticamente
+                    ? 'Atualizando...'
+                    : 'Atualizar logs'
+                }}
               </button>
             </div>
 
             <!-- Filtros de auditoria -->
             <div class="perfil-filters">
               <div class="filter-field">
-                <label for="filtro-log-usuario">Usuário</label>
+                <label for="filtro-log-usuario">
+                  Usuário
+                </label>
 
                 <select
                   id="filtro-log-usuario"
@@ -260,7 +309,9 @@
               </div>
 
               <div class="filter-field">
-                <label for="filtro-log-evento">Tipo de evento</label>
+                <label for="filtro-log-evento">
+                  Tipo de evento
+                </label>
 
                 <select
                   id="filtro-log-evento"
@@ -270,30 +321,35 @@
                   <option value="">
                     Todos os eventos
                   </option>
-                  <option value="CADASTRO">
-                    Cadastro
-                  </option>
-                  <option value="LOGIN">
-                    Login
-                  </option>
-                  <option value="LOGOUT">
-                    Logout
+
+                  <option
+                    v-for="evento in eventosAuditoria"
+                    :key="evento.value"
+                    :value="evento.value"
+                  >
+                    {{ evento.label }}
                   </option>
                 </select>
               </div>
             </div>
 
-            <!-- Carregamento -->
+            <!-- Carregamento inicial -->
             <div
-              v-if="logsStore.carregando"
+              v-if="
+                logsStore.carregando &&
+                  logsStore.logs.length === 0
+              "
               class="status-message"
             >
               Carregando registros de auditoria...
             </div>
 
-            <!-- Erro -->
+            <!-- Erro sem registros anteriores -->
             <div
-              v-else-if="logsStore.erro"
+              v-else-if="
+                logsStore.erro &&
+                  logsStore.logs.length === 0
+              "
               class="status-message error"
             >
               {{ logsStore.erro }}
@@ -307,68 +363,51 @@
               </button>
             </div>
 
-            <!-- Tabela de logs -->
+            <!-- Tabela de auditoria -->
             <div
               v-else
-              class="logs-table-wrapper"
+              class="logs-table-container"
             >
-              <table class="logs-table">
-                <thead>
-                  <tr>
-                    <th>ID</th>
-                    <th>Usuário</th>
-                    <th>Evento</th>
-                    <th>Descrição</th>
-                    <th>Endereço IP</th>
-                    <th>Data e horário</th>
-                  </tr>
-                </thead>
-
-                <tbody>
-                  <tr
-                    v-for="log in logsStore.logs"
-                    :key="log.id"
-                  >
-                    <td>{{ log.id }}</td>
-
-                    <td>
-                      {{ log.usuario_nome || 'Usuário removido' }}
-                    </td>
-
-                    <td>
-                      <span
-                        class="log-event"
-                        :class="`log-${log.tipo_evento?.toLowerCase()}`"
-                      >
-                        {{ log.tipo_evento_display || formatarEvento(log.tipo_evento) }}
-                      </span>
-                    </td>
-
-                    <td>{{ log.descricao || '-' }}</td>
-
-                    <td>{{ log.ip || '-' }}</td>
-
-                    <td>{{ formatarData(log.data) }}</td>
-                  </tr>
-
-                  <tr v-if="logsStore.logs.length === 0">
-                    <td
-                      colspan="6"
-                      class="logs-empty"
-                    >
-                      Nenhum registro encontrado.
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
+              <Table
+                title=""
+                :headers="logsTableHeaders"
+                :rows="logsTableRows"
+                :show-actions="false"
+                :show-detail="false"
+                :show-edit="false"
+                :show-inactive="false"
+                :max-height="520"
+              />
             </div>
 
-            <div class="table-footer">
+            <!-- Erro durante atualização mantendo dados anteriores -->
+            <div
+              v-if="
+                logsStore.erro &&
+                  logsStore.logs.length > 0
+              "
+              class="status-message error logs-refresh-error"
+              role="status"
+            >
+              Não foi possível atualizar os registros.
+              Os dados exibidos podem estar desatualizados.
+            </div>
+
+            <!-- Rodapé -->
+            <div
+              v-if="
+                !logsStore.carregando &&
+                  !logsStore.erro
+              "
+              class="table-footer"
+            >
               <span>
-                {{ logsStore.logs.length }}
-                {{ logsStore.logs.length === 1
-                  ? 'registro encontrado'
-                  : 'registros encontrados' }}
+                Total de registros encontrados:
+                {{ logsStore.total ?? logsStore.logs.length }}
+              </span>
+
+              <span v-if="logsStore.atualizandoAutomaticamente">
+                Atualizando registros...
               </span>
             </div>
           </section>
@@ -376,7 +415,10 @@
       </template>
     </main>
 
-    <!-- Modal de alteração de papel -->
+    <!-- ========================================
+         MODAL DE ALTERAÇÃO DE PAPEL
+    ======================================== -->
+
     <div
       v-if="modalAberto"
       class="modal-overlay"
@@ -393,13 +435,17 @@
             <h2 id="modal-title">
               Alterar papel do usuário
             </h2>
-            <p>Atualize o papel associado à conta.</p>
+
+            <p>
+              Atualize o papel associado à conta.
+            </p>
           </div>
 
           <button
             type="button"
             class="modal-close"
             aria-label="Fechar"
+            :disabled="salvando"
             @click="fecharModal"
           >
             <X :size="19" />
@@ -416,7 +462,10 @@
             </div>
 
             <div>
-              <strong>{{ nomeUsuario(usuarioSelecionado) }}</strong>
+              <strong>
+                {{ nomeUsuario(usuarioSelecionado) }}
+              </strong>
+
               <span>
                 {{ usuarioSelecionado.email || 'E-mail não informado' }}
               </span>
@@ -424,7 +473,9 @@
           </div>
 
           <div class="filter-field">
-            <label for="novo-papel">Papel de acesso</label>
+            <label for="novo-papel">
+              Papel de acesso
+            </label>
 
             <select
               id="novo-papel"
@@ -433,9 +484,11 @@
               <option value="ALUNO">
                 Aluno
               </option>
+
               <option value="PROFESSOR">
                 Professor
               </option>
+
               <option value="SUPORTE">
                 Suporte técnico
               </option>
@@ -456,7 +509,11 @@
           <button
             type="button"
             class="save-button"
-            :disabled="salvando || !novoPapel"
+            :disabled="
+              salvando ||
+                !novoPapel ||
+                novoPapel === usuarioSelecionado?.papel
+            "
             @click="salvarPapel"
           >
             {{ salvando ? 'Salvando...' : 'Salvar alterações' }}
@@ -468,11 +525,7 @@
 </template>
 
 <script setup>
-import {
-  computed,
-  onMounted,
-  ref
-} from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 
 import {
   Search,
@@ -489,16 +542,27 @@ import Card from '../components/Card.vue'
 import Table from '../components/Table.vue'
 
 import api from '../services/api'
-
 import { useLogsContaStore } from '../stores/logsUser'
 
 import '../assets/css/Perfis.css'
 
+
+// ========================================
+// STORE
+// ========================================
+
 const logsStore = useLogsContaStore()
 
+
+// ========================================
+// ESTADO DA TELA
+// ========================================
+
 const usuarios = ref([])
+
 const carregando = ref(false)
 const salvando = ref(false)
+
 const erro = ref('')
 
 const search = ref('')
@@ -513,6 +577,11 @@ const filtroLogEvento = ref('')
 const modalAberto = ref(false)
 const usuarioSelecionado = ref(null)
 const novoPapel = ref('')
+
+
+// ========================================
+// DADOS DOS PERFIS
+// ========================================
 
 const perfis = [
   {
@@ -535,6 +604,47 @@ const perfis = [
   }
 ]
 
+
+// ========================================
+// EVENTOS DA AUDITORIA
+// ========================================
+
+const eventosAuditoria = [
+  {
+    value: 'CADASTRO',
+    label: 'Cadastro realizado'
+  },
+  {
+    value: 'CADASTRO_FALHA',
+    label: 'Falha no cadastro'
+  },
+  {
+    value: 'LOGIN',
+    label: 'Login realizado'
+  },
+  {
+    value: 'LOGIN_FALHA',
+    label: 'Falha no login / credenciais incorretas'
+  },
+  {
+    value: 'LOGIN_BLOQUEADO',
+    label: 'Login bloqueado'
+  },
+  {
+    value: 'LOGOUT',
+    label: 'Logout'
+  },
+  {
+    value: 'ALTERACAO_SENHA_FALHA',
+    label: 'Falha na alteração de senha'
+  }
+]
+
+
+// ========================================
+// CABEÇALHOS DAS TABELAS
+// ========================================
+
 const tableHeaders = [
   'ID',
   'Usuário',
@@ -544,21 +654,39 @@ const tableHeaders = [
   'Status'
 ]
 
-const totalUsuarios = computed(() =>
-  usuarios.value.length
-)
+const logsTableHeaders = [
+  'ID',
+  'Usuário',
+  'Evento',
+  'Descrição',
+  'Endereço IP',
+  'Data e horário'
+]
 
-const usuariosAtivos = computed(() =>
-  usuarios.value.filter(usuario => usuario.is_active).length
-)
 
-const usuariosInativos = computed(() =>
-  usuarios.value.filter(usuario => !usuario.is_active).length
-)
+// ========================================
+// INDICADORES
+// ========================================
 
-const totalProfessores = computed(() =>
-  contarPorPapel('PROFESSOR')
-)
+const totalUsuarios = computed(() => {
+  return usuarios.value.length
+})
+
+const usuariosAtivos = computed(() => {
+  return usuarios.value.filter(
+    usuario => usuario.is_active
+  ).length
+})
+
+const usuariosInativos = computed(() => {
+  return usuarios.value.filter(
+    usuario => !usuario.is_active
+  ).length
+})
+
+const totalProfessores = computed(() => {
+  return contarPorPapel('PROFESSOR')
+})
 
 function contarPorPapel(papel) {
   return usuarios.value.filter(
@@ -566,7 +694,16 @@ function contarPorPapel(papel) {
   ).length
 }
 
+
+// ========================================
+// NOME DO USUÁRIO
+// ========================================
+
 function nomeUsuario(usuario) {
+  if (!usuario) {
+    return 'Usuário'
+  }
+
   return [
     usuario.first_name,
     usuario.last_name
@@ -574,6 +711,11 @@ function nomeUsuario(usuario) {
     .filter(Boolean)
     .join(' ') || usuario.username || 'Usuário'
 }
+
+
+// ========================================
+// FILTROS DOS USUÁRIOS
+// ========================================
 
 const usuariosFiltrados = computed(() => {
   const termo = search.value.toLowerCase().trim()
@@ -600,8 +742,14 @@ const usuariosFiltrados = computed(() => {
 
     const correspondeStatus =
       filtroStatus.value === 'todos' ||
-      (filtroStatus.value === 'ativo' && usuario.is_active) ||
-      (filtroStatus.value === 'inativo' && !usuario.is_active)
+      (
+        filtroStatus.value === 'ativo' &&
+        usuario.is_active
+      ) ||
+      (
+        filtroStatus.value === 'inativo' &&
+        !usuario.is_active
+      )
 
     return (
       correspondePesquisa &&
@@ -610,6 +758,11 @@ const usuariosFiltrados = computed(() => {
     )
   })
 })
+
+
+// ========================================
+// FORMATAÇÃO DOS PAPÉIS
+// ========================================
 
 function formatarPapel(papel) {
   const papeis = {
@@ -621,8 +774,13 @@ function formatarPapel(papel) {
   return papeis[papel] || papel || '-'
 }
 
-const tableRows = computed(() =>
-  usuariosFiltrados.value.map(usuario => [
+
+// ========================================
+// DADOS DA TABELA DE USUÁRIOS
+// ========================================
+
+const tableRows = computed(() => {
+  return usuariosFiltrados.value.map(usuario => [
     usuario.id ?? '-',
     usuario.username || '-',
     nomeUsuario(usuario),
@@ -630,7 +788,12 @@ const tableRows = computed(() =>
     formatarPapel(usuario.papel),
     usuario.is_active ? 'ATIVO' : 'INATIVO'
   ])
-)
+})
+
+
+// ========================================
+// CARREGAR USUÁRIOS
+// ========================================
 
 async function carregarUsuarios() {
   carregando.value = true
@@ -639,12 +802,19 @@ async function carregarUsuarios() {
   try {
     const response = await api.get('/contas/usuarios/')
 
-    usuarios.value = Array.isArray(response.data)
-      ? response.data
-      : response.data?.results || []
+    const dados = response.data
+
+    usuarios.value = Array.isArray(dados)
+      ? dados
+      : Array.isArray(dados?.results)
+        ? dados.results
+        : []
 
   } catch (error) {
-    console.error('Erro ao carregar usuários:', error)
+    console.error(
+      'Erro ao carregar usuários:',
+      error.response?.data || error
+    )
 
     erro.value =
       error.response?.data?.detail ||
@@ -655,36 +825,88 @@ async function carregarUsuarios() {
   }
 }
 
-async function abrirAba(aba) {
-  abaAtiva.value = aba
 
-  if (aba === 'logs') {
-    await carregarLogs()
-  }
+// ========================================
+// NAVEGAÇÃO ENTRE ABAS
+// ========================================
+
+function abrirAba(aba) {
+  abaAtiva.value = aba
 }
 
+
+// ========================================
+// CARREGAR AUDITORIA
+// ========================================
+
 async function carregarLogs() {
+  // Atualiza os filtros da store antes da requisição.
   logsStore.filtros.usuario =
     filtroLogUsuario.value || null
 
   logsStore.filtros.tipo_evento =
     filtroLogEvento.value || null
 
-  await logsStore.fetchLogs()
+  return await logsStore.fetchLogs()
 }
+
+
+// ========================================
+// ATUALIZAÇÃO AUTOMÁTICA DA AUDITORIA
+// ========================================
+
+watch(
+  abaAtiva,
+  (aba, anterior, onCleanup) => {
+    if (aba !== 'logs') {
+      return
+    }
+
+    // Carrega os registros ao entrar na aba.
+    carregarLogs()
+
+    // Atualiza automaticamente a cada 10 segundos.
+    const intervalo = window.setInterval(() => {
+      if (!logsStore.requisicaoEmAndamento) {
+        logsStore.atualizarAutomaticamente()
+      }
+    }, 10000)
+
+    // Limpa o intervalo ao trocar de aba ou desmontar o componente.
+    onCleanup(() => {
+      window.clearInterval(intervalo)
+    })
+  }
+)
+
+
+// ========================================
+// FORMATAÇÃO DOS EVENTOS
+// ========================================
 
 function formatarEvento(evento) {
   const eventos = {
-    CADASTRO: 'Cadastro',
-    LOGIN: 'Login',
-    LOGOUT: 'Logout'
+    CADASTRO: 'Cadastro realizado',
+    CADASTRO_FALHA: 'Falha no cadastro',
+    LOGIN: 'Login realizado',
+    LOGIN_FALHA: 'Falha no login',
+    LOGIN_BLOQUEADO: 'Login bloqueado',
+    LOGOUT: 'Logout',
+    ALTERACAO_SENHA_FALHA: 'Falha na alteração de senha'
   }
 
   return eventos[evento] || evento || '-'
 }
 
+
+// ========================================
+// FORMATAÇÃO DA DATA
+// ========================================
+
 function formatarData(data) {
-  if (!data) return '-'
+  if (!data) {
+    return '-'
+  }
 
   const dataFormatada = new Date(data)
 
@@ -698,30 +920,105 @@ function formatarData(data) {
   })
 }
 
-function editarUsuario(index) {
-  const usuario = usuariosFiltrados.value[index]
 
-  if (!usuario) return
+// ========================================
+// DADOS DA TABELA DE AUDITORIA
+// ========================================
+
+const logsTableRows = computed(() => {
+  return logsStore.logs.map(log => {
+    const tipoEvento = log.tipo_evento || ''
+
+    return [
+      log.id ?? '-',
+
+      log.usuario_nome || 'Usuário não identificado',
+
+      // O Table.vue utiliza value para identificar
+      // a classe CSS e label para mostrar o texto.
+      {
+        value: tipoEvento,
+        label:
+          log.tipo_evento_display ||
+          formatarEvento(tipoEvento)
+      },
+
+      log.descricao || '-',
+
+      log.ip || '-',
+
+      formatarData(log.data)
+    ]
+  })
+})
+
+
+// ========================================
+// EDITAR PAPEL DO USUÁRIO
+// ========================================
+
+function editarUsuario(payload) {
+  let usuario = null
+
+  // O Table.vue atual emite o índice da linha.
+  if (typeof payload === 'number') {
+    usuario = usuariosFiltrados.value[payload]
+  }
+
+  // Compatibilidade caso futuramente a tabela emita o objeto.
+  else if (
+    payload &&
+    typeof payload === 'object' &&
+    payload.id !== undefined
+  ) {
+    usuario = usuariosFiltrados.value.find(
+      item => String(item.id) === String(payload.id)
+    ) || payload
+  }
+
+  if (!usuario) {
+    return
+  }
 
   usuarioSelecionado.value = usuario
   novoPapel.value = usuario.papel || 'ALUNO'
+
   modalAberto.value = true
 }
 
+
+// ========================================
+// FECHAR MODAL
+// ========================================
+
 function fecharModal() {
-  if (salvando.value) return
+  if (salvando.value) {
+    return
+  }
 
   modalAberto.value = false
   usuarioSelecionado.value = null
   novoPapel.value = ''
 }
 
+
+// ========================================
+// SALVAR ALTERAÇÃO DE PAPEL
+// ========================================
+
 async function salvarPapel() {
+  const usuarioId = usuarioSelecionado.value?.id
+
   if (
-    !usuarioSelecionado.value?.id ||
+    !usuarioId ||
     !novoPapel.value ||
     salvando.value
   ) {
+    return
+  }
+
+  if (novoPapel.value === usuarioSelecionado.value.papel) {
+    fecharModal()
     return
   }
 
@@ -729,38 +1026,53 @@ async function salvarPapel() {
 
   try {
     const response = await api.patch(
-      `/contas/usuarios/${usuarioSelecionado.value.id}/`,
+      `/contas/usuarios/${usuarioId}/`,
       {
         papel: novoPapel.value
       }
     )
 
+    // Atualiza o usuário na lista local.
     const indice = usuarios.value.findIndex(
-      usuario => usuario.id === usuarioSelecionado.value.id
+      usuario => String(usuario.id) === String(usuarioId)
     )
 
     if (indice !== -1) {
       usuarios.value[indice] = {
         ...usuarios.value[indice],
         ...response.data,
-        papel: novoPapel.value
+        papel: response.data?.papel || novoPapel.value
       }
     }
 
+    // Fecha o modal após a confirmação da API.
+    salvando.value = false
     fecharModal()
 
   } catch (error) {
-    console.error('Erro ao atualizar papel:', error)
-
-    window.alert(
-      error.response?.data?.detail ||
-      'Não foi possível atualizar o papel do usuário.'
+    console.error(
+      'Erro ao atualizar papel:',
+      error.response?.data || error
     )
+
+    const mensagem =
+      error.response?.data?.detail ||
+      error.response?.data?.papel?.[0] ||
+      'Não foi possível atualizar o papel do usuário.'
+
+    window.alert(mensagem)
 
   } finally {
     salvando.value = false
   }
 }
 
-onMounted(carregarUsuarios)
+
+// ========================================
+// INICIALIZAÇÃO
+// ========================================
+
+onMounted(() => {
+  carregarUsuarios()
+})
 </script>

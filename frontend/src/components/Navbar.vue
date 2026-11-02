@@ -64,7 +64,7 @@
         </li>
 
         <!-- Relatórios -->
-        <li>
+        <li v-if="podeGerenciarPerfis">
           <router-link to="/relatorios">
             <ChartNoAxesColumnIncreasing
               class="nav-icon"
@@ -191,8 +191,8 @@ const primeiraLetra = computed(() => {
 })
 
 // Logout
-const handleLogout = () => {
-  authStore.logout()
+const handleLogout = async () => {
+  await authStore.logout()
   router.replace('/login')
 }
 </script>

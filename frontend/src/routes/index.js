@@ -87,7 +87,7 @@ const routes = [
     component: Relatorios,
     meta: {
       requiresAuth: true,
-      roles: TODOS_PAPEIS
+      roles: PROFESSOR_SUPORTE
     }
   },
   {
@@ -123,7 +123,7 @@ const routes = [
     component: DetalheManutencao,
     meta: {
       requiresAuth: true,
-      roles: TODOS_PAPEIS
+      roles: PROFESSOR_SUPORTE
     }
   },
   {

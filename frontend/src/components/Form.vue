@@ -4,16 +4,13 @@
     @submit.prevent="handleSubmit"
   >
     <!-- CABEÇALHO -->
-
     <div class="form-header">
       <h2 class="form-title">
         {{ title }}
       </h2>
     </div>
 
-
     <!-- FORMULÁRIO NORMAL -->
-
     <div
       v-if="!sections.length"
       class="form-fields"
@@ -23,26 +20,18 @@
         :key="field.name"
         class="form-field"
         :class="{
-          full:
-            field.full ||
-            field.type === 'textarea' ||
-            field.type === 'file'
+          full: field.full || field.type === 'textarea' || field.type === 'file'
         }"
       >
         <label :for="field.name">
           {{ field.label }}
-
           <span
             v-if="field.required"
             class="required"
-          >
-            *
-          </span>
+          >*</span>
         </label>
 
-
         <!-- INPUT -->
-
         <input
           v-if="
             field.type !== 'select' &&
@@ -56,9 +45,7 @@
           :required="field.required"
         >
 
-
         <!-- SELECT -->
-
         <select
           v-else-if="field.type === 'select'"
           :id="field.name"
@@ -81,9 +68,7 @@
           </option>
         </select>
 
-
         <!-- TEXTAREA -->
-
         <textarea
           v-else-if="field.type === 'textarea'"
           :id="field.name"
@@ -92,9 +77,7 @@
           :required="field.required"
         />
 
-
         <!-- FILE -->
-
         <div
           v-else-if="field.type === 'file'"
           class="file-upload"
@@ -139,16 +122,12 @@
       </div>
     </div>
 
-
     <!-- FORMULÁRIO COM SEÇÕES -->
-
     <div
       v-else
       class="form-sections"
     >
-
       <!-- COLUNA PRINCIPAL -->
-
       <div class="form-main-sections">
         <section
           v-for="section in mainSections"
@@ -166,9 +145,7 @@
                 class="form-section-icon"
               />
 
-              <span>
-                {{ section.title }}
-              </span>
+              <span>{{ section.title }}</span>
             </h3>
 
             <span
@@ -179,41 +156,29 @@
             </span>
           </div>
 
-
           <!-- CAMPOS DA SEÇÃO -->
-
           <div
             v-if="section.fields?.length"
             class="form-section-fields"
-            :class="{
-              'three-columns': section.columns === 3
-            }"
+            :class="{ 'three-columns': section.columns === 3 }"
           >
             <div
               v-for="field in section.fields"
               :key="field.name"
               class="form-field"
               :class="{
-                full:
-                  field.full ||
-                  field.type === 'textarea' ||
-                  field.type === 'file'
+                full: field.full || field.type === 'textarea' || field.type === 'file'
               }"
             >
               <label :for="field.name">
                 {{ field.label }}
-
                 <span
                   v-if="field.required"
                   class="required"
-                >
-                  *
-                </span>
+                >*</span>
               </label>
 
-
               <!-- INPUT -->
-
               <input
                 v-if="
                   field.type !== 'select' &&
@@ -227,9 +192,7 @@
                 :required="field.required"
               >
 
-
               <!-- SELECT -->
-
               <select
                 v-else-if="field.type === 'select'"
                 :id="field.name"
@@ -252,9 +215,7 @@
                 </option>
               </select>
 
-
               <!-- TEXTAREA -->
-
               <textarea
                 v-else-if="field.type === 'textarea'"
                 :id="field.name"
@@ -263,9 +224,7 @@
                 :required="field.required"
               />
 
-
               <!-- FILE -->
-
               <div
                 v-else-if="field.type === 'file'"
                 class="file-upload"
@@ -310,23 +269,17 @@
             </div>
           </div>
 
-
           <!-- CONTEÚDO CUSTOMIZADO -->
-
           <div
             v-if="section.content"
             class="form-section-content"
           >
-            <slot
-              :name="section.content"
-            />
+            <slot :name="section.content" />
           </div>
         </section>
       </div>
 
-
       <!-- COLUNA LATERAL -->
-
       <aside class="form-sidebar-sections">
         <section
           v-for="section in sidebarSections"
@@ -344,9 +297,7 @@
                 class="form-section-icon"
               />
 
-              <span>
-                {{ section.title }}
-              </span>
+              <span>{{ section.title }}</span>
             </h3>
 
             <span
@@ -357,41 +308,29 @@
             </span>
           </div>
 
-
           <!-- CAMPOS DA SEÇÃO -->
-
           <div
             v-if="section.fields?.length"
             class="form-section-fields"
-            :class="{
-              'three-columns': section.columns === 3
-            }"
+            :class="{ 'three-columns': section.columns === 3 }"
           >
             <div
               v-for="field in section.fields"
               :key="field.name"
               class="form-field"
               :class="{
-                full:
-                  field.full ||
-                  field.type === 'textarea' ||
-                  field.type === 'file'
+                full: field.full || field.type === 'textarea' || field.type === 'file'
               }"
             >
               <label :for="field.name">
                 {{ field.label }}
-
                 <span
                   v-if="field.required"
                   class="required"
-                >
-                  *
-                </span>
+                >*</span>
               </label>
 
-
               <!-- INPUT -->
-
               <input
                 v-if="
                   field.type !== 'select' &&
@@ -405,9 +344,7 @@
                 :required="field.required"
               >
 
-
               <!-- SELECT -->
-
               <select
                 v-else-if="field.type === 'select'"
                 :id="field.name"
@@ -430,9 +367,7 @@
                 </option>
               </select>
 
-
               <!-- TEXTAREA -->
-
               <textarea
                 v-else-if="field.type === 'textarea'"
                 :id="field.name"
@@ -441,9 +376,7 @@
                 :required="field.required"
               />
 
-
               <!-- FILE -->
-
               <div
                 v-else-if="field.type === 'file'"
                 class="file-upload"
@@ -488,24 +421,18 @@
             </div>
           </div>
 
-
           <!-- CONTEÚDO CUSTOMIZADO -->
-
           <div
             v-if="section.content"
             class="form-section-content"
           >
-            <slot
-              :name="section.content"
-            />
+            <slot :name="section.content" />
           </div>
         </section>
       </aside>
     </div>
 
-
     <!-- AÇÕES -->
-
     <div class="form-actions">
       <button
         type="button"
@@ -518,6 +445,7 @@
       <button
         type="submit"
         class="btn-submit"
+        :disabled="submitDisabled"
       >
         {{ submitButtonText }}
       </button>
@@ -525,16 +453,13 @@
   </form>
 </template>
 
-
 <script setup>
 import { computed, reactive } from 'vue'
-
 import '../assets/css/Form.css'
-
 
 /* ========================================
    PROPS
-   ======================================== */
+======================================== */
 
 const props = defineProps({
   title: {
@@ -560,63 +485,55 @@ const props = defineProps({
   initialData: {
     type: Object,
     default: () => ({})
+  },
+
+  // Permite desabilitar o botão de envio externamente.
+  submitDisabled: {
+    type: Boolean,
+    default: false
   }
 })
 
-
 /* ========================================
    EVENTOS
-   ======================================== */
+======================================== */
 
 const emit = defineEmits([
   'submit',
   'cancel'
 ])
 
-
 /* ========================================
    DADOS DO FORMULÁRIO
-   ======================================== */
+======================================== */
 
 const formData = reactive({
   ...props.initialData
 })
 
-
 const fileNames = reactive({})
-
 
 /* ========================================
    SEPARAÇÃO DAS SEÇÕES
-   ======================================== */
+======================================== */
 
-/*
- * Seções normais:
- * ficam na coluna principal.
- */
-
+// Seções normais ficam na coluna principal.
 const mainSections = computed(() => {
   return props.sections.filter((section) => {
     return !section.class?.includes('sidebar-section')
   })
 })
 
-
-/*
- * Seções com "sidebar-section":
- * ficam na coluna lateral.
- */
-
+// Seções com sidebar-section ficam na coluna lateral.
 const sidebarSections = computed(() => {
   return props.sections.filter((section) => {
     return section.class?.includes('sidebar-section')
   })
 })
 
-
 /* ========================================
    UPLOAD DE ARQUIVOS
-   ======================================== */
+======================================== */
 
 const handleFileChange = (event, fieldName) => {
   const files = Array.from(
@@ -636,17 +553,18 @@ const handleFileChange = (event, fieldName) => {
     : `${files.length} arquivos selecionados`
 }
 
-
 /* ========================================
    ENVIO
-   ======================================== */
+======================================== */
 
 const handleSubmit = () => {
-  emit(
-    'submit',
-    {
-      ...formData
-    }
-  )
+  // Impede o envio enquanto o formulário estiver bloqueado.
+  if (props.submitDisabled) {
+    return
+  }
+
+  emit('submit', {
+    ...formData
+  })
 }
 </script>

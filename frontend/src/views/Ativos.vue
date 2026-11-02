@@ -17,6 +17,7 @@
         </div>
 
         <button
+          v-if="permissao"
           type="button"
           class="btn-new-asset"
           @click="router.push('/ativos/novo')"
@@ -180,11 +181,13 @@ import ConfirmModal from '../components/ConfirmModal.vue'
 import Info from '../components/Info.vue'
 
 import { useAtivosStore } from '../stores/ativos'
+import { useAuthStore } from '../stores/auth'
 import { usePdf } from '../composables/gerarPdf.js'
 
 import '../assets/css/Ativos.css'
 
 const router = useRouter()
+const authStore = useAuthStore()
 
 const ativosStore = useAtivosStore()
 
@@ -201,6 +204,14 @@ const mensagem = ref('')
 const mensagemErro = ref('')
 const mostrarInfo = ref(false)
 const operacaoSucesso = ref(false)
+
+const papelAtual = computed(() => {
+  return String(authStore.papelUsuario || '').toUpperCase()
+})
+
+const permissao = computed(() => {
+  return ['PROFESSOR', 'SUPORTE'].includes(papelAtual.value)
+})
 
 const tableHeaders = [
   'Descrição',

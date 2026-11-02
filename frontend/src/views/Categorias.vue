@@ -57,6 +57,7 @@
         </div>
 
         <button
+          v-if="permissao"
           type="button"
           class="new-category-button"
           @click="handleNewCategory"
@@ -224,6 +225,7 @@ import Table from '../components/Table.vue'
 import ConfirmModal from '../components/ConfirmModal.vue'
 
 import { useAtivosStore } from '../stores/ativos'
+import { useAuthStore } from '../stores/auth'
 
 import Info from '../components/Info.vue'
 
@@ -232,6 +234,7 @@ import '../assets/css/Categorias.css'
 
 const router = useRouter()
 const ativosStore = useAtivosStore()
+const authStore = useAuthStore()
 
 
 const search = ref('')
@@ -242,6 +245,14 @@ const mensagem = ref('')
 const mensagemErro = ref('')
 const mostrarInfo = ref(false)
 const operacaoSucesso = ref(false)
+
+const papelAtual = computed(() => {
+  return String(authStore.papelUsuario || '').toUpperCase()
+})
+
+const permissao = computed(() => {
+  return ['PROFESSOR', 'SUPORTE'].includes(papelAtual.value)
+}) 
 
 onMounted(async () => {
   await ativosStore.fetchAtivos()
