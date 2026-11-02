@@ -1,32 +1,50 @@
 /* =========================================
-   VARIÁVEIS
-   (mesma paleta da sidebar: navy + teal)
+   VARIÁVEIS DE AUTENTICAÇÃO
 ========================================= */
 
 .login-view,
 .auth-view {
   --auth-bg: #0d1628;
   --auth-grid: rgba(148, 163, 184, 0.07);
+
   --auth-card-bg: #ffffff;
   --auth-text: #0f172a;
   --auth-muted: #64748b;
+
   --auth-accent: #0d9488;
   --auth-accent-hover: #0f766e;
   --auth-on-dark: #5eead4;
+
   --auth-error-bg: #fef2f2;
   --auth-error-border: #fecaca;
   --auth-error-text: #b91c1c;
 
-  /* logo: altura e compensação da margem transparente da imagem */
+  --auth-success-bg: #f0fdf4;
+  --auth-success-border: #bbf7d0;
+  --auth-success-text: #166534;
+
+  --auth-warning-bg: #fff7ed;
+  --auth-warning-border: #fed7aa;
+  --auth-warning-text: #9a3412;
+
+  /* Logo */
   --auth-logo-height: 84px;
-  --auth-logo-shift: 0.51; /* fração da altura; ajuste fino aqui */
+  --auth-logo-shift: 0.51;
+}
+
+
+/* =========================================
+   RESET LOCAL
+========================================= */
+
+.login-view *,
+.auth-view * {
+  box-sizing: border-box;
 }
 
 
 /* =========================================
    TELAS DE AUTENTICAÇÃO
-   Fundo navy com grade discreta, como uma
-   planilha de inventário.
 ========================================= */
 
 .login-view,
@@ -34,7 +52,6 @@
   width: 100%;
   min-height: 100vh;
   min-height: 100dvh;
-  box-sizing: border-box;
 
   display: flex;
   flex-direction: column;
@@ -44,9 +61,18 @@
   padding: 24px;
 
   background-color: var(--auth-bg);
+
   background-image:
-    linear-gradient(var(--auth-grid) 1px, transparent 1px),
-    linear-gradient(90deg, var(--auth-grid) 1px, transparent 1px);
+    linear-gradient(
+      var(--auth-grid) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      90deg,
+      var(--auth-grid) 1px,
+      transparent 1px
+    );
+
   background-size: 32px 32px;
   background-position: center top;
 
@@ -55,32 +81,39 @@
 
 
 /* =========================================
-   LOGO (opcional)
-   <img class="auth-logo" ... /> antes do .form
+   LOGO
 ========================================= */
 
 .login-view .auth-logo,
 .auth-view .auth-logo {
   display: block;
+
   width: auto;
   max-width: 100%;
   height: var(--auth-logo-height);
+
   margin: 0 auto 32px;
 
-  /* centraliza o desenho, não a caixa da imagem */
-  transform: translateX(calc(var(--auth-logo-height) * var(--auth-logo-shift)));
+  object-fit: contain;
+
+  transform: translateX(
+    calc(
+      var(--auth-logo-height) *
+      var(--auth-logo-shift)
+    )
+  );
 }
 
 
 /* =========================================
-   FORMULÁRIO (card)
+   FORMULÁRIO (CARD)
 ========================================= */
 
 .login-view .form,
 .auth-view .form {
   width: 100%;
   max-width: 420px;
-  box-sizing: border-box;
+
   margin: 0 auto;
   padding: 36px 32px 32px;
 
@@ -90,6 +123,7 @@
   border: 0;
   border-top: 3px solid var(--auth-accent);
   border-radius: 10px;
+
   box-shadow:
     0 2px 4px rgba(0, 0, 0, 0.2),
     0 24px 48px rgba(0, 0, 0, 0.35);
@@ -105,21 +139,24 @@
   margin: 0 0 24px;
 
   color: var(--auth-text);
+
   font-size: 24px;
   font-weight: 700;
   line-height: 1.25;
+
   letter-spacing: -0.01em;
   text-align: center;
 }
 
-/* opcional: <p class="form-subtitle">Acesse sua conta</p> */
 .login-view .form-subtitle,
 .auth-view .form-subtitle {
   margin: -16px 0 24px;
 
   color: var(--auth-muted);
+
   font-size: 13px;
   line-height: 1.5;
+
   text-align: center;
 }
 
@@ -131,6 +168,7 @@
 .login-view .form-fields,
 .auth-view .form-fields {
   width: 100%;
+
   display: flex;
   flex-direction: column;
   gap: 18px;
@@ -138,37 +176,274 @@
 
 
 /* =========================================
-   MENSAGEM DE ERRO
-   (opcional: <p class="form-error" role="alert">)
+   MENSAGENS DE ERRO
 ========================================= */
 
 .login-view .form-error,
-.auth-view .form-error {
-  margin: 0 0 16px;
-  padding: 10px 12px;
-  box-sizing: border-box;
+.auth-view .form-error,
+.login-view .login-error,
+.auth-view .login-error {
+  width: 100%;
+
+  padding: 12px 14px;
 
   background-color: var(--auth-error-bg);
+
   border: 1px solid var(--auth-error-border);
   border-radius: 6px;
 
   color: var(--auth-error-text);
-  font-size: 12px;
-  line-height: 1.4;
+
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+
+/* Erro interno do formulário */
+
+.login-view .form-error,
+.auth-view .form-error {
+  margin: 0 0 16px;
+}
+
+
+/* Erro de autenticação ou cadastro */
+
+.login-view .login-error,
+.auth-view .login-error {
+  max-width: 420px;
+
+  margin: 16px auto 0;
+
+  text-align: left;
+  overflow-wrap: anywhere;
 }
 
 
 /* =========================================
-   LINK
+   CONTEÚDO DA MENSAGEM DE ERRO
+========================================= */
+
+.login-view .login-error-content,
+.auth-view .login-error-content {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+
+  width: 100%;
+}
+
+
+/* Título do erro */
+
+.login-view .login-error-title,
+.auth-view .login-error-title {
+  display: block;
+
+  margin: 0;
+
+  color: var(--auth-error-text);
+
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+
+/* Descrição do erro */
+
+.login-view .login-error-description,
+.auth-view .login-error-description {
+  margin: 0;
+
+  color: var(--auth-error-text);
+
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+
+/* Orientações adicionais */
+
+.login-view .login-error-help,
+.auth-view .login-error-help {
+  margin: 5px 0 0;
+
+  color: var(--auth-muted);
+
+  font-size: 11px;
+  line-height: 1.6;
+}
+
+
+/* =========================================
+   DETALHES DOS ERROS DE CADASTRO
+========================================= */
+
+.auth-view .register-error-details {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+
+  margin: 5px 0 0;
+  padding-left: 20px;
+
+  color: var(--auth-error-text);
+
+  font-size: 12px;
+  line-height: 1.7;
+
+  list-style-type: disc;
+}
+
+.auth-view .register-error-details li {
+  padding-left: 3px;
+}
+
+.auth-view .register-error-details li::marker {
+  color: var(--auth-error-text);
+}
+
+
+/* =========================================
+   CONTAGEM REGRESSIVA DO BLOQUEIO
+========================================= */
+
+.login-view .login-countdown,
+.auth-view .login-countdown {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  gap: 8px;
+
+  margin-top: 12px;
+  padding: 14px 12px 10px;
+
+  background-color: rgba(239, 68, 68, 0.05);
+
+  border-top: 1px solid var(--auth-error-border);
+  border-radius: 4px;
+
+  color: var(--auth-error-text);
+
+  font-size: 12px;
+  line-height: 1.5;
+
+  text-align: center;
+}
+
+
+/* Tempo restante */
+
+.login-view .login-countdown strong,
+.auth-view .login-countdown strong {
+  display: block;
+
+  color: var(--auth-error-text);
+
+  font-size: 26px;
+  font-weight: 700;
+  line-height: 1.2;
+
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 2px;
+}
+
+
+/* Orientação abaixo do contador */
+
+.login-view .countdown-help,
+.auth-view .countdown-help {
+  color: var(--auth-muted);
+
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+
+/* =========================================
+   MENSAGEM DE SUCESSO
+========================================= */
+
+.login-view .register-success,
+.auth-view .register-success {
+  width: 100%;
+  max-width: 420px;
+
+  margin: 16px auto 0;
+  padding: 12px 16px;
+
+  background-color: var(--auth-success-bg);
+
+  border: 1px solid var(--auth-success-border);
+  border-radius: 6px;
+
+  color: var(--auth-success-text);
+
+  font-size: 13px;
+  line-height: 1.5;
+
+  text-align: center;
+}
+
+
+/* Conteúdo da mensagem de sucesso */
+
+.login-view .register-success-content,
+.auth-view .register-success-content {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+
+  width: 100%;
+}
+
+
+/* Título do sucesso */
+
+.login-view .register-success-title,
+.auth-view .register-success-title {
+  display: block;
+
+  margin: 0;
+
+  color: var(--auth-success-text);
+
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+
+/* Descrição do sucesso */
+
+.login-view .register-success-description,
+.auth-view .register-success-description {
+  margin: 0;
+
+  color: var(--auth-success-text);
+
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+
+/* =========================================
+   LINK DE CADASTRO E LOGIN
 ========================================= */
 
 .register-link {
   display: block;
+
   margin-top: 20px;
 
   color: var(--auth-accent, #0d9488);
+
   font-size: 12px;
   font-weight: 500;
+
   text-align: center;
   text-decoration: none;
 
@@ -183,10 +458,13 @@
 .register-link:focus-visible {
   outline: 2px solid rgba(13, 148, 136, 0.45);
   outline-offset: 3px;
+
   border-radius: 2px;
 }
 
-/* se o link estiver FORA do card, sobre o fundo navy */
+
+/* Link fora do card */
+
 .login-view > .register-link,
 .auth-view > .register-link {
   color: var(--auth-on-dark);
@@ -199,6 +477,22 @@
 
 
 /* =========================================
+   ESTADO DE CARREGAMENTO
+========================================= */
+
+.login-view .form button:disabled,
+.auth-view .form button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.login-view .form button:disabled:hover,
+.auth-view .form button:disabled:hover {
+  cursor: not-allowed;
+}
+
+
+/* =========================================
    CELULAR
 ========================================= */
 
@@ -207,10 +501,7 @@
   .auth-view {
     padding: 16px;
     background-size: 24px 24px;
-  }
 
-  .login-view,
-  .auth-view {
     --auth-logo-height: 68px;
   }
 
@@ -229,6 +520,18 @@
   .auth-view .form-title {
     font-size: 22px;
   }
+
+  .login-view .login-error,
+  .auth-view .login-error,
+  .login-view .register-success,
+  .auth-view .register-success {
+    max-width: 100%;
+  }
+
+  .login-view .login-countdown strong,
+  .auth-view .login-countdown strong {
+    font-size: 24px;
+  }
 }
 
 
@@ -245,6 +548,26 @@
   .login-view .form,
   .auth-view .form {
     padding: 24px 16px 20px;
+  }
+
+  .login-view .login-error,
+  .auth-view .login-error,
+  .login-view .register-success,
+  .auth-view .register-success {
+    padding: 10px 12px;
+    font-size: 12px;
+  }
+
+  .login-view .login-error-title,
+  .auth-view .login-error-title,
+  .login-view .register-success-title,
+  .auth-view .register-success-title {
+    font-size: 12px;
+  }
+
+  .login-view .login-countdown strong,
+  .auth-view .login-countdown strong {
+    font-size: 22px;
   }
 }
 

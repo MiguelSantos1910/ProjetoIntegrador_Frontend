@@ -1,179 +1,219 @@
-/* =========================
+/* ========================================
    CONTAINER DA TABELA
-   ========================= */
+======================================== */
 
 .table-container {
   width: 100%;
-
   box-sizing: border-box;
-
   background-color: #ffffff;
-
   border: 1px solid #e2e8f0;
   border-radius: 8px;
-
   overflow: hidden;
 }
 
 
-/* =========================
+/* ========================================
    CABEÇALHO
-   ========================= */
+======================================== */
 
 .table-header {
   display: flex;
-
   align-items: center;
-
   min-height: 52px;
-
   padding: 0 18px;
-
   box-sizing: border-box;
-
   border-bottom: 1px solid #e2e8f0;
 }
 
-
 .table-title {
   margin: 0;
-
   color: #0f172a;
-
   font-size: 14px;
   font-weight: 600;
 }
 
 
-/* =========================
-   ÁREA RESPONSIVA
-   ========================= */
+/* ========================================
+   ÁREA DE ROLAGEM DINÂMICA
+======================================== */
 
 .table-wrapper {
+  position: relative;
   width: 100%;
 
-  overflow-x: auto;
+  max-height: var(--table-max-height, min(65vh, 520px));
 
+  overflow: auto;
   -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 #f8fafc;
 }
 
 
-/* =========================
+/* ========================================
+   BARRA DE ROLAGEM
+======================================== */
+
+.table-wrapper::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.table-wrapper::-webkit-scrollbar-track {
+  background-color: #f8fafc;
+}
+
+.table-wrapper::-webkit-scrollbar-thumb {
+  background-color: #cbd5e1;
+  border-radius: 10px;
+}
+
+.table-wrapper::-webkit-scrollbar-thumb:hover {
+  background-color: #94a3b8;
+}
+
+
+/* ========================================
    TABELA
-   ========================= */
+======================================== */
 
 .table-wrapper table {
   width: 100%;
-
   min-width: 600px;
 
-  border-collapse: collapse;
+  border-collapse: separate;
+  border-spacing: 0;
 
   background-color: #ffffff;
-
   color: #334155;
-
   font-size: 11px;
 }
 
 
-/* =========================
-   CABEÇALHO DA TABELA
-   ========================= */
+/* ========================================
+   CABEÇALHO FIXO DA TABELA
+======================================== */
 
 .table-wrapper thead {
   background-color: #f8fafc;
 }
 
-
 .table-wrapper th {
-  height: 42px;
+  position: sticky;
+  top: 0;
+  z-index: 5;
 
+  height: 42px;
   padding: 0 14px;
 
   box-sizing: border-box;
+  background-color: #f8fafc;
 
   border-bottom: 1px solid #e2e8f0;
 
   color: #64748b;
-
   font-size: 10px;
   font-weight: 600;
-
   text-align: left;
-
   white-space: nowrap;
 }
 
 
-/* =========================
+/* ========================================
    CÉLULAS
-   ========================= */
+======================================== */
 
 .table-wrapper td {
   height: 46px;
-
   padding: 0 14px;
 
   box-sizing: border-box;
+  background-color: #ffffff;
 
   border-bottom: 1px solid #f1f5f9;
 
   color: #475569;
-
   font-size: 11px;
-
   white-space: nowrap;
 }
 
 
-/* =========================
-   STATUS
-   ========================= */
+/* ========================================
+   STATUS DOS ATIVOS
+   CORES ORIGINAIS PRESERVADAS
+======================================== */
 
 .status-badge {
   display: inline-flex;
-
   align-items: center;
+  justify-content: center;
 
   padding: 4px 10px;
-
   border-radius: 999px;
 
   font-size: 12px;
   font-weight: 600;
+  white-space: nowrap;
 }
+
+/* Ativo - Verde */
 
 .status-ativo {
   background: #dcfce7;
   color: #166534;
 }
 
+/* Inativo - Cinza */
+
 .status-inativo {
   background: #f3f4f6;
   color: #374151;
 }
+
+/* Em manutenção - Amarelo */
 
 .status-manutencao {
   background: #fef3c7;
   color: #92400e;
 }
 
-.status-descartado {
-  background: #fee2e2;
-  color: #991b1b;
+/* Devolvido - Laranja */
+
+.status-devolvido {
+  background-color: #ffedd5;
+  color: #c2410c;
 }
 
-/* Ordens de manutenção */
+/* Variações para o status de manutenção */
+
+.status-em-manutencao,
+.status-em_manutencao {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+
+/* ========================================
+   ORDENS DE MANUTENÇÃO
+======================================== */
+
+/* Pendente */
+
 .status-pendente {
   color: #92400e;
   background-color: #fef3c7;
 }
 
+/* Em andamento */
+
 .status-andamento {
   color: #1d4ed8;
   background-color: #dbeafe;
 }
+
+/* Concluída */
 
 .status-concluido,
 .status-concluida {
@@ -181,51 +221,115 @@
   background-color: #dcfce7;
 }
 
+/* Cancelada */
+
 .status-cancelado {
   color: #991b1b;
   background-color: #fee2e2;
 }
 
 
-/* =========================
+/* ========================================
+   EVENTOS DA AUDITORIA
+======================================== */
+
+.log-event {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 4px 10px;
+  border-radius: 999px;
+
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* Cadastro - Verde */
+
+.log-cadastro {
+  color: #166534;
+  background-color: #dcfce7;
+}
+
+/* Login - Azul */
+
+.log-login {
+  color: #1d4ed8;
+  background-color: #dbeafe;
+}
+
+/* Logout - Amarelo */
+
+.log-logout {
+  color: #92400e;
+  background-color: #fef3c7;
+}
+
+/* Falha no cadastro - Vermelho */
+
+.log-cadastro_falha {
+  color: #991b1b;
+  background-color: #fee2e2;
+}
+
+/* Falha no login - Vermelho */
+
+.log-login_falha {
+  color: #991b1b;
+  background-color: #fee2e2;
+}
+
+/* Login bloqueado - Laranja */
+
+.log-login_bloqueado {
+  color: #c2410c;
+  background-color: #ffedd5;
+}
+
+/* Falha na alteração de senha - Vermelho */
+
+.log-alteracao_senha_falha {
+  color: #991b1b;
+  background-color: #fee2e2;
+}
+
+
+/* ========================================
    ÚLTIMA LINHA
-   ========================= */
+======================================== */
 
 .table-wrapper tbody tr:last-child td {
   border-bottom: none;
 }
 
 
-/* =========================
+/* ========================================
    HOVER
-   ========================= */
+======================================== */
 
 .table-wrapper tbody tr {
   transition: background-color 0.15s ease;
 }
 
-
-.table-wrapper tbody tr:hover {
+.table-wrapper tbody tr:hover td {
   background-color: #f8fafc;
 }
 
 
-/* =========================
+/* ========================================
    AÇÕES
-   ========================= */
+======================================== */
 
 .actions {
   width: 110px;
-
   text-align: center;
-
   white-space: nowrap;
 }
 
-
 .actions button {
   display: inline-flex;
-
   align-items: center;
   justify-content: center;
 
@@ -233,15 +337,12 @@
   height: 30px;
 
   margin: 0 2px;
-
   padding: 0;
 
   border: 1px solid transparent;
-
   border-radius: 5px;
 
   background-color: transparent;
-
   cursor: pointer;
 
   transition:
@@ -251,126 +352,141 @@
 }
 
 
-/* =========================
+/* ========================================
    DETALHES
-   ========================= */
+======================================== */
 
 .actions .btn-detail {
   color: #64748b;
 }
 
-
 .actions .btn-detail:hover {
   background-color: #f1f5f9;
-
   color: #0d9f95;
-
   border-color: #cbd5e1;
 }
 
 
-/* =========================
+/* ========================================
    EDITAR
-   ========================= */
+======================================== */
 
 .actions .btn-edit {
   color: #64748b;
 }
 
-
 .actions .btn-edit:hover {
   background-color: #f1f5f9;
-
   color: #0f766e;
-
   border-color: #cbd5e1;
 }
 
 
-/* =========================
-   EXCLUIR
-   ========================= */
+/* ========================================
+   INATIVAR
+======================================== */
 
 .actions .btn-delete {
   color: #94a3b8;
 }
 
-
 .actions .btn-delete:hover {
   background-color: #fef2f2;
-
   color: #dc2626;
-
   border-color: #fecaca;
 }
 
 
-/* =========================
-   RESPONSIVIDADE
-   ========================= */
+/* ========================================
+   ESTADO VAZIO
+======================================== */
+
+.empty-row {
+  height: 70px !important;
+  color: #64748b !important;
+  text-align: center;
+  background-color: #ffffff;
+}
+
+
+/* ========================================
+   ACESSIBILIDADE
+======================================== */
+
+.table-wrapper:focus-visible {
+  outline: 2px solid rgba(13, 148, 136, 0.45);
+  outline-offset: -2px;
+}
+
+
+/* ========================================
+   RESPONSIVIDADE - TABLETS
+======================================== */
 
 @media (max-width: 768px) {
-
   .table-header {
     min-height: 48px;
-
     padding: 0 14px;
   }
-
 
   .table-title {
     font-size: 13px;
   }
 
-
   .table-wrapper table {
     min-width: 550px;
   }
 
-
   .table-wrapper th {
     height: 40px;
-
     padding: 0 12px;
   }
-
 
   .table-wrapper td {
     height: 44px;
-
     padding: 0 12px;
   }
-
 }
 
 
-/* =========================
+/* ========================================
    CELULAR
-   ========================= */
+======================================== */
 
 @media (max-width: 500px) {
-
   .table-header {
     padding: 0 12px;
   }
-
 
   .table-wrapper table {
     min-width: 500px;
   }
 
-
   .table-wrapper th,
   .table-wrapper td {
     padding-left: 10px;
-
     padding-right: 10px;
   }
-
 
   .actions button {
     width: 28px;
     height: 28px;
   }
 
+  .status-badge,
+  .log-event {
+    font-size: 10px;
+  }
+}
+
+
+/* ========================================
+   ACESSIBILIDADE - MOVIMENTO
+======================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .table-wrapper tbody tr,
+  .actions button {
+    transition: none;
+  }
 }

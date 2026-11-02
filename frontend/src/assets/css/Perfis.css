@@ -1,3 +1,7 @@
+/* ========================================
+   ESTRUTURA PRINCIPAL
+======================================== */
+
 .perfis {
   width: 100%;
   min-height: 100vh;
@@ -7,7 +11,9 @@
   color: #0f172a;
 }
 
-/* Cabeçalho */
+/* ========================================
+   CABEÇALHO
+======================================== */
 
 .perfis-header {
   display: flex;
@@ -44,14 +50,17 @@
   height: 36px;
   padding: 0 12px;
   box-sizing: border-box;
+
   border: 1px solid #e2e8f0;
   border-radius: 6px;
+
   background-color: #ffffff;
   color: #64748b;
 }
 
 .search-box input {
   width: 100%;
+  min-width: 0;
   border: none;
   outline: none;
   background: transparent;
@@ -59,12 +68,19 @@
   font-size: 12px;
 }
 
+.search-box input::placeholder {
+  color: #94a3b8;
+}
+
 .search-box:focus-within {
   border-color: #0d9488;
   box-shadow: 0 0 0 2px rgba(13, 148, 136, 0.12);
 }
 
-/* Conteúdo */
+
+/* ========================================
+   CONTEÚDO
+======================================== */
 
 .perfis-content {
   display: flex;
@@ -91,7 +107,10 @@
   font-weight: 600;
 }
 
-/* Indicadores */
+
+/* ========================================
+   INDICADORES
+======================================== */
 
 .indicators-grid {
   display: grid;
@@ -99,25 +118,41 @@
   gap: 16px;
 }
 
-/* Abas */
+
+/* ========================================
+   ABAS
+======================================== */
 
 .perfil-tabs {
   display: flex;
   gap: 22px;
+
   border-bottom: 1px solid #e2e8f0;
+
+  overflow-x: auto;
+  scrollbar-width: thin;
 }
 
 .perfil-tabs button {
   position: relative;
+  flex-shrink: 0;
+
   padding: 12px 2px;
+
   border: none;
   border-bottom: 2px solid transparent;
+
   background: transparent;
   color: #64748b;
+
   font-size: 13px;
   font-weight: 500;
+
   cursor: pointer;
-  transition: color 0.2s, border-color 0.2s;
+
+  transition:
+    color 0.2s,
+    border-color 0.2s;
 }
 
 .perfil-tabs button:hover {
@@ -129,7 +164,10 @@
   color: #0d9488;
 }
 
-/* Cards de perfil */
+
+/* ========================================
+   CARDS DE PERFIL
+======================================== */
 
 .perfil-roles-grid {
   display: grid;
@@ -139,8 +177,10 @@
 
 .report-card {
   background-color: #ffffff;
+
   border: 1px solid #e2e8f0;
   border-radius: 8px;
+
   box-shadow: 0 1px 2px rgba(15, 23, 42, 0.03);
 }
 
@@ -148,6 +188,7 @@
   display: flex;
   align-items: flex-start;
   gap: 14px;
+
   padding: 20px;
 }
 
@@ -155,10 +196,14 @@
   display: flex;
   align-items: center;
   justify-content: center;
+
   flex-shrink: 0;
+
   width: 42px;
   height: 42px;
+
   border-radius: 8px;
+
   background-color: #f0fdfa;
   color: #0d9488;
 }
@@ -169,14 +214,18 @@
 
 .role-content h3 {
   margin: 0 0 7px;
+
   color: #0f172a;
+
   font-size: 14px;
   font-weight: 600;
 }
 
 .role-content p {
   margin: 0;
+
   color: #64748b;
+
   font-size: 12px;
   line-height: 1.6;
 }
@@ -184,14 +233,22 @@
 .role-count {
   display: inline-block;
   margin-top: 13px;
+
   color: #0d9488;
+
   font-size: 12px;
   font-weight: 600;
 }
 
-/* Tabela e filtros */
+
+/* ========================================
+   TABELAS E FILTROS
+======================================== */
 
 .table-card {
+  width: 100%;
+  min-width: 0;
+
   overflow: hidden;
 }
 
@@ -200,26 +257,40 @@
   align-items: center;
   justify-content: space-between;
   gap: 16px;
+
   padding: 18px 20px;
+
   border-bottom: 1px solid #e2e8f0;
 }
 
 .perfil-table-header h2 {
   margin: 0;
+
   color: #0f172a;
+
   font-size: 14px;
   font-weight: 600;
 }
 
 .perfil-table-header p {
   margin: 5px 0 0;
+
   color: #64748b;
+
   font-size: 12px;
+  line-height: 1.5;
 }
+
+
+/* ========================================
+   FILTROS
+======================================== */
 
 .perfil-filters {
   display: flex;
+  flex-wrap: wrap;
   gap: 14px;
+
   padding: 16px 20px;
 }
 
@@ -227,11 +298,13 @@
   display: flex;
   flex-direction: column;
   gap: 7px;
+
   min-width: 180px;
 }
 
 .filter-field label {
   color: #475569;
+
   font-size: 12px;
   font-weight: 500;
 }
@@ -239,13 +312,22 @@
 .filter-field select {
   width: 100%;
   height: 36px;
+
   padding: 0 10px;
+
   border: 1px solid #e2e8f0;
   border-radius: 6px;
+
   outline: none;
+
   background-color: #ffffff;
   color: #475569;
+
   font-size: 12px;
+
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
 }
 
 .filter-field select:focus {
@@ -253,19 +335,33 @@
   box-shadow: 0 0 0 2px rgba(13, 148, 136, 0.12);
 }
 
+
+/* ========================================
+   RODAPÉ DAS TABELAS
+======================================== */
+
 .table-footer {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 12px;
+
   padding: 14px 20px;
+
   border-top: 1px solid #e2e8f0;
+
   color: #64748b;
   font-size: 12px;
 }
 
-/* Auditoria de contas */
+
+/* ========================================
+   AUDITORIA DE CONTAS
+======================================== */
 
 .logs-card {
+  width: 100%;
+  min-width: 0;
   overflow: hidden;
 }
 
@@ -273,99 +369,216 @@
   flex-wrap: wrap;
 }
 
+.logs-card .perfil-table-header > div {
+  min-width: 0;
+  flex: 1;
+}
+
 .logs-card .perfil-table-header .save-button {
   flex-shrink: 0;
 }
 
-/* Tabela de logs */
 
-.logs-table-wrapper {
+/* ========================================
+   COMPONENTE TABLE NA AUDITORIA
+======================================== */
+
+.logs-table-container {
   width: 100%;
-  overflow-x: auto;
+  min-width: 0;
+
+  padding: 0 20px;
+
+  box-sizing: border-box;
 }
 
-.logs-table {
+/* Remove a borda externa duplicada */
+
+.logs-table-container .table-container {
   width: 100%;
-  min-width: 850px;
-  border-collapse: collapse;
+  min-width: 0;
+
+  border: none;
+  border-radius: 0;
+
+  box-shadow: none;
 }
 
-.logs-table th,
-.logs-table td {
-  padding: 14px 16px;
-  text-align: left;
-  border-bottom: 1px solid #e2e8f0;
-  font-size: 13px;
+/* Oculta o cabeçalho interno do Table.vue,
+   pois a seção já possui seu próprio título. */
+
+.logs-table-container .table-header {
+  display: none;
 }
 
-.logs-table th {
+/* Área de rolagem da auditoria */
+
+.logs-table-container .table-wrapper {
+  position: relative;
+
+  width: 100%;
+
+  max-height: var(--table-max-height, min(65vh, 520px));
+
+  overflow: auto;
+
+  overscroll-behavior: contain;
+
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 #f8fafc;
+}
+
+/* Barra de rolagem */
+
+.logs-table-container .table-wrapper::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.logs-table-container .table-wrapper::-webkit-scrollbar-track {
   background-color: #f8fafc;
-  color: #64748b;
-  font-size: 12px;
-  font-weight: 600;
+}
+
+.logs-table-container .table-wrapper::-webkit-scrollbar-thumb {
+  background-color: #cbd5e1;
+  border-radius: 10px;
+}
+
+.logs-table-container .table-wrapper::-webkit-scrollbar-thumb:hover {
+  background-color: #94a3b8;
+}
+
+/* Cabeçalho fixo */
+
+.logs-table-container .table-wrapper thead th {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+
+  background-color: #f8fafc;
+
   white-space: nowrap;
 }
 
-.logs-table td {
-  color: #334155;
+/* Largura mínima para leitura dos registros */
+
+.logs-table-container .table-wrapper table {
+  width: 100%;
+  min-width: 900px;
 }
 
-.logs-table tbody tr {
-  transition: background-color 0.2s;
+/* Descrição dos eventos */
+
+.logs-table-container .table-wrapper tbody td:nth-child(4) {
+  min-width: 220px;
+  max-width: 380px;
+
+  white-space: normal;
+
+  overflow-wrap: anywhere;
+
+  line-height: 1.5;
 }
 
-.logs-table tbody tr:hover {
-  background-color: #f8fafc;
-}
 
-.logs-table tbody tr:last-child td {
-  border-bottom: none;
-}
-
-/* Identificação dos eventos */
+/* ========================================
+   IDENTIFICAÇÃO VISUAL DOS EVENTOS
+======================================== */
 
 .log-event {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+
+  max-width: 100%;
+
   padding: 5px 9px;
+
   border-radius: 6px;
+
   font-size: 11px;
   font-weight: 600;
+
   white-space: nowrap;
 }
+
+/* Cadastro realizado */
 
 .log-cadastro {
   background-color: #dcfce7;
   color: #166534;
 }
 
+/* Login realizado */
+
 .log-login {
   background-color: #dbeafe;
   color: #1d4ed8;
 }
+
+/* Logout */
 
 .log-logout {
   background-color: #fef3c7;
   color: #92400e;
 }
 
-/* Estado vazio da auditoria */
+/* Falha no cadastro */
+
+.log-cadastro_falha {
+  background-color: #fee2e2;
+  color: #991b1b;
+}
+
+/* Senha ou credenciais incorretas */
+
+.log-login_falha {
+  background-color: #fee2e2;
+  color: #991b1b;
+}
+
+/* Bloqueio por excesso de tentativas */
+
+.log-login_bloqueado {
+  background-color: #ffedd5;
+  color: #9a3412;
+}
+
+/* Falha na alteração de senha */
+
+.log-alteracao_senha_falha {
+  background-color: #fee2e2;
+  color: #991b1b;
+}
+
+
+/* ========================================
+   ESTADO VAZIO DA AUDITORIA
+======================================== */
 
 .logs-empty {
   padding: 30px !important;
+
   color: #64748b !important;
+
   text-align: center !important;
 }
 
-/* Mensagens */
+
+/* ========================================
+   MENSAGENS DE CARREGAMENTO E ERRO
+======================================== */
 
 .status-message {
   padding: 24px;
+
   border: 1px solid #e2e8f0;
   border-radius: 8px;
+
   background-color: #ffffff;
+
   color: #64748b;
+
   text-align: center;
   font-size: 13px;
 }
@@ -376,14 +589,20 @@
 
 .retry-button {
   display: block;
+
   margin: 12px auto 0;
   padding: 8px 14px;
+
   border: 1px solid #e2e8f0;
   border-radius: 6px;
+
   background-color: #ffffff;
   color: #475569;
+
   font-size: 12px;
+
   cursor: pointer;
+
   transition: background-color 0.2s;
 }
 
@@ -391,48 +610,71 @@
   background-color: #f8fafc;
 }
 
-/* Modal */
+
+/* ========================================
+   MODAL
+======================================== */
 
 .modal-overlay {
   position: fixed;
   inset: 0;
   z-index: 1000;
+
   display: flex;
   align-items: center;
   justify-content: center;
+
   padding: 20px;
+
   background-color: rgba(15, 23, 42, 0.45);
 }
 
 .perfil-modal {
   width: 100%;
   max-width: 460px;
-  overflow: hidden;
+
+  max-height: calc(100vh - 40px);
+
+  overflow-y: auto;
+
   border: 1px solid #e2e8f0;
   border-radius: 8px;
+
   background-color: #ffffff;
+
   box-shadow: 0 12px 35px rgba(15, 23, 42, 0.15);
 }
+
+
+/* ========================================
+   CABEÇALHO DO MODAL
+======================================== */
 
 .modal-header {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
   gap: 16px;
+
   padding: 20px;
+
   border-bottom: 1px solid #e2e8f0;
 }
 
 .modal-header h2 {
   margin: 0;
+
   color: #0f172a;
+
   font-size: 16px;
   font-weight: 600;
 }
 
 .modal-header p {
   margin: 6px 0 0;
+
   color: #64748b;
+
   font-size: 12px;
 }
 
@@ -440,24 +682,41 @@
   display: flex;
   align-items: center;
   justify-content: center;
+
+  flex-shrink: 0;
+
   width: 30px;
   height: 30px;
+
   border: none;
   border-radius: 6px;
+
   background: transparent;
   color: #64748b;
+
   cursor: pointer;
 }
 
-.modal-close:hover {
+.modal-close:hover:not(:disabled) {
   background-color: #f1f5f9;
   color: #0f172a;
 }
+
+.modal-close:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+
+/* ========================================
+   CONTEÚDO DO MODAL
+======================================== */
 
 .modal-body {
   display: flex;
   flex-direction: column;
   gap: 22px;
+
   padding: 20px;
 }
 
@@ -471,9 +730,14 @@
   display: flex;
   align-items: center;
   justify-content: center;
+
+  flex-shrink: 0;
+
   width: 42px;
   height: 42px;
+
   border-radius: 50%;
+
   background-color: #f0fdfa;
   color: #0d9488;
 }
@@ -482,6 +746,7 @@
   display: flex;
   flex-direction: column;
   gap: 5px;
+
   min-width: 0;
 }
 
@@ -492,49 +757,73 @@
 
 .usuario-resumo span {
   overflow: hidden;
+
   color: #64748b;
+
   font-size: 12px;
+
   text-overflow: ellipsis;
+  white-space: nowrap;
 }
+
+
+/* ========================================
+   RODAPÉ DO MODAL
+======================================== */
 
 .modal-footer {
   display: flex;
   justify-content: flex-end;
   gap: 10px;
+
   padding: 16px 20px;
+
   border-top: 1px solid #e2e8f0;
 }
 
-/* Botões */
+
+/* ========================================
+   BOTÕES
+======================================== */
 
 .cancel-button,
 .save-button {
   min-height: 36px;
+
   padding: 0 14px;
+
   border-radius: 6px;
+
   font-size: 12px;
   font-weight: 500;
+
   cursor: pointer;
-  transition: background-color 0.2s;
+
+  transition:
+    background-color 0.2s,
+    border-color 0.2s,
+    color 0.2s;
 }
 
 .cancel-button {
   border: 1px solid #e2e8f0;
+
   background-color: #ffffff;
   color: #475569;
 }
 
-.cancel-button:hover {
+.cancel-button:hover:not(:disabled) {
   background-color: #f8fafc;
 }
 
 .save-button {
   border: 1px solid #0d9488;
+
   background-color: #0d9488;
   color: #ffffff;
 }
 
-.save-button:hover {
+.save-button:hover:not(:disabled) {
   border-color: #0f766e;
   background-color: #0f766e;
 }
@@ -545,12 +834,22 @@
   cursor: not-allowed;
 }
 
-button:focus-visible {
-  outline: 2px solid rgba(13, 148, 136, 0.35);
+
+/* ========================================
+   FOCO ACESSÍVEL
+======================================== */
+
+.perfis button:focus-visible,
+.perfis select:focus-visible,
+.perfis input:focus-visible {
+  outline: 2px solid rgba(13, 148, 136, 0.45);
   outline-offset: 2px;
 }
 
-/* Responsividade */
+
+/* ========================================
+   RESPONSIVIDADE - TABLETS
+======================================== */
 
 @media (max-width: 1100px) {
   .indicators-grid {
@@ -562,19 +861,33 @@ button:focus-visible {
   }
 }
 
+
+/* ========================================
+   RESPONSIVIDADE - TABLETS PEQUENOS
+======================================== */
+
 @media (max-width: 768px) {
   .perfis-header {
     align-items: flex-start;
   }
 
-  .logs-card .perfil-table-header {
+  .perfil-table-header {
     align-items: flex-start;
   }
 
   .logs-card .perfil-table-header .save-button {
-    width: 100%;
+    flex-shrink: 0;
+  }
+
+  .logs-table-container .table-wrapper table {
+    min-width: 850px;
   }
 }
+
+
+/* ========================================
+   RESPONSIVIDADE - CELULAR
+======================================== */
 
 @media (max-width: 650px) {
   .perfis {
@@ -616,13 +929,30 @@ button:focus-visible {
 
   .perfil-tabs {
     gap: 16px;
-    overflow-x: auto;
   }
 
-  .perfil-tabs button {
-    flex-shrink: 0;
+  .logs-card .perfil-table-header .save-button {
+    width: 100%;
+  }
+
+  .logs-table-container {
+    padding: 0 12px;
+  }
+
+  .logs-table-container .table-wrapper table {
+    min-width: 800px;
+  }
+
+  .perfil-modal {
+    max-height: calc(100vh - 24px);
+    overflow-y: auto;
   }
 }
+
+
+/* ========================================
+   CELULAR PEQUENO
+======================================== */
 
 @media (max-width: 400px) {
   .perfis {
@@ -645,5 +975,24 @@ button:focus-visible {
   .modal-footer {
     flex-wrap: wrap;
     padding: 14px 16px;
+  }
+
+  .cancel-button,
+  .save-button {
+    flex: 1;
+  }
+}
+
+
+/* ========================================
+   ACESSIBILIDADE - MOVIMENTO REDUZIDO
+======================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .perfil-tabs button,
+  .retry-button,
+  .cancel-button,
+  .save-button {
+    transition: none;
   }
 }
