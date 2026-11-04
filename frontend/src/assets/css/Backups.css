@@ -1,620 +1,357 @@
 /* ========================================
-   PÁGINA
-   ======================================== */
+   ESTRUTURA PRINCIPAL
+   (mesmo padrão visual de Perfis.css)
+======================================== */
 
 .backups {
   width: 100%;
   min-height: 100vh;
+  padding: 24px;
   box-sizing: border-box;
-
   background-color: #f8fafc;
   color: #0f172a;
 }
 
-
 /* ========================================
    CABEÇALHO
-   ======================================== */
+======================================== */
 
 .backups-header {
-  width: 100%;
-  min-height: 72px;
-
   display: flex;
   align-items: center;
   justify-content: space-between;
-
   gap: 20px;
-  padding: 18px 24px;
-
-  box-sizing: border-box;
-
-  background-color: #ffffff;
-
-  border-bottom: 1px solid #e2e8f0;
+  margin-bottom: 28px;
 }
 
-.backups-title-area {
-  min-width: 0;
-}
-
-.backups-title-area h1 {
+.backups-header h1 {
   margin: 0;
-
   color: #0f172a;
-
-  font-size: 20px;
-  font-weight: 700;
-  line-height: 1.3;
+  font-size: 22px;
+  font-weight: 600;
 }
 
-.backups-title-area span {
-  display: block;
-
-  margin-top: 4px;
-
-  color: #94a3b8;
-
-  font-size: 10px;
-  line-height: 1.4;
+.backups-header p {
+  margin: 6px 0 0;
+  color: #64748b;
+  font-size: 13px;
 }
-
-
-/* ========================================
-   AÇÕES DO CABEÇALHO
-   ======================================== */
 
 .backups .header-actions {
   display: flex;
   align-items: center;
-
-  gap: 10px;
-
-  flex-shrink: 0;
+  gap: 12px;
 }
 
 .backups .search-box {
-  width: 250px;
-  height: 36px;
-
   display: flex;
   align-items: center;
-
-  gap: 8px;
-  padding: 0 11px;
-
+  gap: 9px;
+  width: 260px;
+  height: 36px;
+  padding: 0 12px;
   box-sizing: border-box;
 
-  border: 1px solid #cbd5e1;
+  border: 1px solid #e2e8f0;
   border-radius: 6px;
 
   background-color: #ffffff;
-
   color: #64748b;
-
-  transition:
-    border-color 0.2s ease,
-    box-shadow 0.2s ease,
-    background-color 0.2s ease;
-}
-
-.backups .search-box:hover {
-  border-color: #94a3b8;
-}
-
-.backups .search-box:focus-within {
-  border-color: #0d9488;
-
-  box-shadow:
-    0 0 0 2px rgba(13, 148, 136, 0.1);
 }
 
 .backups .search-box input {
   width: 100%;
   min-width: 0;
-  height: 100%;
-
-  padding: 0;
-
-  border: 0;
+  border: none;
   outline: none;
-
-  background-color: transparent;
-
+  background: transparent;
   color: #0f172a;
-
-  font-family: inherit;
-  font-size: 11px;
+  font-size: 12px;
 }
 
 .backups .search-box input::placeholder {
   color: #94a3b8;
 }
 
-.backups .notification-button {
-  width: 36px;
-  height: 36px;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  flex-shrink: 0;
-
-  padding: 0;
-
-  border: 1px solid #cbd5e1;
-  border-radius: 6px;
-
-  background-color: #ffffff;
-
-  color: #475569;
-
-  cursor: pointer;
-
-  transition:
-    border-color 0.2s ease,
-    background-color 0.2s ease,
-    color 0.2s ease;
-}
-
-.backups .notification-button:hover {
-  border-color: #94a3b8;
-
-  background-color: #f8fafc;
-
-  color: #0f172a;
-}
-
-.backups .notification-button:focus-visible {
-  outline: 2px solid rgba(13, 148, 136, 0.25);
-  outline-offset: 2px;
+.backups .search-box:focus-within {
+  border-color: #0d9488;
+  box-shadow: 0 0 0 2px rgba(13, 148, 136, 0.12);
 }
 
 
 /* ========================================
    CONTEÚDO
-   ======================================== */
+======================================== */
 
 .backups-content {
-  width: 100%;
-
   display: flex;
   flex-direction: column;
+  gap: 26px;
+}
 
-  gap: 24px;
+.backup-section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
 
-  padding: 24px;
+.backups .section-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
 
-  box-sizing: border-box;
+.backups .section-heading h2 {
+  margin: 0;
+  color: #0f172a;
+  font-size: 15px;
+  font-weight: 600;
 }
 
 
 /* ========================================
-   AÇÕES DA PÁGINA
-   ======================================== */
+   INDICADORES
+======================================== */
 
-.backups .page-actions {
-  width: 100%;
-
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-
-  gap: 20px;
+.backup-indicators-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
 }
 
-.backups .page-actions > div {
+
+/* ========================================
+   CARD DA TABELA
+======================================== */
+
+.backup-card {
+  width: 100%;
+  min-width: 0;
+  overflow: hidden;
+
+  background-color: #ffffff;
+
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.03);
+}
+
+.backup-table-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+
+  padding: 18px 20px;
+
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.backup-table-header > div {
+  flex: 1;
   min-width: 0;
 }
 
-.backups .page-actions h2 {
+.backup-table-header h2 {
   margin: 0;
-
   color: #0f172a;
-
-  font-size: 15px;
-  font-weight: 700;
-  line-height: 1.4;
+  font-size: 14px;
+  font-weight: 600;
 }
 
-.backups .page-actions span {
-  display: block;
-
-  margin-top: 4px;
-
-  color: #94a3b8;
-
-  font-size: 10px;
-  line-height: 1.4;
+.backup-table-header p {
+  margin: 5px 0 0;
+  color: #64748b;
+  font-size: 12px;
+  line-height: 1.5;
 }
 
-.backups .new-backup-button {
-  height: 38px;
-
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-
-  gap: 7px;
-
-  padding: 0 16px;
-
-  box-sizing: border-box;
+.backups .save-button {
+  flex-shrink: 0;
+  min-height: 36px;
+  padding: 0 14px;
 
   border: 1px solid #0d9488;
   border-radius: 6px;
 
   background-color: #0d9488;
-
   color: #ffffff;
 
-  font-family: inherit;
-
-  font-size: 11px;
-  font-weight: 600;
-
-  white-space: nowrap;
+  font-size: 12px;
+  font-weight: 500;
 
   cursor: pointer;
 
   transition:
-    background-color 0.2s ease,
-    border-color 0.2s ease,
-    transform 0.1s ease,
-    box-shadow 0.2s ease;
+    background-color 0.2s,
+    border-color 0.2s;
 }
 
-.backups .new-backup-button:hover {
+.backups .save-button:hover:not(:disabled) {
   border-color: #0f766e;
-
   background-color: #0f766e;
-
-  box-shadow:
-    0 2px 4px rgba(15, 118, 110, 0.15);
 }
 
-.backups .new-backup-button:active {
-  transform: translateY(1px);
+.backups .save-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
 
+
+/* ========================================
+   COMPONENTE TABLE DENTRO DO CARD
+======================================== */
+
+.backup-table-container {
+  width: 100%;
+  min-width: 0;
+  padding: 0 20px;
+  box-sizing: border-box;
+}
+
+/* Remove a borda externa duplicada */
+
+.backup-table-container .table-container {
+  width: 100%;
+  min-width: 0;
+  border: none;
+  border-radius: 0;
   box-shadow: none;
 }
 
-.backups .new-backup-button:focus-visible {
-  outline: 2px solid rgba(13, 148, 136, 0.25);
-  outline-offset: 2px;
+/* O card já tem título próprio */
+
+.backup-table-container .table-header {
+  display: none;
 }
 
-
-/* ========================================
-   CARDS DE RESUMO
-   ======================================== */
-
-.summary-grid {
-  width: 100%;
-
-  display: grid;
-
-  grid-template-columns:
-    repeat(3, minmax(0, 1fr));
-
-  gap: 18px;
-}
-
-.summary-card {
-  min-width: 0;
-  min-height: 88px;
-
-  display: flex;
-  align-items: center;
-
-  gap: 14px;
-
-  padding: 16px;
-
-  box-sizing: border-box;
-
-  background-color: #ffffff;
-
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
-
-  box-shadow:
-    0 1px 2px rgba(15, 23, 42, 0.03);
-
-  transition:
-    border-color 0.2s ease,
-    box-shadow 0.2s ease,
-    transform 0.2s ease;
-}
-
-.summary-card:hover {
-  border-color: #d7dee8;
-
-  box-shadow:
-    0 3px 8px rgba(15, 23, 42, 0.05);
-
-  transform: translateY(-1px);
-}
-
-.summary-icon {
-  width: 42px;
-  height: 42px;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  flex-shrink: 0;
-
-  border-radius: 8px;
-
-  background-color: #e6fffb;
-
-  color: #0d9488;
-}
-
-.summary-info {
-  min-width: 0;
-}
-
-.summary-info span {
-  display: block;
-
-  overflow: hidden;
-
-  color: #64748b;
-
-  font-size: 9px;
-  font-weight: 600;
-
-  line-height: 1.4;
-
-  text-overflow: ellipsis;
+.backup-table-container .table-wrapper thead th {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  background-color: #f8fafc;
   white-space: nowrap;
 }
 
-.summary-info strong {
-  display: block;
+.backup-table-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
 
-  margin-top: 4px;
+  padding: 14px 20px;
 
-  color: #0f172a;
+  border-top: 1px solid #e2e8f0;
 
-  font-size: 20px;
-  font-weight: 700;
-
-  line-height: 1.2;
+  color: #64748b;
+  font-size: 12px;
 }
 
 
 /* ========================================
-   TABELA
-   ======================================== */
-
-.backups-table {
-  width: 100%;
-  min-width: 0;
-}
-
-/*
- * A tabela utiliza o componente Table.vue.
- *
- * Os estilos abaixo são mantidos no próprio
- * Table.css:
- *
- * .table-container
- * .table-header
- * .table-title
- * .table-wrapper
- * table
- * th
- * td
- * .actions
- * .btn-edit
- * .btn-delete
- */
-
-
-/* ========================================
-   MENSAGENS DE STATUS
-   ======================================== */
+   MENSAGENS
+======================================== */
 
 .backups .status-message {
-  width: 100%;
-
-  padding: 18px 20px;
-
-  box-sizing: border-box;
+  padding: 24px;
 
   border: 1px solid #e2e8f0;
   border-radius: 8px;
 
   background-color: #ffffff;
-
-  color: #475569;
-
-  font-size: 12px;
+  color: #64748b;
 
   text-align: center;
+  font-size: 13px;
 }
 
 .backups .status-message.error {
-  border-color: #fecaca;
-
-  background-color: #fef2f2;
-
   color: #b91c1c;
+}
+
+.backups .retry-button {
+  display: block;
+  margin: 12px auto 0;
+  padding: 8px 14px;
+
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+
+  background-color: #ffffff;
+  color: #475569;
+
+  font-size: 12px;
+  cursor: pointer;
+
+  transition: background-color 0.2s;
+}
+
+.backups .retry-button:hover {
+  background-color: #f8fafc;
 }
 
 
 /* ========================================
    RESPONSIVIDADE
-   ======================================== */
+======================================== */
 
-@media (max-width: 1200px) {
-
-  .summary-grid {
-    grid-template-columns:
-      repeat(3, minmax(0, 1fr));
-
-    gap: 14px;
+@media (max-width: 1100px) {
+  .backup-indicators-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
-
 }
 
-
-/* ========================================
-   TABLET
-   ======================================== */
-
-@media (max-width: 900px) {
-
-  .backups-header {
-    padding: 18px 20px;
-  }
-
-  .backups-content {
-    padding: 20px;
-  }
-
-  .summary-grid {
-    grid-template-columns:
-      repeat(2, minmax(0, 1fr));
-  }
-
-}
-
-
-/* ========================================
-   TABLET PEQUENO
-   ======================================== */
-
-@media (max-width: 700px) {
-
-  .backups-header {
+@media (max-width: 768px) {
+  .backups-header,
+  .backup-table-header {
     align-items: flex-start;
+  }
+}
 
+@media (max-width: 650px) {
+  .backups {
+    padding: 16px;
+  }
+
+  .backups-header {
     flex-direction: column;
-
     gap: 14px;
-
-    padding: 16px 20px;
   }
 
-  .backups .header-actions {
-    width: 100%;
-  }
-
+  .backups .header-actions,
   .backups .search-box {
-    flex: 1;
-
-    width: auto;
-  }
-
-  .backups .page-actions {
-    align-items: flex-start;
-
-    flex-direction: column;
-
-    gap: 14px;
-  }
-
-  .backups .new-backup-button {
     width: 100%;
   }
 
-}
-
-
-/* ========================================
-   MOBILE
-   ======================================== */
-
-@media (max-width: 550px) {
-
-  .backups-header {
-    padding: 14px 12px;
-  }
-
-  .backups-content {
-    gap: 20px;
-
-    padding: 16px 12px 20px;
-  }
-
-  .backups-title-area h1 {
-    font-size: 18px;
-  }
-
-  .backups .page-actions h2 {
-    font-size: 14px;
-  }
-
-  .summary-grid {
+  .backup-indicators-grid {
     grid-template-columns: 1fr;
-
-    gap: 12px;
   }
 
-  .summary-card {
-    min-height: 82px;
-
-    padding: 14px;
+  .backup-table-header {
+    padding: 16px;
   }
 
-  .summary-icon {
-    width: 40px;
-    height: 40px;
+  .backups .save-button {
+    width: 100%;
   }
 
+  .backup-table-container {
+    padding: 0 12px;
+  }
+
+  .backup-table-footer {
+    padding: 12px 16px;
+  }
 }
-
-
-/* ========================================
-   MOBILE PEQUENO
-   ======================================== */
 
 @media (max-width: 400px) {
-
-  .backups-content {
-    padding: 12px 10px 16px;
+  .backups {
+    padding: 12px;
   }
 
-  .backups-header {
-    padding: 12px 10px;
+  .backups-header h1 {
+    font-size: 19px;
   }
-
-  .backups .notification-button {
-    width: 34px;
-    height: 34px;
-  }
-
-  .summary-card {
-    gap: 12px;
-  }
-
-}
-
-/* =========================
-   BACKUP
-========================= */
-
-.backups .new-backup-button:disabled {
-  cursor: not-allowed;
-  opacity: 0.6;
-}
-
-.backup-warning {
-  margin: 0;
-  padding: 12px 15px;
-
-  border: 1px solid #fde68a;
-  border-radius: 7px;
-
-  background-color: #fffbeb;
-  color: #92400e;
-
-  font-size: 12px;
-  line-height: 1.5;
 }
