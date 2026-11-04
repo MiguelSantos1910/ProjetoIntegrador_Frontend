@@ -35,7 +35,7 @@
       <Card
         title="Inativos"
         :value="inativos"
-        footer-text="Necessitam de atenção"
+        footer-text="Fora de uso"
         :icon="Ban"
       />
 

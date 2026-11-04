@@ -61,6 +61,25 @@
           B-111
         </option>
       </select>
+
+      <select
+        v-model="selectedStatus"
+        class="filter-select"
+      >
+        <option :value="STATUS_SEM_INATIVOS">
+          Status: Sem inativos
+        </option>
+        <option value="">
+          Status: Todos
+        </option>
+        <option
+          v-for="opcao in opcoesStatus"
+          :key="opcao.value"
+          :value="opcao.value"
+        >
+          {{ opcao.label }}
+        </option>
+      </select>
     </div>
 
     <!-- Carregando -->
@@ -105,6 +124,7 @@
         :headers="tableHeaders"
         :rows="filteredRows"
         :show-actions="true"
+        :can-inactive="podeInativarLinha"
         @edit="editarAtivo"
         @inactive="handleInactive"
         @detail="handleDetail"
@@ -183,6 +203,7 @@ import Info from '../components/Info.vue'
 import { useAtivosStore } from '../stores/ativos'
 import { useAuthStore } from '../stores/auth'
 import { usePdf } from '../composables/gerarPdf.js'
+import { STATUS_ATIVO } from '../composables/status.js'
 
 import '../assets/css/Ativos.css'
 
@@ -196,6 +217,14 @@ const { gerarPdf } = usePdf()
 const search = ref('')
 const selectedCategory = ref('')
 const selectedRoom = ref('')
+
+// Por padrão a lista esconde os inativos; "Todos" ou "Inativo" os mostram.
+const STATUS_SEM_INATIVOS = '__SEM_INATIVOS__'
+const selectedStatus = ref(STATUS_SEM_INATIVOS)
+
+const opcoesStatus = ['ATIVO', 'EM_MANUTENCAO', 'DEVOLVIDO', 'INATIVO'].map(
+  (value) => ({ value, label: STATUS_ATIVO[value].label })
+)
 
 const showInactiveModal = ref(false)
 const selectedAtivo = ref(null)
@@ -267,13 +296,23 @@ const filteredAtivos = computed(() => {
       !selectedRoom.value ||
       ativo.sala === selectedRoom.value
 
+    const correspondeStatus =
+      selectedStatus.value === STATUS_SEM_INATIVOS
+        ? ativo.status !== 'INATIVO'
+        : !selectedStatus.value || ativo.status === selectedStatus.value
+
     return (
       correspondePesquisa &&
       correspondeTipo &&
-      correspondeSala
+      correspondeSala &&
+      correspondeStatus
     )
   })
 })
+
+const podeInativarLinha = (rowIndex) => {
+  return filteredAtivos.value[rowIndex]?.status !== 'INATIVO'
+}
 
 const filteredRows = computed(() => {
   return filteredAtivos.value.map((ativo) => [
