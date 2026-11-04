@@ -114,6 +114,12 @@
               >
                 <Ban :size="16" />
               </button>
+
+              <!-- Ações extras da tela (opcional) -->
+              <slot
+                name="acoes"
+                :row-index="rowIndex"
+              />
             </td>
           </tr>
 
