@@ -100,7 +100,9 @@ const formFields = ref([
     options: [
       { value: 'ATIVO', label: 'Ativo' },
       { value: 'EM_MANUTENCAO', label: 'Em manutenção' },
-      { value: 'DEVOLVIDO', label: 'Devolvido' }
+      { value: 'DEVOLVIDO', label: 'Devolvido' },
+      // Permite ver o status de um ativo inativo e reativá-lo.
+      { value: 'INATIVO', label: 'Inativo' }
     ],
     placeholder: 'Selecione o status do ativo',
     required: false

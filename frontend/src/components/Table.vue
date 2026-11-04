@@ -105,7 +105,7 @@
 
               <!-- Inativar -->
               <button
-                v-if="showInactive && permissao"
+                v-if="showInactive && permissao && (!canInactive || canInactive(rowIndex))"
                 type="button"
                 class="btn-delete"
                 title="Inativar"
@@ -199,6 +199,13 @@ const props = defineProps({
   showInactive: {
     type: Boolean,
     default: true
+  },
+
+  // Opcional: (rowIndex) => boolean. Esconde o botão Inativar nas linhas
+  // em que ele não se aplica (ex.: registro já inativo).
+  canInactive: {
+    type: Function,
+    default: null
   },
 
   // Altura máxima da área de rolagem.
