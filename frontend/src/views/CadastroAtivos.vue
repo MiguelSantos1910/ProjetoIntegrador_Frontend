@@ -111,14 +111,14 @@ const handleFormSubmit = async (formData) => {
       operacaoSucesso.value = false
       mensagem.value = ''
       mensagemErro.value =
-        ativosStore.errorMessage ||
+        ativosStore.erro ||
         'Ocorreu um erro ao cadastrar o ativo.'
       mostrarInfo.value = true
     }
   } catch (error) {
     operacaoSucesso.value = false
     mensagemErro.value =
-      ativosStore.errorMessage ||
+      ativosStore.erro ||
       'Ocorreu um erro ao cadastrar o ativo.'
     mostrarInfo.value = true
 

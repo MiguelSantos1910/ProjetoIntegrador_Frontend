@@ -543,6 +543,7 @@ import Table from '../components/Table.vue'
 
 import api from '../services/api'
 import { useLogsContaStore } from '../stores/logsUser'
+import { dataHoraFormatada } from '../composables/formatData.js'
 
 import '../assets/css/Perfis.css'
 
@@ -900,28 +901,6 @@ function formatarEvento(evento) {
 
 
 // ========================================
-// FORMATAÇÃO DA DATA
-// ========================================
-
-function formatarData(data) {
-  if (!data) {
-    return '-'
-  }
-
-  const dataFormatada = new Date(data)
-
-  if (Number.isNaN(dataFormatada.getTime())) {
-    return '-'
-  }
-
-  return dataFormatada.toLocaleString('pt-BR', {
-    dateStyle: 'short',
-    timeStyle: 'short'
-  })
-}
-
-
-// ========================================
 // DADOS DA TABELA DE AUDITORIA
 // ========================================
 
@@ -947,7 +926,7 @@ const logsTableRows = computed(() => {
 
       log.ip || '-',
 
-      formatarData(log.data)
+      dataHoraFormatada(log.data)
     ]
   })
 })

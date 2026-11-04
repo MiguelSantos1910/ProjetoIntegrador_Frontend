@@ -212,12 +212,13 @@
               </button>
 
               <button
+                v-if="podeCancelar"
                 type="button"
                 class="delete-button"
-                :disabled="excluindo"
-                @click="handleDelete"
+                :disabled="cancelando"
+                @click="handleCancel"
               >
-                {{ excluindo ? 'Excluindo...' : 'Excluir Manutenção' }}
+                {{ cancelando ? 'Cancelando...' : 'Cancelar Ordem' }}
               </button>
             </div>
           </section>
@@ -309,14 +310,14 @@
 
     <!-- MODAL DE CONFIRMAÇÃO -->
     <ConfirmModal
-      v-model="showDeleteModal"
-      title="Excluir Manutenção?"
-      subtitle="Esta ação não poderá ser desfeita."
+      v-model="showCancelModal"
+      title="Cancelar Ordem?"
+      subtitle="A ordem continuará no histórico com o status Cancelada."
       :item-name="manutencao.ativo.descricao || 'Manutenção'"
       :item-info="`Patrimônio: ${manutencao.ativo.numero_patrimonio || '-'}`"
-      message="A manutenção será removida do sistema."
-      confirm-text="Confirmar Exclusão"
-      @confirm="confirmDelete"
+      message="A ordem de manutenção será marcada como cancelada."
+      confirm-text="Confirmar Cancelamento"
+      @confirm="confirmCancel"
     />
 
     <!-- POPUP DE RESULTADO -->
@@ -365,11 +366,11 @@ const ordensStore = useOrdensStore()
 
 const search = ref('')
 
-const showDeleteModal = ref(false)
+const showCancelModal = ref(false)
 const mostrarInfo = ref(false)
 
 const carregando = ref(false)
-const excluindo = ref(false)
+const cancelando = ref(false)
 const erro = ref('')
 
 const operacaoSucesso = ref(false)
@@ -518,52 +519,61 @@ const handleBack = () => {
   router.back()
 }
 
-const handleDelete = () => {
-  showDeleteModal.value = true
+// O back não permite excluir ordens (rastreabilidade); cancelar mantém o
+// registro e gera log. Ordens já encerradas não podem ser canceladas.
+const podeCancelar = computed(() => {
+  return !['CONCLUIDA', 'CANCELADA'].includes(
+    normalizarStatus(manutencao.value.status)
+  )
+})
+
+const handleCancel = () => {
+  showCancelModal.value = true
 }
 
-const confirmDelete = async () => {
-  if (!manutencao.value.id || excluindo.value) return
+const confirmCancel = async () => {
+  if (!manutencao.value.id || cancelando.value) return
 
-  excluindo.value = true
+  cancelando.value = true
   erro.value = ''
   mostrarInfo.value = false
 
   try {
-    const sucesso = await ordensStore.deleteordens(
-      manutencao.value.id
+    const sucesso = await ordensStore.updateOrder(
+      manutencao.value.id,
+      { status: 'Cancelada' }
     )
 
-    showDeleteModal.value = false
+    showCancelModal.value = false
 
     if (sucesso) {
       operacaoSucesso.value = true
-      mensagem.value = 'Manutenção excluída com sucesso!'
+      mensagem.value = 'Ordem cancelada com sucesso!'
       mensagemErro.value = ''
     } else {
       operacaoSucesso.value = false
       mensagem.value = ''
       mensagemErro.value =
         ordensStore.erro ||
-        'Não foi possível excluir a manutenção.'
+        'Não foi possível cancelar a ordem.'
     }
 
     mostrarInfo.value = true
   } catch (error) {
-    console.error('Erro ao excluir manutenção:', error)
+    console.error('Erro ao cancelar ordem:', error)
 
-    showDeleteModal.value = false
+    showCancelModal.value = false
     operacaoSucesso.value = false
     mensagem.value = ''
 
     mensagemErro.value =
       ordensStore.erro ||
       error.response?.data?.detail ||
-      'Ocorreu um erro ao excluir a manutenção.'
+      'Ocorreu um erro ao cancelar a ordem.'
 
     mostrarInfo.value = true
   } finally {
-    excluindo.value = false
+    cancelando.value = false
   }
 }
 
