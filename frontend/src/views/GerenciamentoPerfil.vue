@@ -648,6 +648,10 @@ const eventosAuditoria = [
     label: 'Banco restaurado'
   },
   {
+    value: 'BACKUP_BAIXADO',
+    label: 'Backup baixado'
+  },
+  {
     value: 'BACKUP_FALHA',
     label: 'Falha no backup'
   }
@@ -908,6 +912,7 @@ function formatarEvento(evento) {
     ALTERACAO_SENHA_FALHA: 'Falha na alteração de senha',
     BACKUP_CRIADO: 'Backup gerado',
     BACKUP_RESTAURADO: 'Banco restaurado',
+    BACKUP_BAIXADO: 'Backup baixado',
     BACKUP_FALHA: 'Falha no backup'
   }
 
