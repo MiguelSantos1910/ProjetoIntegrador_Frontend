@@ -63,7 +63,7 @@ Consulta dos tipos de ativo (Gabinete, Monitor, Teclado e Mesa) e da quantidade 
 - Aba **Auditoria**, com os eventos de cadastro, login, falha, bloqueio, logout e backup, e filtros por usuário e evento.
 
 ### Backup do banco (professor)
-Tela `/backups` para gerar backups e restaurar o sistema a partir deles. Antes de restaurar, o estado atual é salvo automaticamente; ao final, a sessão é encerrada. As ações aparecem na Auditoria. Detalhes em [`docs/backup.md`](https://github.com/MiguelSantos1910/ProjetoIntegrador_Backend/blob/main/docs/backup.md) do back-end.
+Tela `/backups` para gerar, **baixar** e restaurar backups. Antes de restaurar, o estado atual é salvo automaticamente; ao final, a sessão é encerrada. O arquivo baixado (`.sqlite3`) contém os hashes de senha de todos os usuários: guarde-o em local privado. Gerar, baixar e restaurar aparecem na Auditoria. Detalhes em [`docs/backup.md`](https://github.com/MiguelSantos1910/ProjetoIntegrador_Backend/blob/main/docs/backup.md) do back-end.
 
 ### Login, cadastro e configurações
 - Login com JWT. Depois de 5 tentativas erradas, a tela mostra o bloqueio e o tempo restante.
@@ -139,7 +139,7 @@ A URL da API vem da variável `VITE_APP_API_URL` (ver [Configurar a API](#3-conf
 | Ativos | `GET` `POST` `PATCH` | `/api/ativos/` e `/api/ativos/<id>/` |
 | Histórico | `GET` | `/api/historico/` |
 | Ordens e logs | `GET` `POST` `PATCH` | `/api/ordens_manutencao/` e `/api/ordens_manutencao/<id>/logs/` |
-| Backup | `GET` `POST` | `/api/backups/` e `/api/backups/<nome>/restaurar/` |
+| Backup | `GET` `POST` | `/api/backups/`, `/api/backups/<nome>/restaurar/` e `/api/backups/<nome>/download/` |
 
 A lista completa, com regras e permissões, está no [README do back-end](https://github.com/MiguelSantos1910/ProjetoIntegrador_Backend#endpoints-da-api).
 
