@@ -14,6 +14,7 @@ import NovaCategoria from '../views/NovaCategoria.vue'
 import DetalheManutencao from '../views/DetalheManutencao.vue'
 import EditarAtivo from '../views/EditarAtivo.vue'
 import GerenciamentoPerfil from '../views/GerenciamentoPerfil.vue'
+import BackupBanco from '../views/BackupBanco.vue'
 
 // Papéis existentes no backend (mesmas regras de permissions.py no back)
 const PROFESSOR_SUPORTE = ['PROFESSOR', 'SUPORTE']
@@ -143,6 +144,15 @@ const routes = [
     meta: {
       requiresAuth: true,
       roles: PROFESSOR 
+    }
+  },
+  {
+    path: '/backups',
+    name: 'backups',
+    component: BackupBanco,
+    meta: {
+      requiresAuth: true,
+      roles: PROFESSOR
     }
   }
 ]

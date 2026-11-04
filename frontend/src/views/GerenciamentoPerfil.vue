@@ -638,6 +638,18 @@ const eventosAuditoria = [
   {
     value: 'ALTERACAO_SENHA_FALHA',
     label: 'Falha na alteração de senha'
+  },
+  {
+    value: 'BACKUP_CRIADO',
+    label: 'Backup gerado'
+  },
+  {
+    value: 'BACKUP_RESTAURADO',
+    label: 'Banco restaurado'
+  },
+  {
+    value: 'BACKUP_FALHA',
+    label: 'Falha no backup'
   }
 ]
 
@@ -893,7 +905,10 @@ function formatarEvento(evento) {
     LOGIN_FALHA: 'Falha no login',
     LOGIN_BLOQUEADO: 'Login bloqueado',
     LOGOUT: 'Logout',
-    ALTERACAO_SENHA_FALHA: 'Falha na alteração de senha'
+    ALTERACAO_SENHA_FALHA: 'Falha na alteração de senha',
+    BACKUP_CRIADO: 'Backup gerado',
+    BACKUP_RESTAURADO: 'Banco restaurado',
+    BACKUP_FALHA: 'Falha no backup'
   }
 
   return eventos[evento] || evento || '-'
