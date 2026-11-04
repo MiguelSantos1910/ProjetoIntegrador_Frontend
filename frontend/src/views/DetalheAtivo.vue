@@ -492,7 +492,9 @@ const formatarEvento = (evento) => {
     ENTREGA: 'Entrega do ativo',
     DEVOLUCAO: 'Devolução do ativo',
     MANUTENCAO: 'Manutenção do ativo',
-    INATIVO: 'Inativação do ativo'
+    INATIVO: 'Inativação do ativo',
+    REATIVACAO: 'Reativação do ativo',
+    RETORNO: 'Retorno ao uso'
   }
 
   return (
