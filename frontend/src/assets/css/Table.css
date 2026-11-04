@@ -223,7 +223,8 @@
 
 /* Cancelada */
 
-.status-cancelado {
+.status-cancelado,
+.status-cancelada {
   color: #991b1b;
   background-color: #fee2e2;
 }

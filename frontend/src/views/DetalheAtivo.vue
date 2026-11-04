@@ -93,7 +93,7 @@
                 id="descricao"
                 v-model="assetEdit.descricao"
                 type="text"
-                :disabled="ativoInativo"
+                :disabled="somenteLeitura"
               >
             </div>
 
@@ -103,7 +103,7 @@
               <select
                 id="tipo"
                 v-model="assetEdit.tipo"
-                :disabled="ativoInativo"
+                :disabled="somenteLeitura"
               >
                 <option value="GABINETE">
                   Gabinete
@@ -129,7 +129,7 @@
                 id="numero-patrimonio"
                 v-model="assetEdit.numero_patrimonio"
                 type="text"
-                :disabled="ativoInativo"
+                :disabled="somenteLeitura"
               >
             </div>
 
@@ -140,7 +140,7 @@
                 id="sala"
                 v-model="assetEdit.sala"
                 type="text"
-                :disabled="ativoInativo"
+                :disabled="somenteLeitura"
               >
             </div>
 
@@ -150,7 +150,7 @@
               <select
                 id="status"
                 v-model="assetEdit.status"
-                :disabled="ativoInativo"
+                :disabled="somenteLeitura"
               >
                 <option value="ATIVO">
                   Ativo
@@ -181,7 +181,7 @@
           <!-- AÇÕES -->
           <div class="asset-actions">
             <button
-              v-if="!ativoInativo"
+              v-if="podeAlterar && !ativoInativo"
               type="button"
               class="delete-button"
               :disabled="ativosStore.carregando"
@@ -201,6 +201,7 @@
               </button>
 
               <button
+                v-if="podeAlterar"
                 type="button"
                 class="update-button"
                 :disabled="ativosStore.carregando || ativoInativo"
@@ -384,6 +385,7 @@ import QrCode from '../components/QrCode.vue'
 import Info from '../components/Info.vue'
 
 import { useAtivosStore } from '../stores/ativos'
+import { useAuthStore } from '../stores/auth'
 
 import { STATUS_ATIVO } from '../composables/status.js'
 import { dataFormatada } from '../composables/formatData.js'
@@ -394,6 +396,7 @@ const route = useRoute()
 const router = useRouter()
 
 const ativosStore = useAtivosStore()
+const authStore = useAuthStore()
 
 const search = ref('')
 
@@ -462,6 +465,17 @@ const statusClass = computed(() => {
 
 const ativoInativo = computed(() => {
   return asset.value?.status === 'INATIVO'
+})
+
+// Mesma regra do back (ativos/permissions.py): só professor e suporte
+// alteram ativos. Aqui só esconde/desabilita; quem bloqueia é a API.
+const podeAlterar = computed(() => {
+  const papel = String(authStore.papelUsuario || '').toUpperCase()
+  return ['PROFESSOR', 'SUPORTE'].includes(papel)
+})
+
+const somenteLeitura = computed(() => {
+  return ativoInativo.value || !podeAlterar.value
 })
 
 const formatarTipo = (tipo) => {
@@ -570,7 +584,6 @@ const handleUpdate = async () => {
     mensagem.value = ''
 
     mensagemErro.value =
-      ativosStore.errorMessage ||
       ativosStore.erro ||
       'Erro ao atualizar o ativo.'
 
@@ -646,7 +659,6 @@ const confirmDelete = async () => {
     mensagem.value = ''
 
     mensagemErro.value =
-      ativosStore.errorMessage ||
       ativosStore.erro ||
       'Ocorreu um erro ao inativar o ativo.'
 

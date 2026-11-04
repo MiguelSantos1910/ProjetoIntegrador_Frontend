@@ -15,9 +15,8 @@ import DetalheManutencao from '../views/DetalheManutencao.vue'
 import EditarAtivo from '../views/EditarAtivo.vue'
 import GerenciamentoPerfil from '../views/GerenciamentoPerfil.vue'
 
-// Papéis existentes no backend
+// Papéis existentes no backend (mesmas regras de permissions.py no back)
 const PROFESSOR_SUPORTE = ['PROFESSOR', 'SUPORTE']
-const SUPORTE = ['SUPORTE']
 const PROFESSOR = ['PROFESSOR']
 const TODOS_PAPEIS = ['PROFESSOR', 'SUPORTE', 'ALUNO']
 
@@ -116,7 +115,7 @@ const routes = [
     component: ManutencaoAtivo,
     meta: {
       requiresAuth: true,
-      roles: SUPORTE
+      roles: PROFESSOR_SUPORTE
     }
   },
   {
@@ -125,7 +124,7 @@ const routes = [
     component: DetalheManutencao,
     meta: {
       requiresAuth: true,
-      roles: SUPORTE
+      roles: PROFESSOR_SUPORTE
     }
   },
   {

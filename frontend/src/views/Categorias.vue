@@ -167,30 +167,12 @@
           :headers="categoriasHeaders"
           :rows="filteredCategories"
           :show-actions="true"
+          :show-inactive="false"
           @edit="handleEdit"
-          @inactive="handleInactive"
           @detail="handleDetail"
         />
       </section>
     </main>
-
-
-    <!-- MODAL DE EXCLUSÃO -->
-
-    <ConfirmModal
-      v-model="showDeleteModal"
-      title="Inativar Categoria?"
-      subtitle="Esta ação poderá ser desfeita."
-      :item-name="selectedCategory?.name || ''"
-      :item-info="
-        selectedCategory
-          ? `${selectedCategory.assets} ativos associados`
-          : ''
-      "
-      message="A categoria será inativada do sistema. Certifique-se de que não existem ativos vinculados a ela antes de confirmar."
-      confirm-text="Confirmar Inativação"
-      @confirm="confirmInactive"
-    />
 
     <Info
       v-model="mostrarInfo"
@@ -222,7 +204,6 @@ import {
 } from 'lucide-vue-next'
 
 import Table from '../components/Table.vue'
-import ConfirmModal from '../components/ConfirmModal.vue'
 
 import { useAtivosStore } from '../stores/ativos'
 import { useAuthStore } from '../stores/auth'
@@ -238,8 +219,6 @@ const authStore = useAuthStore()
 
 
 const search = ref('')
-const showDeleteModal = ref(false)
-const selectedCategory = ref(null)
 
 const mensagem = ref('')
 const mensagemErro = ref('')
@@ -395,39 +374,6 @@ const handleEdit = (rowIndex) => {
 
 }
 
-
-const handleInactive = (rowIndex) => {
-  const ativo = filteredAtivos.value[rowIndex]
-
-  if (!ativo) return
-
-  selectedAtivo.value = ativo
-  showInactiveModal.value = true
-}
-
-const confirmInactive = () => {
-
-  if (!selectedCategory.value) {
-    return
-  }
-
-   if (selectedCategory.value) {
-    operacaoSucesso.value = true
-    mensagem.value = 'Categoria removido com sucesso!'
-    mensagemErro.value = ''
-    mostrarInfo.value = true
-  } else {
-    operacaoSucesso.value = false
-    mensagem.value = ''
-    mensagemErro.value =
-      ativosStore.errorMessage ||
-      'Ocorreu um erro ao inativar o ativo.'
-    mostrarInfo.value = true
-  }
-
-  showDeleteModal.value = false
-  selectedCategory.value = null
-}
 
 const handleDetail = (rowIndex) => {
 
