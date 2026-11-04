@@ -275,6 +275,11 @@
   background-color: #dcfce7;
 }
 
+.log-backup_baixado {
+  color: #92400e;
+  background-color: #fef3c7;
+}
+
 .log-backup_restaurado {
   color: #1d4ed8;
   background-color: #dbeafe;
@@ -416,8 +421,23 @@
 
 
 /* ========================================
-   RESTAURAR (tela de backup)
+   BAIXAR E RESTAURAR (tela de backup)
 ======================================== */
+
+.actions .btn-download {
+  color: #64748b;
+}
+
+.actions .btn-download:hover {
+  background-color: #f1f5f9;
+  color: #0f766e;
+  border-color: #cbd5e1;
+}
+
+.actions .btn-download:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
 
 .actions .btn-restore {
   color: #64748b;
