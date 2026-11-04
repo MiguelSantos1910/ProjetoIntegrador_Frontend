@@ -17,6 +17,8 @@ import GerenciamentoPerfil from '../views/GerenciamentoPerfil.vue'
 
 // Papéis existentes no backend
 const PROFESSOR_SUPORTE = ['PROFESSOR', 'SUPORTE']
+const SUPORTE = ['SUPORTE']
+const PROFESSOR = ['PROFESSOR']
 const TODOS_PAPEIS = ['PROFESSOR', 'SUPORTE', 'ALUNO']
 
 const routes = [
@@ -114,7 +116,7 @@ const routes = [
     component: ManutencaoAtivo,
     meta: {
       requiresAuth: true,
-      roles: TODOS_PAPEIS
+      roles: SUPORTE
     }
   },
   {
@@ -123,7 +125,7 @@ const routes = [
     component: DetalheManutencao,
     meta: {
       requiresAuth: true,
-      roles: PROFESSOR_SUPORTE
+      roles: SUPORTE
     }
   },
   {
@@ -141,7 +143,7 @@ const routes = [
     component: GerenciamentoPerfil,
     meta: {
       requiresAuth: true,
-      roles: PROFESSOR_SUPORTE
+      roles: PROFESSOR 
     }
   }
 ]
