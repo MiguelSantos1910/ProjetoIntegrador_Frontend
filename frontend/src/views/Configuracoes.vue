@@ -52,6 +52,14 @@
           </div>
         </div>
 
+        <p
+          v-if="!podeEditarPerfil"
+          class="config-field-hint"
+        >
+          Nome e e-mail só podem ser alterados por um professor, em Perfis.
+          Você pode alterar a sua senha na seção Segurança.
+        </p>
+
         <div class="config-grid">
           <div class="config-field">
             <label for="nome">Nome</label>
@@ -59,6 +67,7 @@
               id="nome"
               v-model="formData.nome"
               type="text"
+              :readonly="!podeEditarPerfil"
               autocomplete="name"
               placeholder="Digite seu nome"
               maxlength="150"
@@ -71,6 +80,7 @@
               id="email"
               v-model="formData.email"
               type="email"
+              :readonly="!podeEditarPerfil"
               autocomplete="email"
               placeholder="Digite seu e-mail"
               maxlength="254"
@@ -85,18 +95,6 @@
               type="text"
               placeholder="Função do usuário"
               readonly
-            >
-          </div>
-
-          <div class="config-field">
-            <label for="telefone">Telefone</label>
-            <input
-              id="telefone"
-              v-model="formData.telefone"
-              type="tel"
-              autocomplete="tel"
-              placeholder="Digite seu telefone"
-              maxlength="30"
             >
           </div>
         </div>
@@ -435,7 +433,7 @@
 </template>
 
 <script setup>
-import { reactive, onMounted, ref } from 'vue'
+import { computed, reactive, onMounted, ref } from 'vue'
 
 import {
   User,
@@ -476,7 +474,6 @@ const formData = reactive({
   nome: '',
   email: '',
   funcao: '',
-  telefone: '',
 
   notificacoes: true,
   alertasManutencao: true,
@@ -487,6 +484,24 @@ const formData = reactive({
   formatoData: 'dd/mm/yyyy',
   fusoHorario: 'america_sao_paulo'
 })
+
+// O back só deixa o professor editar dados de conta (contas/views.py);
+// aluno e suporte alteram apenas a própria senha.
+const podeEditarPerfil = computed(() => {
+  const usuario = authStore.usuario
+
+  return Boolean(
+    usuario?.is_superuser ||
+      String(usuario?.papel || '').toUpperCase() === 'PROFESSOR'
+  )
+})
+
+const salvarPreferencias = () => {
+  localStorage.setItem(
+    STORAGE_KEY,
+    JSON.stringify(obterPreferencias())
+  )
+}
 
 const formatarPapel = (papel) => {
   const papeis = {
@@ -515,7 +530,6 @@ const carregarUsuario = () => {
 
   formData.email = usuario.email || ''
   formData.funcao = formatarPapel(usuario.papel)
-  formData.telefone = usuario.telefone || usuario.phone || ''
 }
 
 const carregarConfiguracoes = () => {
@@ -621,6 +635,23 @@ onMounted(async () => {
 const handleSave = async () => {
   if (salvando.value) return
 
+  // Sem permissão para editar o perfil: salva só as preferências locais.
+  if (!podeEditarPerfil.value) {
+    try {
+      salvarPreferencias()
+      carregarUsuario()
+      obterSnapshot()
+      mostrarMensagem('Preferências salvas com sucesso.')
+    } catch (error) {
+      console.error('Erro ao salvar preferências:', error)
+      mostrarMensagem(
+        'Não foi possível salvar as preferências no navegador.',
+        'error'
+      )
+    }
+    return
+  }
+
   const nomeCompleto = formData.nome.trim()
   const email = formData.email.trim()
 
@@ -662,8 +693,7 @@ const handleSave = async () => {
       {
         first_name: firstName,
         last_name: lastName,
-        email,
-        telefone: formData.telefone.trim()
+        email
       }
     )
 
@@ -678,10 +708,7 @@ const handleSave = async () => {
 
     // Persiste as preferências apenas neste navegador.
     try {
-      localStorage.setItem(
-        STORAGE_KEY,
-        JSON.stringify(obterPreferencias())
-      )
+      salvarPreferencias()
     } catch (error) {
       console.error('Erro ao salvar preferências:', error)
 
@@ -703,7 +730,6 @@ const handleSave = async () => {
       authStore.usuario.first_name = firstName
       authStore.usuario.last_name = lastName
       authStore.usuario.email = email
-      authStore.usuario.telefone = formData.telefone.trim()
     }
 
     formData.funcao = formatarPapel(authStore.usuario?.papel)

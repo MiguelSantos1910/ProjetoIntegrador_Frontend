@@ -291,6 +291,23 @@
    GRID DOS CAMPOS
    ========================= */
 
+/* Aviso exibido quando o perfil é somente leitura (aluno e suporte) */
+
+.config-field-hint {
+  margin: -6px 0 16px;
+  color: var(--cfg-text-muted);
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+/* Campos somente leitura (função e, para aluno e suporte, nome e e-mail) */
+
+.config-field input[readonly] {
+  background-color: var(--cfg-bg);
+  color: var(--cfg-text-muted);
+  cursor: default;
+}
+
 .config-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
