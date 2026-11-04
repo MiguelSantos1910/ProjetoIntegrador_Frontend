@@ -64,7 +64,7 @@
         </li>
 
         <!-- Relatórios -->
-        <li v-if="podeGerenciarPerfis">
+        <li v-if="podeVerRelatorios">
           <router-link to="/relatorios">
             <ChartNoAxesColumnIncreasing
               class="nav-icon"
@@ -185,9 +185,15 @@ const podeGerenciarPerfis = computed(() => {
   return ['PROFESSOR'].includes(papelAtual.value)
 })
 
-// Permissão para gerenciamento de manutenção
+// Manutenção: professor e suporte criam e editam ordens no back
+// (ordens_manutencao/permissions.py); aluno só consulta.
 const podeGerenciarManutencao = computed(() => {
-  return ['SUPORTE'].includes(papelAtual.value)
+  return ['PROFESSOR', 'SUPORTE'].includes(papelAtual.value)
+})
+
+// Relatórios: mesma regra da rota /relatorios.
+const podeVerRelatorios = computed(() => {
+  return ['PROFESSOR', 'SUPORTE'].includes(papelAtual.value)
 })
 
 // Primeira letra do nome

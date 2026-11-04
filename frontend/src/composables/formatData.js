@@ -1,5 +1,26 @@
-export const dataFormatada = (data) => {
-  if (!data) return '-'
+const paraData = (data) => {
+  if (!data) return null
 
-  return new Date(data).toLocaleDateString('pt-BR')
+  const convertida = new Date(data)
+
+  return Number.isNaN(convertida.getTime()) ? null : convertida
+}
+
+// Só a data: 04/11/2026
+export const dataFormatada = (data) => {
+  const convertida = paraData(data)
+
+  return convertida ? convertida.toLocaleDateString('pt-BR') : '-'
+}
+
+// Data e hora, para registros de auditoria: 04/11/2026, 14:32
+export const dataHoraFormatada = (data) => {
+  const convertida = paraData(data)
+
+  return convertida
+    ? convertida.toLocaleString('pt-BR', {
+        dateStyle: 'short',
+        timeStyle: 'short'
+      })
+    : '-'
 }

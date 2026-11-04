@@ -1010,9 +1010,7 @@ const formatStatusManutencao = (status) => {
     PENDENTE: 'Pendente',
     ABERTA: 'Aberta',
     EM_ANDAMENTO: 'Em andamento',
-    CONCLUIDO: 'Concluído',
-    CONCLUIDA: 'Concluída',
-    CANCELADA: 'Cancelada'
+    CONCLUIDO: 'Concluído'
   }
 
   return (

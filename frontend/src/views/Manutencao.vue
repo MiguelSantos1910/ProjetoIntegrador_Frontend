@@ -296,7 +296,7 @@ async function handleFormSubmit(data) {
     operacaoSucesso.value = false
     mensagem.value = ''
     mensagemErro.value =
-      ordensStore.errorMessage ||
+      ordensStore.erro ||
       'Ocorreu um erro ao cadastrar a ordem de manutenção.'
     mostrarInfo.value = true
   }
