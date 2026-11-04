@@ -87,6 +87,18 @@
           </router-link>
         </li>
 
+        <!-- Backup do banco -->
+        <li v-if="podeGerenciarPerfis">
+          <router-link to="/backups">
+            <DatabaseBackup
+              class="nav-icon"
+              :size="15"
+              :stroke-width="1.8"
+            />
+            <span>Backup</span>
+          </router-link>
+        </li>
+
         <!-- Configurações -->
         <li>
           <router-link to="/configuracoes">
@@ -141,7 +153,8 @@ import {
   Wrench,
   Grid2X2,
   ChartNoAxesColumnIncreasing,
-  ShieldCheck
+  ShieldCheck,
+  DatabaseBackup
 } from 'lucide-vue-next'
 
 import { useAuthStore } from '../stores/auth'

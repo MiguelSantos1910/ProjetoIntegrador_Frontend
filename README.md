@@ -141,6 +141,10 @@ O frontend também precisa tratar situações como credenciais inválidas, sess�
 
 A autorização definitiva deve ser aplicada pelo backend; a interface não substitui as permissões do servidor.
 
+### Backup do banco
+
+Tela exclusiva do professor (`/backups`) para gerar backups do banco e restaurar o sistema a partir deles. Antes de restaurar, o estado atual é salvo automaticamente; ao final, a sessão é encerrada. Gerar, restaurar e falhas aparecem na aba de auditoria. Detalhes em `docs/backup.md` do repositório do backend.
+
 ### Configurações
 
 A página de configurações permite ajustar preferências da interface.
@@ -386,7 +390,7 @@ O sistema tem três papéis. O painel esconde menus e botões conforme o papel, 
 
 | Papel | O que pode fazer no painel |
 |---|---|
-| `PROFESSOR` | Tudo: ativos (cadastrar, editar, inativar), categorias, manutenção, relatórios, auditoria e gerenciamento de perfis. |
+| `PROFESSOR` | Tudo: ativos (cadastrar, editar, inativar), categorias, manutenção, relatórios, auditoria, gerenciamento de perfis e backup do banco. |
 | `SUPORTE` | Ativos (cadastrar, editar, inativar), categorias, ordens de manutenção e relatórios. Não gerencia perfis. |
 | `ALUNO` | Somente consulta: dashboard, lista e detalhe de ativos, categorias e configurações. |
 
