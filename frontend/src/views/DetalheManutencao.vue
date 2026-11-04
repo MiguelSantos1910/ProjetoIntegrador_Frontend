@@ -547,6 +547,10 @@ const confirmCancel = async () => {
     showCancelModal.value = false
 
     if (sucesso) {
+      // Atualiza o status exibido: o badge muda e o botão some na hora.
+      manutencao.value.status =
+        ordensStore.ordem?.status || 'Cancelada'
+
       operacaoSucesso.value = true
       mensagem.value = 'Ordem cancelada com sucesso!'
       mensagemErro.value = ''

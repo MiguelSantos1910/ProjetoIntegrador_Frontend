@@ -12,7 +12,7 @@
             v-model="search"
             type="text"
             class="search-input"
-            placeholder="Pesquisar ativos..."
+            placeholder="Pesquisar por nome, patrimônio ou código..."
           >
         </div>
 
@@ -268,6 +268,11 @@ const filteredAtivos = computed(() => {
       ativo.numero_patrimonio ?? ''
     ).toLowerCase()
 
+    // Código do QR Code (o mesmo lido pelo app), para consultar pelo código.
+    const codigoQr = String(
+      ativo.codigo_qr || ''
+    ).toLowerCase()
+
     const tipo = String(
       ativo.tipo || ''
     ).toLowerCase()
@@ -284,6 +289,7 @@ const filteredAtivos = computed(() => {
       !termo ||
       descricao.includes(termo) ||
       patrimonio.includes(termo) ||
+      codigoQr.includes(termo) ||
       tipo.includes(termo) ||
       sala.includes(termo) ||
       status.includes(termo)
