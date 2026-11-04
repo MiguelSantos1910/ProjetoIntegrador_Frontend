@@ -364,9 +364,13 @@ const confirmInactive = async () => {
     mensagem.value = ''
 
     mensagemErro.value =
-      ativosStore.errorMessage ||
       ativosStore.erro ||
       'Ocorreu um erro ao inativar o ativo.'
+
+    // A mensagem já foi copiada para o popup; sem limpar, a tabela fica
+    // trocada pelo bloco de erro (v-else-if="ativosStore.erro").
+    ativosStore.erro = null
+    selectedAtivo.value = null
 
     mostrarInfo.value = true
 
