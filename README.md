@@ -20,6 +20,7 @@ O projeto está sendo desenvolvido de forma incremental, com foco em uma interfa
 - [Relatórios e indicadores](#relatórios-e-indicadores)
 - [Persistência de configurações](#persistência-de-configurações)
 - [Executando localmente](#executando-localmente)
+- [Usuários de teste](#usuários-de-teste)
 - [Estrutura do projeto](#estrutura-do-projeto)
 - [Próximas melhorias](#próximas-melhorias)
 - [Status do projeto](#status-do-projeto)
@@ -274,10 +275,10 @@ Esses caminhos devem corresponder às rotas configuradas no backend.
 A URL base deve ser configurada de acordo com o ambiente de execução, por exemplo, utilizando variáveis de ambiente do Vite.
 
 ```env
-VITE_API_URL=http://127.0.0.1:8000/api
+VITE_APP_API_URL=http://127.0.0.1:8000/api
 ```
 
-O serviço Axios pode utilizar essa variável para definir sua `baseURL`.
+O serviço Axios (`src/services/api.js`) usa essa variável como `baseURL`. Se ela não for definida, o padrão é `http://127.0.0.1:8000/api`.
 
 Em produção, a variável deve apontar para a URL publicada da API. Não coloque senhas, chaves secretas ou outras credenciais privadas em variáveis `VITE_*`, pois elas podem ser incorporadas ao código enviado ao navegador.
 
@@ -345,13 +346,21 @@ npm install
 
 ### 3. Configurar a API
 
-Crie ou ajuste o arquivo `.env` na raiz do frontend:
+Copie o arquivo de exemplo e ajuste a URL da API:
 
-```env
-VITE_API_URL=http://127.0.0.1:8000/api
+```bash
+cp .env.example .env
 ```
 
-Utilize a URL correspondente à configuração do serviço Axios do projeto.
+```env
+# Backend local
+VITE_APP_API_URL=http://127.0.0.1:8000/api
+
+# Mesma API usada pelo aplicativo mobile (servidor publicado)
+# VITE_APP_API_URL=http://54.20.29.135/api
+```
+
+O `.env` não é versionado. Para o painel web e o aplicativo mobile mostrarem os mesmos dados, os dois precisam apontar para a mesma API.
 
 ### 4. Iniciar o ambiente de desenvolvimento
 
@@ -370,6 +379,25 @@ npm run build
 O comando gera os arquivos de produção no diretório configurado pelo Vite, normalmente `dist/`.
 
 Para conferir os scripts e comandos disponíveis, consulte o `package.json` do projeto.
+
+## Usuários de teste
+
+O sistema tem três papéis. O painel esconde menus e botões conforme o papel, e o backend bloqueia (`403`) qualquer operação não permitida.
+
+| Papel | O que pode fazer no painel |
+|---|---|
+| `PROFESSOR` | Tudo: ativos (cadastrar, editar, inativar), categorias, manutenção, relatórios, auditoria e gerenciamento de perfis. |
+| `SUPORTE` | Ativos (cadastrar, editar, inativar), categorias, ordens de manutenção e relatórios. Não gerencia perfis. |
+| `ALUNO` | Somente consulta: dashboard, lista e detalhe de ativos, categorias e configurações. |
+
+Para preparar os usuários de teste no backend:
+
+1. Crie as contas pela tela de cadastro do painel (`/cadastro`). Todo cadastro público nasce como `ALUNO`.
+2. Entre com um usuário `PROFESSOR` (ou no Django Admin) e altere o papel das contas de professor e suporte em **Perfis**.
+
+Sugestão de contas para a demonstração: `professor_teste`, `suporte_teste` e `aluno_teste`. As senhas não ficam no repositório; são entregues à banca separadamente.
+
+> O aplicativo mobile converte o usuário para minúsculas antes do login. Use nomes de usuário em minúsculas nas contas que também serão usadas no app.
 
 ## Estrutura do projeto
 
@@ -411,9 +439,9 @@ A estrutura é ilustrativa e deve ser ajustada aos diretórios efetivamente pres
 
 ## Aplicativo mobile e Realidade Aumentada
 
-O aplicativo mobile é uma extensão planejada do Easy Asset, desenvolvida separadamente em Flutter e integrada à mesma API.
+O aplicativo mobile do Easy Asset é desenvolvido em Flutter, em repositório separado ([pi4-mobile-lando](https://github.com/LANDOSOUZA/pi4-mobile-lando)), e consome a mesma API. Por padrão, o app usa a API publicada em `http://54.20.29.135/api`; para ver no painel os dados do app, configure `VITE_APP_API_URL` com essa mesma URL (ver [Configurar a API](#3-configurar-a-api)).
 
-Entre as possibilidades de evolução estão:
+Funções previstas ou em evolução no app:
 
 - Consulta de ativos em campo.
 - Identificação por QR Code.
