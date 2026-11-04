@@ -58,6 +58,44 @@ export const useBackupsStore = defineStore('backups', {
             }
         },
 
+        // O download passa pelo Axios (e não por um link comum) porque a
+        // rota exige o token JWT no cabeçalho Authorization.
+        async baixarBackup(nome) {
+            this.erro = null
+
+            try {
+                const response = await api.get(
+                    `/backups/${encodeURIComponent(nome)}/download/`,
+                    { responseType: 'blob' }
+                )
+
+                const url = URL.createObjectURL(response.data)
+                const link = document.createElement('a')
+
+                link.href = url
+                link.download = nome
+                document.body.appendChild(link)
+                link.click()
+                link.remove()
+
+                URL.revokeObjectURL(url)
+                return true
+            } catch (error) {
+                // Com responseType 'blob', o corpo do erro também vem em blob.
+                let detalhe = null
+
+                try {
+                    const texto = await error.response?.data?.text?.()
+                    detalhe = texto ? JSON.parse(texto).detail : null
+                } catch {
+                    detalhe = null
+                }
+
+                this.erro = detalhe || 'Erro ao baixar o backup'
+                return false
+            }
+        },
+
         async restaurarBackup(nome) {
             this.processando = true
             this.erro = null

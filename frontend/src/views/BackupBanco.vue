@@ -106,7 +106,8 @@
                 <p>
                   Restaurar volta o banco inteiro à data do backup, inclusive
                   usuários, senhas e logs de auditoria. O estado atual é salvo
-                  antes, como "Antes da restauração".
+                  antes, como "Antes da restauração". O arquivo baixado contém
+                  os hashes de senha de todos: guarde-o em local privado.
                 </p>
               </div>
 
@@ -136,6 +137,17 @@
                 :max-height="520"
               >
                 <template #acoes="{ rowIndex }">
+                  <button
+                    type="button"
+                    class="btn-download"
+                    title="Baixar"
+                    aria-label="Baixar este backup"
+                    :disabled="backupsStore.processando || baixando"
+                    @click="handleBaixar(rowIndex)"
+                  >
+                    <Download :size="16" />
+                  </button>
+
                   <button
                     type="button"
                     class="btn-restore"
@@ -203,6 +215,7 @@ import { useRouter } from 'vue-router'
 
 import {
   Database,
+  Download,
   History,
   Package,
   RotateCcw,
@@ -231,6 +244,7 @@ const authStore = useAuthStore()
 const search = ref('')
 
 const showRestoreModal = ref(false)
+const baixando = ref(false)
 const selectedBackup = ref(null)
 
 const mensagem = ref('')
@@ -339,6 +353,29 @@ const handleCriarBackup = async () => {
   mostrarInfo.value = true
 }
 
+
+const handleBaixar = async (rowIndex) => {
+  const backup = backupsFiltrados.value[rowIndex]
+
+  if (!backup || baixando.value) return
+
+  baixando.value = true
+
+  const sucesso = await backupsStore.baixarBackup(backup.nome)
+
+  baixando.value = false
+
+  // Sucesso: o próprio navegador mostra o download. Só o erro vai ao popup.
+  if (!sucesso) {
+    operacaoSucesso.value = false
+    mensagem.value = ''
+    mensagemErro.value =
+      backupsStore.erro ||
+      'Ocorreu um erro ao baixar o backup.'
+    backupsStore.erro = null
+    mostrarInfo.value = true
+  }
+}
 
 const handleRestaurar = (rowIndex) => {
   const backup = backupsFiltrados.value[rowIndex]
