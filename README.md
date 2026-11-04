@@ -1,346 +1,163 @@
 # Easy Asset — Frontend
 
-**Sistema de Gestão de Ativos | Projeto Integrador**
+Painel web do Easy Asset, o sistema de gestão de laboratórios e ativos do Projeto Integrador IV (ADS, SENAI Roberto Mange). Feito com **Vue 3, Vite, Pinia e Tailwind CSS**, consome a API REST do [back-end Django](https://github.com/MiguelSantos1910/ProjetoIntegrador_Backend), a mesma usada pelo aplicativo mobile em Flutter.
 
-Frontend web do Easy Asset, um sistema de gestão de ativos desenvolvido para centralizar o cadastro, a consulta, o acompanhamento e a manutenção de equipamentos.
-
-A aplicação é construída com **Vue.js, Vite, Tailwind CSS e Pinia**, consumindo uma API REST desenvolvida em Django e Django REST Framework. A arquitetura também prevê a integração com um aplicativo mobile desenvolvido em Flutter, compartilhando a mesma API.
-
-O projeto está sendo desenvolvido de forma incremental, com foco em uma interface organizada, componentes reutilizáveis e separação entre apresentação, gerenciamento de estado e comunicação com o backend.
+O painel é o ambiente de administração: cadastro e consulta de ativos, inativação, ordens de manutenção, histórico, relatórios, perfis de usuário, auditoria e backup do banco. Ele não guarda regras de negócio nem acessa o banco: tudo passa pela API, que é quem decide as permissões.
 
 ## Sumário
 
-- [Sobre o projeto](#sobre-o-projeto)
 - [Tecnologias](#tecnologias)
 - [Funcionalidades](#funcionalidades)
-- [Páginas da aplicação](#páginas-da-aplicação)
-- [Arquitetura do frontend](#arquitetura-do-frontend)
+- [Páginas e rotas](#páginas-e-rotas)
+- [Papéis e permissões no painel](#papéis-e-permissões-no-painel)
+- [Arquitetura](#arquitetura)
 - [Integração com a API](#integração-com-a-api)
-- [Gerenciamento de estado](#gerenciamento-de-estado)
-- [Relatórios e indicadores](#relatórios-e-indicadores)
-- [Persistência de configurações](#persistência-de-configurações)
 - [Executando localmente](#executando-localmente)
 - [Usuários de teste](#usuários-de-teste)
 - [Estrutura do projeto](#estrutura-do-projeto)
-- [Próximas melhorias](#próximas-melhorias)
-- [Status do projeto](#status-do-projeto)
-
-## Sobre o projeto
-
-O Easy Asset tem como objetivo facilitar o gerenciamento do ciclo de vida dos ativos, reunindo em uma única aplicação informações sobre equipamentos, categorias, disponibilidade e manutenção.
-
-A interface web funciona como o ambiente principal de consulta e administração, permitindo acompanhar os indicadores do sistema, gerenciar ativos e ordens de manutenção, consultar históricos e gerar relatórios.
-
-A aplicação foi estruturada para consumir uma API centralizada, evitando que o frontend mantenha regras de negócio ou acesso ao banco de dados de forma independente.
+- [Qualidade e CI](#qualidade-e-ci)
+- [Aplicativo mobile e Realidade Aumentada](#aplicativo-mobile-e-realidade-aumentada)
+- [Limitações conhecidas](#limitações-conhecidas)
+- [Créditos e licenças](#créditos-e-licenças)
+- [Repositórios](#repositórios)
 
 ## Tecnologias
 
-| Tecnologia | Finalidade |
+| Tecnologia | Uso |
 |---|---|
-| Vue.js 3 | Construção da interface baseada em componentes |
+| Vue 3 | Interface baseada em componentes |
 | Vite | Ambiente de desenvolvimento e build |
-| Tailwind CSS | Estilização da interface |
-| Pinia | Gerenciamento de estado compartilhado |
-| Vue Router | Navegação entre páginas |
-| Axios | Comunicação HTTP com a API |
-| Lucide Vue Next | Ícones da interface |
-| `localStorage` | Persistência local das preferências da interface |
-| Django REST Framework | Backend consumido pela aplicação |
-
-O backend e o aplicativo mobile são projetos separados. O frontend web não acessa diretamente o banco de dados: todas as operações remotas são realizadas por meio da API.
+| Vue Router | Rotas, com controle de acesso por papel |
+| Pinia | Estado compartilhado (stores por módulo) |
+| Axios | Comunicação HTTP com a API, com o token JWT |
+| Tailwind CSS | Estilização (junto com um CSS por página em `src/assets/css/`) |
+| Chart.js e vue-chartjs | Gráficos do Dashboard e de Relatórios |
+| jsPDF e jspdf-autotable | Exportação de relatórios em PDF |
+| qrcode.vue | QR Code do ativo na tela de detalhe |
+| Lucide | Ícones |
 
 ## Funcionalidades
 
 ### Dashboard
+Indicadores de ativos (total, disponíveis, em manutenção e inativos), gráficos por tipo e histórico recente das movimentações.
 
-O dashboard apresenta uma visão geral dos ativos e das operações do sistema.
-
-Os indicadores trabalhados na interface incluem:
-
-- Total de ativos cadastrados.
-- Ativos em manutenção.
-- Ativos disponíveis.
-- Ativos que exigem atenção.
-- Visualizações gráficas para acompanhamento dos dados.
-
-Os valores exibidos devem ser alimentados pelos dados disponíveis no backend, evitando manter indicadores definitivos apenas em valores fixos no frontend.
-
-### Gestão de ativos
-
-O módulo de ativos permite organizar as informações dos equipamentos cadastrados.
-
-Funcionalidades contempladas na interface:
-
-- Listagem e consulta de ativos.
-- Cadastro de novos ativos.
-- Edição das informações.
-- Visualização dos detalhes do equipamento.
-- Identificação por categoria e status.
-- Consulta de informações relacionadas ao ativo.
-
-A disponibilidade de cada operação depende da integração com a API e das permissões do usuário autenticado.
-
-### Categorias
-
-O módulo de categorias permite organizar os ativos por classificação.
-
-A interface contempla páginas para:
-
-- Listagem de categorias.
-- Cadastro de novas categorias.
-
-As operações de persistência dependem dos endpoints correspondentes no backend.
+### Ativos
+- Lista com busca por **nome, patrimônio, tipo, sala ou código do QR Code** e filtros de tipo, sala e status. Os inativos ficam ocultos por padrão; o filtro de status permite mostrá-los.
+- Cadastro, edição e **inativação**. Ativos não são excluídos, para preservar o histórico. Na edição, o status "Inativo" permite reativar.
+- Detalhe do ativo com o **QR Code** (o mesmo lido pelo app) e o **histórico de movimentações**: cadastro, manutenção, devolução, inativação, reativação e retorno ao uso.
+- Exportação da lista em PDF.
 
 ### Manutenção
-
-O módulo de manutenção permite acompanhar as ordens relacionadas aos ativos.
-
-O modelo de ordem de manutenção utilizado no backend contempla:
-
-- Ativo relacionado.
-- Descrição do serviço.
-- Responsável.
-- Status da ordem.
-- Custo estimado.
-- Data de abertura.
-- Data de conclusão.
-
-Os status definidos no modelo são `Pendente`, `Em andamento`, `Concluída` e `Cancelada`.
-
-A interface de manutenção e os relatórios devem refletir os dados efetivamente retornados pela API.
-
-### Histórico das ordens de manutenção
-
-O frontend também contempla a integração com o histórico de alterações das ordens.
-
-A consulta utiliza o endpoint:
-
-```http
-GET /api/ordens_manutencao/<id>/logs/
-```
-
-O histórico pode apresentar informações como:
-
-- Identificação da ordem.
-- Ação registrada.
-- Descrição da alteração.
-- Status anterior.
-- Novo status.
-- Usuário relacionado.
-- Data do evento.
-
-A exibição depende de os registros estarem disponíveis no backend e de o usuário ter autorização para consultar os dados.
-
-### Usuários e autenticação
-
-A aplicação possui páginas de login e cadastro de usuários.
-
-A integração com o backend utiliza autenticação por JWT. O token de acesso deve acompanhar as requisições protegidas da API.
-
-O frontend também precisa tratar situações como credenciais inválidas, sessão expirada, falhas de comunicação e respostas de acesso negado.
-
-A autorização definitiva deve ser aplicada pelo backend; a interface não substitui as permissões do servidor.
-
-### Backup do banco
-
-Tela exclusiva do professor (`/backups`) para gerar backups do banco e restaurar o sistema a partir deles. Antes de restaurar, o estado atual é salvo automaticamente; ao final, a sessão é encerrada. Gerar, restaurar e falhas aparecem na aba de auditoria. Detalhes em `docs/backup.md` do repositório do backend.
-
-### Configurações
-
-A página de configurações permite ajustar preferências da interface.
-
-As preferências que precisam permanecer após a navegação ou a atualização da página podem ser persistidas no `localStorage` do navegador.
-
-Esse armazenamento é destinado às configurações locais da interface e não deve ser utilizado como substituto do banco de dados central para ativos, usuários ou ordens de manutenção.
+- Abertura de ordens de manutenção para um ativo, com responsável, custo estimado e status (`Pendente`, `Em andamento`, `Concluída` e `Cancelada`).
+- Detalhe da ordem com os **logs** de criação e de mudança de status.
+- **Cancelar ordem** no lugar de excluir: a ordem fica no histórico com o status `Cancelada`.
 
 ### Relatórios
+Indicadores, gráficos, tabelas de ordens e de usuários com filtros, histórico das ordens e exportação em PDF. A exportação é feita no navegador, com os dados carregados.
 
-A página de relatórios reúne informações para acompanhamento dos ativos e das operações de manutenção.
+### Categorias
+Consulta dos tipos de ativo (Gabinete, Monitor, Teclado e Mesa) e da quantidade de ativos de cada tipo. Os tipos são fixos no back-end (ver [Limitações](#limitações-conhecidas)).
 
-Entre os recursos trabalhados estão:
+### Perfis e auditoria (professor)
+- Gerenciamento de usuários e dos papéis (`PROFESSOR`, `SUPORTE` e `ALUNO`).
+- Aba **Auditoria**, com os eventos de cadastro, login, falha, bloqueio, logout e backup, e filtros por usuário e evento.
 
-- Tabelas de dados.
-- Indicadores e gráficos.
-- Visualização de ordens por status.
-- Filtros para consulta.
-- Histórico das ordens de manutenção.
-- Exportação de relatórios em PDF.
+### Backup do banco (professor)
+Tela `/backups` para gerar backups e restaurar o sistema a partir deles. Antes de restaurar, o estado atual é salvo automaticamente; ao final, a sessão é encerrada. As ações aparecem na Auditoria. Detalhes em [`docs/backup.md`](https://github.com/MiguelSantos1910/ProjetoIntegrador_Backend/blob/main/docs/backup.md) do back-end.
 
-A exportação em PDF é realizada pela aplicação web utilizando os dados disponíveis na interface. Ela não implica necessariamente a existência de um endpoint específico de exportação no backend.
+### Login, cadastro e configurações
+- Login com JWT. Depois de 5 tentativas erradas, a tela mostra o bloqueio e o tempo restante.
+- Cadastro público, que sempre cria um `ALUNO`. O professor muda o papel em Perfis.
+- Botão **Sair**, que invalida a sessão no back-end.
+- **Configurações:** troca da própria senha (todos os papéis) e preferências da interface, salvas no navegador. Nome e e-mail só são editáveis pelo professor; para aluno e suporte ficam somente leitura.
 
-## Páginas da aplicação
+## Páginas e rotas
 
-A aplicação possui páginas organizadas por responsabilidade.
+| Rota | Página | Papéis |
+|---|---|---|
+| `/login` | `Login.vue` | público |
+| `/cadastro` | `CadastroUsuario.vue` | público |
+| `/dashboard` | `Dashboard.vue` | todos |
+| `/ativos` | `Ativos.vue` | todos |
+| `/ativos/novo` | `CadastroAtivos.vue` | professor e suporte |
+| `/ativos/detalhe/:id` | `DetalheAtivo.vue` | todos (somente leitura para o aluno) |
+| `/ativos/editar/:id` | `EditarAtivo.vue` | professor e suporte |
+| `/manutencao` | `Manutencao.vue` | professor e suporte |
+| `/manutencao/detalhe/:id` | `DetalheManutencao.vue` | professor e suporte |
+| `/relatorios` | `Relatorios.vue` | professor e suporte |
+| `/categorias` | `Categorias.vue` | todos |
+| `/categorias/nova` | `NovaCategoria.vue` | professor e suporte |
+| `/perfis` | `GerenciamentoPerfil.vue` | professor |
+| `/backups` | `BackupBanco.vue` | professor |
+| `/configuracoes` | `Configuracoes.vue` | todos |
 
-| Página | Responsabilidade |
+Sem login, qualquer rota protegida leva ao `/login`. Com login, uma rota fora do papel do usuário leva ao Dashboard.
+
+## Papéis e permissões no painel
+
+| Papel | O que vê e faz |
 |---|---|
-| `Login.vue` | Autenticação do usuário |
-| `CadastroUsuario.vue` | Cadastro de usuários |
-| `Dashboard.vue` | Indicadores e visão geral |
-| `Ativos.vue` | Listagem e gerenciamento de ativos |
-| `CadastroAtivo.vue` | Cadastro de ativos |
-| `DetalheAtivo.vue` | Detalhes do equipamento |
-| `ManutencaoAtivo.vue` | Gestão de manutenção |
-| `Relatorios.vue` | Indicadores, tabelas, histórico e exportação em PDF |
-| `Categorias.vue` | Consulta de categorias |
-| `NovaCategoria.vue` | Cadastro de categorias |
-| `Configuracoes.vue` | Preferências da interface |
+| `PROFESSOR` | Tudo: ativos (cadastrar, editar e inativar), manutenção, relatórios, categorias, perfis, auditoria e backup |
+| `SUPORTE` | Ativos (cadastrar, editar e inativar), manutenção, relatórios e categorias. Não gerencia perfis nem backup |
+| `ALUNO` | Somente consulta: dashboard, lista e detalhe de ativos, categorias e configurações |
 
-Os nomes acima correspondem às páginas trabalhadas no projeto; os nomes e a organização definitivos devem seguir os arquivos existentes no repositório.
+O painel esconde menus, botões e rotas conforme o papel (`meta.roles` em `src/routes/index.js` e `Navbar.vue`). Isso é só conveniência: **a permissão real é verificada no back-end**, que responde `403` a qualquer operação não autorizada.
 
-## Arquitetura do frontend
-
-A arquitetura separa a interface visual, o gerenciamento de estado e a comunicação com o backend.
+## Arquitetura
 
 ```text
-┌───────────────────────────────────┐
-│             Vue.js                │
-│                                   │
-│  Views                            │
-│  ├── Dashboard                    │
-│  ├── Ativos                       │
-│  ├── Manutenção                   │
-│  ├── Categorias                   │
-│  ├── Relatórios                   │
-│  └── Configurações                │
-└─────────────────┬─────────────────┘
-                  │
-                  ▼
-┌───────────────────────────────────┐
-│       Componentes reutilizáveis   │
-│                                   │
-│  Formulários                      │
-│  Cards                            │
-│  Navegação                        │
-│  Tabelas e elementos visuais      │
-└─────────────────┬─────────────────┘
-                  │
-                  ▼
-┌───────────────────────────────────┐
-│        Pinia e serviços            │
-│                                   │
-│  Estado compartilhado             │
-│  Requisições HTTP                 │
-│  Tratamento de respostas          │
-└─────────────────┬─────────────────┘
-                  │
-                  │ HTTP / REST
-                  ▼
-┌───────────────────────────────────┐
-│      Django REST Framework        │
-│                                   │
-│  Autenticação e permissões        │
-│  Ativos e categorias              │
-│  Ordens e histórico               │
-└───────────────────────────────────┘
+ Views (src/views)          páginas, uma por rota
+   │
+   ├── Components           Table, Card, Form, ConfirmModal, Info, Chart, QrCode, Navbar
+   ├── Composables          status (badges), formatData (datas), gerarPdf
+   │
+   ▼
+ Stores Pinia (src/stores)  auth, ativos, historico, ordens, usuarios, logsUser, backups
+   │
+   ▼
+ services/api.js            Axios: baseURL e token JWT em cada requisição
+   │  HTTP / REST
+   ▼
+ API Django (back-end)      autenticação, permissões, regras de negócio e banco
 ```
 
-A separação permite que os componentes visuais sejam reutilizados e que as chamadas à API não precisem ser implementadas individualmente em cada página.
-
-## Gerenciamento de estado
-
-O projeto utiliza Pinia para compartilhar informações entre componentes e páginas quando necessário.
-
-O gerenciamento de estado pode ser utilizado para:
-
-- Armazenar os dados carregados da API.
-- Compartilhar listas e indicadores.
-- Centralizar operações de consulta, cadastro, edição e exclusão.
-- Controlar estados de carregamento e erros.
-- Evitar requisições duplicadas desnecessárias.
-
-Por exemplo, a store de ativos pode disponibilizar os ativos cadastrados e o total de registros para diferentes partes do dashboard e das páginas de consulta.
-
-O estado em memória e a persistência são conceitos diferentes: os dados do servidor devem ser carregados ou atualizados conforme necessário, enquanto preferências locais podem ser mantidas no navegador.
+- **Views** cuidam da tela e chamam as stores.
+- **Stores** fazem as requisições, guardam os dados e os estados `carregando` e `erro`.
+- **Composables** padronizam rótulos e cores de status (`STATUS_ATIVO`), datas (`dataFormatada` e `dataHoraFormatada`) e PDF.
 
 ## Integração com a API
 
-O frontend utiliza Axios para realizar requisições HTTP ao backend.
-
-A configuração da API deve ficar centralizada em um serviço, evitando URLs repetidas em diferentes arquivos.
-
-Exemplos de operações utilizadas pela aplicação:
+A URL da API vem da variável `VITE_APP_API_URL` (ver [Configurar a API](#3-configurar-a-api)). O `services/api.js` envia `Authorization: Bearer <token>` em toda requisição.
 
 | Operação | Método | Endpoint |
 |---|---|---|
-| Login | `POST` | `/api/token/` |
-| Consultar usuário autenticado | `GET` | `/api/contas/me/` |
-| Listar ativos | `GET` | `/api/ativos/` |
-| Cadastrar ativo | `POST` | `/api/ativos/` |
-| Consultar detalhes de um ativo | `GET` | `/api/ativos/<id>/` |
-| Listar ordens de manutenção | `GET` | `/api/ordens_manutencao/` |
-| Criar ordem de manutenção | `POST` | `/api/ordens_manutencao/` |
-| Consultar logs de uma ordem | `GET` | `/api/ordens_manutencao/<id>/logs/` |
+| Login e renovação | `POST` | `/api/token/` e `/api/token/refresh/` |
+| Logout | `POST` | `/api/contas/logout/` |
+| Usuário autenticado | `GET` | `/api/contas/me/` |
+| Usuários, papéis e senha | `GET` `POST` `PATCH` | `/api/contas/usuarios/` e `/api/contas/usuarios/<id>/senha/` |
+| Auditoria | `GET` | `/api/contas/auditoria/` |
+| Ativos | `GET` `POST` `PATCH` | `/api/ativos/` e `/api/ativos/<id>/` |
+| Histórico | `GET` | `/api/historico/` |
+| Ordens e logs | `GET` `POST` `PATCH` | `/api/ordens_manutencao/` e `/api/ordens_manutencao/<id>/logs/` |
+| Backup | `GET` `POST` | `/api/backups/` e `/api/backups/<nome>/restaurar/` |
 
-Esses caminhos devem corresponder às rotas configuradas no backend.
+A lista completa, com regras e permissões, está no [README do back-end](https://github.com/MiguelSantos1910/ProjetoIntegrador_Backend#endpoints-da-api).
 
-### Configuração da URL base
-
-A URL base deve ser configurada de acordo com o ambiente de execução, por exemplo, utilizando variáveis de ambiente do Vite.
-
-```env
-VITE_APP_API_URL=http://127.0.0.1:8000/api
-```
-
-O serviço Axios (`src/services/api.js`) usa essa variável como `baseURL`. Se ela não for definida, o padrão é `http://127.0.0.1:8000/api`.
-
-Em produção, a variável deve apontar para a URL publicada da API. Não coloque senhas, chaves secretas ou outras credenciais privadas em variáveis `VITE_*`, pois elas podem ser incorporadas ao código enviado ao navegador.
-
-### Tratamento de requisições
-
-As chamadas à API devem tratar adequadamente:
-
-- Erros de validação.
-- Falhas de conexão.
-- Respostas `401 Unauthorized`.
-- Respostas `403 Forbidden`.
-- Recursos inexistentes.
-- Estados de carregamento.
-- Respostas vazias ou listas sem resultados.
-
-Quando a API exigir autenticação, o token de acesso deve ser enviado no cabeçalho `Authorization`.
-
-## Relatórios e indicadores
-
-A página `Relatorios.vue` concentra as visualizações e a exportação de dados.
-
-O desenvolvimento dessa página inclui a integração de tabelas de ordens de manutenção e usuários, filtros e geração de PDFs.
-
-Também trabalhamos na integração do histórico das ordens de manutenção com o endpoint de logs, incluindo o tratamento de carregamento e erros dessa consulta.
-
-Os gráficos devem utilizar os dados efetivamente carregados. Recursos ainda parciais, como a visualização de ordens por status, devem ser considerados em desenvolvimento até que sua implementação e seus resultados sejam validados.
-
-## Persistência de configurações
-
-As preferências da página `Configuracoes.vue` podem ser salvas no `localStorage`.
-
-Esse mecanismo permite manter opções da interface entre visitas e atualizações da página no mesmo navegador.
-
-É importante distinguir os dados armazenados localmente dos dados persistidos no backend:
-
-- **`localStorage`:** preferências locais da interface.
-- **Pinia:** estado compartilhado durante a execução da aplicação, salvo se houver persistência adicional configurada.
-- **API Django:** dados centrais de ativos, usuários, categorias e ordens de manutenção.
-
-Dados sensíveis, especialmente credenciais e tokens, exigem cuidados específicos e não devem ser armazenados indiscriminadamente no `localStorage`.
+Não coloque senhas ou chaves em variáveis `VITE_*`: elas são incorporadas ao código enviado ao navegador.
 
 ## Executando localmente
 
 ### Pré-requisitos
 
-- Node.js em uma versão compatível com o projeto.
-- npm.
-- Backend Django configurado e disponível para testar as operações que dependem da API.
+- Node.js 20.19+ ou 22.12+ (exigido pelo Vite 8) e npm
+- [Back-end](https://github.com/MiguelSantos1910/ProjetoIntegrador_Backend) rodando, local ou publicado
 
-### 1. Acessar a pasta do frontend
-
-Entre no diretório que contém o `package.json`:
+### 1. Acessar a pasta do front
 
 ```bash
-cd frontend
+git clone https://github.com/MiguelSantos1910/ProjetoIntegrador_Frontend.git
+cd ProjetoIntegrador_Frontend/frontend
 ```
-
-Ajuste o caminho conforme a organização do seu repositório.
 
 ### 2. Instalar as dependências
 
@@ -350,130 +167,111 @@ npm install
 
 ### 3. Configurar a API
 
-Copie o arquivo de exemplo e ajuste a URL da API:
-
 ```bash
 cp .env.example .env
 ```
 
 ```env
-# Backend local
+# Back-end local
 VITE_APP_API_URL=http://127.0.0.1:8000/api
 
 # Mesma API usada pelo aplicativo mobile (servidor publicado)
 # VITE_APP_API_URL=http://54.20.29.135/api
 ```
 
-O `.env` não é versionado. Para o painel web e o aplicativo mobile mostrarem os mesmos dados, os dois precisam apontar para a mesma API.
+O `.env` não é versionado. Para o painel e o app mostrarem os mesmos dados, os dois precisam apontar para a mesma API. Sem a variável, o padrão é `http://127.0.0.1:8000/api`.
 
-### 4. Iniciar o ambiente de desenvolvimento
+### 4. Iniciar
 
 ```bash
 npm run dev
 ```
 
-O Vite exibirá no terminal o endereço local da aplicação.
+O Vite mostra o endereço no terminal (normalmente `http://localhost:5173`).
 
 ### 5. Gerar a versão de produção
 
 ```bash
-npm run build
+npm run build     # gera dist/
+npm run preview   # serve o dist/ localmente
 ```
-
-O comando gera os arquivos de produção no diretório configurado pelo Vite, normalmente `dist/`.
-
-Para conferir os scripts e comandos disponíveis, consulte o `package.json` do projeto.
 
 ## Usuários de teste
 
-O sistema tem três papéis. O painel esconde menus e botões conforme o papel, e o backend bloqueia (`403`) qualquer operação não permitida.
+Use uma conta de cada papel. As mesmas contas valem para o app, desde que painel e app usem a mesma API.
 
-| Papel | O que pode fazer no painel |
+| Usuário sugerido | Papel |
 |---|---|
-| `PROFESSOR` | Tudo: ativos (cadastrar, editar, inativar), categorias, manutenção, relatórios, auditoria, gerenciamento de perfis e backup do banco. |
-| `SUPORTE` | Ativos (cadastrar, editar, inativar), categorias, ordens de manutenção e relatórios. Não gerencia perfis. |
-| `ALUNO` | Somente consulta: dashboard, lista e detalhe de ativos, categorias e configurações. |
+| `professor_teste` | `PROFESSOR` |
+| `suporte_teste` | `SUPORTE` |
+| `aluno_teste` | `ALUNO` |
 
-Para preparar os usuários de teste no backend:
+Como criar:
 
-1. Crie as contas pela tela de cadastro do painel (`/cadastro`). Todo cadastro público nasce como `ALUNO`.
-2. Entre com um usuário `PROFESSOR` (ou no Django Admin) e altere o papel das contas de professor e suporte em **Perfis**.
+1. Pelo terminal do back-end, com os comandos da seção [Usuários de teste](https://github.com/MiguelSantos1910/ProjetoIntegrador_Backend#usuários-de-teste) do README dele; **ou**
+2. Pela tela `/cadastro` do painel (toda conta nasce `ALUNO`), entrando depois como professor e mudando o papel em **Perfis**.
 
-Sugestão de contas para a demonstração: `professor_teste`, `suporte_teste` e `aluno_teste`. As senhas não ficam no repositório; são entregues à banca separadamente.
-
-> O aplicativo mobile converte o usuário para minúsculas antes do login. Use nomes de usuário em minúsculas nas contas que também serão usadas no app.
+As senhas **não ficam no repositório** e são entregues à banca separadamente. Use nomes em **minúsculas**: o app converte o usuário para minúsculas antes do login.
 
 ## Estrutura do projeto
 
-A estrutura conceitual do frontend é organizada em componentes, páginas, stores, serviços e rotas.
-
 ```text
-frontend/
-├── public/
-├── src/
-│   ├── assets/
-│   ├── components/
-|   ├── composables/
-│   ├── views/
-│   ├── stores/
-│   ├── services/
-│   ├── router/
-│   ├── App.vue
-│   └── main.js
-├── .env
-├── package.json
-├── vite.config.js
-└── README.md
+ProjetoIntegrador_Frontend/
+├── .github/workflows/      # pipeline de build (GitHub Actions)
+├── README.md
+└── frontend/
+    ├── public/             # favicon e ícones
+    ├── src/
+    │   ├── assets/css/     # um CSS por página e por componente
+    │   ├── components/     # Table, Card, Form, ConfirmModal, Info, Chart, QrCode, Navbar
+    │   ├── composables/    # status.js, formatData.js, gerarPdf.js
+    │   ├── routes/         # index.js: rotas e controle de acesso por papel
+    │   ├── services/       # api.js: Axios configurado
+    │   ├── stores/         # stores Pinia de cada módulo
+    │   ├── views/          # páginas
+    │   ├── App.vue
+    │   └── main.js
+    ├── .env.example        # variáveis sem segredos
+    ├── eslint.config.js
+    ├── package.json
+    └── vite.config.js
 ```
 
-### Responsabilidade dos diretórios
+## Qualidade e CI
 
-| Diretório | Responsabilidade |
-|---|---|
-| `components/` | Componentes visuais reutilizáveis |
-| `composables/` | Lógica reutilizável | 
-| `views/` | Páginas da aplicação |
-| `stores/` | Estado compartilhado gerenciado pelo Pinia |
-| `services/` | Comunicação com a API e serviços auxiliares |
-| `router/` | Definição das rotas de navegação |
-| `assets/` | Recursos visuais utilizados pela interface |
-| `public/` | Arquivos estáticos disponibilizados diretamente |
+```bash
+npm run build     # build de produção
+npx eslint src    # verificação de estilo
+```
 
-A estrutura é ilustrativa e deve ser ajustada aos diretórios efetivamente presentes no repositório.
+O workflow [`.github/workflows/build.yml`](.github/workflows/build.yml) instala as dependências e roda o build em todo push para o `main` e em todo pull request. O ESLint ainda aponta 13 erros e 2 avisos de estilo, todos de nome de componente com uma só palavra e de `<img/>`, e por isso não bloqueia o pipeline. Os testes automatizados da API ficam no back-end.
 
 ## Aplicativo mobile e Realidade Aumentada
 
-O aplicativo mobile do Easy Asset é desenvolvido em Flutter, em repositório separado ([pi4-mobile-lando](https://github.com/LANDOSOUZA/pi4-mobile-lando)), e consome a mesma API. Por padrão, o app usa a API publicada em `http://54.20.29.135/api`; para ver no painel os dados do app, configure `VITE_APP_API_URL` com essa mesma URL (ver [Configurar a API](#3-configurar-a-api)).
+O app Flutter fica em repositório separado ([pi4-mobile-lando](https://github.com/LANDOSOUZA/pi4-mobile-lando)) e usa a mesma API. Ele faz login, lê o QR Code do ativo e mostra os dados sobre a imagem da câmera (RA), tem consulta manual como alternativa e lista e edita ativos conforme o papel.
 
-Funções previstas ou em evolução no app:
+O QR Code mostrado no detalhe do ativo, neste painel, é o mesmo que o app lê: o app consulta `GET /api/ativos/?codigo_qr=<código>`. Para o app e o painel verem os mesmos ativos, configure `VITE_APP_API_URL` com a URL usada pelo app.
 
-- Consulta de ativos em campo.
-- Identificação por QR Code.
-- Consulta do histórico do equipamento.
-- Registro de movimentações.
-- Integração com recursos de Realidade Aumentada.
+## Limitações conhecidas
 
-## Próximas melhorias
+- **Categorias:** são os tipos fixos do back-end. A tela **Nova Categoria** ainda não grava, porque não existe API de categorias.
+- **Sessão:** não há renovação automática do token. Quando ele expira, é preciso entrar de novo.
+- **Erros por campo** devolvidos pela API ainda aparecem como uma mensagem geral nos formulários.
+- **Paginação:** a lista mostra todos os ativos; os botões de página ainda não funcionam (a API não pagina).
+- **Token no `localStorage`:** prático para o MVP, mas sensível a XSS (risco R7 em `docs/seguranca.md` do back-end).
 
-- Consolidar o tratamento de autenticação e expiração de sessão.
-- Ampliar o tratamento de erros das requisições.
-- Finalizar e validar os gráficos de relatórios.
-- Melhorar a atualização dos indicadores do dashboard.
-- Validar todas as operações de categorias com a API.
-- Revisar as permissões de navegação conforme o papel do usuário.
-- Ampliar os testes dos componentes e das páginas.
-- Validar a interface em diferentes tamanhos de tela.
-- Configurar e testar o build para publicação.
-- Evoluir a integração com o aplicativo mobile.
+## Créditos e licenças
 
-## Repositórios e tecnologias relacionadas
+Bibliotecas usadas, todas de código aberto: Vue, Vite, Vue Router, Pinia e Axios (MIT), Tailwind CSS (MIT), Chart.js e vue-chartjs (MIT), jsPDF e jspdf-autotable (MIT), qrcode.vue (MIT) e Lucide (ISC).
 
-- **Frontend web:** Vue.js, Vite, Tailwind CSS e Pinia.
-- **Backend:** Django e Django REST Framework.
-- **Aplicativo mobile:** Flutter.
+Os dados mostrados nas demonstrações são fictícios.
 
----
+## Repositórios
 
-**Easy Asset — Sistema de Gestão de Ativos**
+| Parte | Repositório |
+|---|---|
+| Painel web (este) | https://github.com/MiguelSantos1910/ProjetoIntegrador_Frontend |
+| Back-end (API) | https://github.com/MiguelSantos1910/ProjetoIntegrador_Backend |
+| Aplicativo mobile | https://github.com/LANDOSOUZA/pi4-mobile-lando |
 
-Uma aplicação web para centralizar o gerenciamento de equipamentos, acompanhar manutenções e consultar informações operacionais por meio de uma API compartilhada.
+**Projeto:** Easy Asset, Projeto Integrador IV, ADS, SENAI Roberto Mange.
