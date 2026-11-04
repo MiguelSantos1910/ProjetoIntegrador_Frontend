@@ -40,7 +40,7 @@
         </li>
 
         <!-- Manutenção -->
-        <li>
+        <li v-if="podeGerenciarManutencao">
           <router-link to="/manutencao">
             <Wrench
               class="nav-icon"
@@ -182,7 +182,12 @@ const papelAtual = computed(() => {
 
 // Permissão para gerenciamento de perfis
 const podeGerenciarPerfis = computed(() => {
-  return ['PROFESSOR', 'SUPORTE'].includes(papelAtual.value)
+  return ['PROFESSOR'].includes(papelAtual.value)
+})
+
+// Permissão para gerenciamento de manutenção
+const podeGerenciarManutencao = computed(() => {
+  return ['SUPORTE'].includes(papelAtual.value)
 })
 
 // Primeira letra do nome
