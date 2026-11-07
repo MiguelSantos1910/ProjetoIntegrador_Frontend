@@ -404,6 +404,73 @@
         </div>
       </section>
 
+      <!-- Conexão (igual à tela de configurações do app mobile) -->
+      <section class="config-card">
+        <div class="config-card-header">
+          <div class="config-card-icon">
+            <Cloud
+              :size="17"
+              :stroke-width="1.8"
+            />
+          </div>
+
+          <div>
+            <h2>Conexão</h2>
+            <span>Servidor da API usado pelo painel.</span>
+          </div>
+        </div>
+
+        <div class="settings-list">
+          <div class="setting-item">
+            <div class="setting-info">
+              <strong>Servidor</strong>
+              <span>Endereço configurado em VITE_APP_API_URL.</span>
+            </div>
+
+            <code class="connection-url">{{ servidorApi }}</code>
+          </div>
+
+          <div class="setting-item">
+            <div class="setting-info">
+              <strong>Situação</strong>
+              <span v-if="erroConexao">{{ erroConexao }}</span>
+              <span v-else>Teste de disponibilidade da API (/health/).</span>
+            </div>
+
+            <span
+              class="connection-badge"
+              :class="`connection-badge--${situacaoConexao.tipo}`"
+              role="status"
+              aria-live="polite"
+            >
+              {{ situacaoConexao.texto }}
+            </span>
+          </div>
+        </div>
+
+        <p
+          v-if="servidorSemHttps"
+          class="connection-warning"
+        >
+          Conexão sem HTTPS: aceita apenas para a demonstração.
+        </p>
+
+        <div class="connection-actions">
+          <button
+            type="button"
+            class="secondary-button"
+            :disabled="testandoConexao"
+            @click="testarConexao"
+          >
+            <Wifi
+              :size="14"
+              :stroke-width="2"
+            />
+            {{ testandoConexao ? 'Testando...' : 'Testar conexão' }}
+          </button>
+        </div>
+      </section>
+
       <!-- Ações finais -->
       <div class="config-actions">
         <button
@@ -443,8 +510,12 @@ import {
   Save,
   Eye,
   EyeOff,
-  LockKeyhole
+  LockKeyhole,
+  Cloud,
+  Wifi
 } from 'lucide-vue-next'
+
+import api from '../services/api'
 
 import { useAuthStore } from '../stores/auth'
 import { useUsuariosStore } from '../stores/usuarios'
@@ -453,6 +524,53 @@ import '../assets/css/Configuracoes.css'
 
 const authStore = useAuthStore()
 const usuariosStore = useUsuariosStore()
+
+// ========================================
+// CONEXÃO COM A API (igual ao app mobile)
+// ========================================
+
+const servidorApi = api.defaults.baseURL
+const servidorSemHttps = String(servidorApi).startsWith('http://')
+
+const testandoConexao = ref(false)
+const tempoResposta = ref(null)
+const erroConexao = ref('')
+
+const situacaoConexao = computed(() => {
+  if (testandoConexao.value) {
+    return { tipo: 'neutro', texto: 'Testando...' }
+  }
+
+  if (tempoResposta.value !== null) {
+    return { tipo: 'online', texto: `Online · ${tempoResposta.value} ms` }
+  }
+
+  if (erroConexao.value) {
+    return { tipo: 'offline', texto: 'Sem resposta' }
+  }
+
+  return { tipo: 'neutro', texto: 'Não testado' }
+})
+
+// GET /api/health/ é público; mede o tempo de resposta.
+const testarConexao = async () => {
+  testandoConexao.value = true
+  tempoResposta.value = null
+  erroConexao.value = ''
+
+  const inicio = performance.now()
+
+  try {
+    await api.get('/health/', { timeout: 8000 })
+    tempoResposta.value = Math.round(performance.now() - inicio)
+  } catch (error) {
+    erroConexao.value = error.response
+      ? `O servidor respondeu com erro (${error.response.status}).`
+      : 'Sem conexão com o servidor. Verifique o endereço e a rede.'
+  } finally {
+    testandoConexao.value = false
+  }
+}
 
 const STORAGE_KEY = 'easy_asset_configuracoes'
 
