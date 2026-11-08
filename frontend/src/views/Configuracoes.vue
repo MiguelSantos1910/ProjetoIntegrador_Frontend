@@ -294,6 +294,41 @@
             @submit.prevent="handleChangePassword"
           >
             <div class="config-field">
+              <label for="senhaAtual">Senha atual</label>
+
+              <div class="password-input-wrapper">
+                <input
+                  id="senhaAtual"
+                  v-model="senhaAtual"
+                  :type="mostrarSenhaAtual ? 'text' : 'password'"
+                  autocomplete="current-password"
+                  placeholder="Digite a senha atual"
+                  required
+                >
+
+                <button
+                  type="button"
+                  class="password-toggle"
+                  :aria-label="
+                    mostrarSenhaAtual
+                      ? 'Ocultar senha atual'
+                      : 'Mostrar senha atual'
+                  "
+                  @click="mostrarSenhaAtual = !mostrarSenhaAtual"
+                >
+                  <EyeOff
+                    v-if="mostrarSenhaAtual"
+                    :size="17"
+                  />
+                  <Eye
+                    v-else
+                    :size="17"
+                  />
+                </button>
+              </div>
+            </div>
+
+            <div class="config-field">
               <label for="novaSenha">Nova senha</label>
 
               <div class="password-input-wrapper">
@@ -517,12 +552,15 @@ import {
 
 import api from '../services/api'
 
+import { useRouter } from 'vue-router'
+
 import { useAuthStore } from '../stores/auth'
 import { useUsuariosStore } from '../stores/usuarios'
 
 import '../assets/css/Configuracoes.css'
 
 const authStore = useAuthStore()
+const router = useRouter()
 const usuariosStore = useUsuariosStore()
 
 // ========================================
@@ -582,9 +620,11 @@ const tipoMensagem = ref('success')
 
 const configuracoesOriginais = ref(null)
 
+const senhaAtual = ref('')
 const novaSenha = ref('')
 const confirmarSenha = ref('')
 
+const mostrarSenhaAtual = ref(false)
 const mostrarSenha = ref(false)
 const mostrandoConfirmacao = ref(false)
 
@@ -872,9 +912,11 @@ const handleCancel = () => {
 
   restaurarSnapshot()
 
+  senhaAtual.value = ''
   novaSenha.value = ''
   confirmarSenha.value = ''
 
+  mostrarSenhaAtual.value = false
   mostrarSenha.value = false
   mostrandoConfirmacao.value = false
 
@@ -883,6 +925,11 @@ const handleCancel = () => {
 
 const handleChangePassword = async () => {
   if (alterandoSenha.value) return
+
+  if (!senhaAtual.value) {
+    mostrarMensagem('Digite a senha atual.', 'error')
+    return
+  }
 
   if (!novaSenha.value) {
     mostrarMensagem('Digite a nova senha.', 'error')
@@ -922,7 +969,8 @@ const handleChangePassword = async () => {
   try {
     const sucesso = await usuariosStore.alterarSenha(
       usuarioId,
-      novaSenha.value
+      novaSenha.value,
+      senhaAtual.value
     )
 
     if (!sucesso) {
@@ -933,13 +981,24 @@ const handleChangePassword = async () => {
       return
     }
 
+    senhaAtual.value = ''
     novaSenha.value = ''
     confirmarSenha.value = ''
 
+    mostrarSenhaAtual.value = false
     mostrarSenha.value = false
     mostrandoConfirmacao.value = false
 
-    mostrarMensagem('Senha alterada com sucesso.')
+    // O back encerra todas as sessões da conta depois da troca (inclusive
+    // esta): limpa a sessão local e volta ao login.
+    mostrarMensagem(
+      'Senha alterada com sucesso. Entre novamente com a nova senha.'
+    )
+
+    setTimeout(() => {
+      authStore.limparSessao()
+      router.push('/login')
+    }, 1500)
   } catch (error) {
     console.error('Erro ao alterar senha:', error)
 

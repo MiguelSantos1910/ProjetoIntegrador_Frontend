@@ -318,6 +318,29 @@
   background-color: #fee2e2;
 }
 
+/* Administração de contas */
+
+.log-senha_alterada,
+.log-conta_reativada {
+  color: #166534;
+  background-color: #dcfce7;
+}
+
+.log-papel_alterado {
+  color: #1d4ed8;
+  background-color: #dbeafe;
+}
+
+.log-conta_desativada {
+  color: #c2410c;
+  background-color: #ffedd5;
+}
+
+.log-usuario_excluido {
+  color: #991b1b;
+  background-color: #fee2e2;
+}
+
 
 /* ========================================
    ÚLTIMA LINHA
