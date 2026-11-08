@@ -209,10 +209,7 @@
 .filters-grid {
   width: 100%;
   display: grid;
-  grid-template-columns:
-    minmax(200px, 280px)
-    minmax(200px, 280px)
-    auto;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   align-items: end;
   gap: 14px;
 }
@@ -340,6 +337,11 @@
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 20px;
+}
+
+/* Linha de três gráficos (seção de ativos). */
+.charts-grid.charts-grid-3 {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
 .chart-card {
@@ -515,6 +517,10 @@
       repeat(2, minmax(0, 1fr));
   }
 
+  .charts-grid.charts-grid-3 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .generate-button {
     width: 100%;
   }
@@ -531,6 +537,10 @@
   }
 
   .charts-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .charts-grid.charts-grid-3 {
     grid-template-columns: 1fr;
   }
 
