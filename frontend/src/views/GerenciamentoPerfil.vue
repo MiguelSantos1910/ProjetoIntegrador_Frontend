@@ -636,8 +636,28 @@ const eventosAuditoria = [
     label: 'Logout'
   },
   {
+    value: 'SENHA_ALTERADA',
+    label: 'Senha alterada'
+  },
+  {
     value: 'ALTERACAO_SENHA_FALHA',
     label: 'Falha na alteração de senha'
+  },
+  {
+    value: 'PAPEL_ALTERADO',
+    label: 'Papel alterado'
+  },
+  {
+    value: 'CONTA_DESATIVADA',
+    label: 'Conta desativada'
+  },
+  {
+    value: 'CONTA_REATIVADA',
+    label: 'Conta reativada'
+  },
+  {
+    value: 'USUARIO_EXCLUIDO',
+    label: 'Usuário excluído'
   },
   {
     value: 'BACKUP_CRIADO',
@@ -909,7 +929,12 @@ function formatarEvento(evento) {
     LOGIN_FALHA: 'Falha no login',
     LOGIN_BLOQUEADO: 'Login bloqueado',
     LOGOUT: 'Logout',
+    SENHA_ALTERADA: 'Senha alterada',
     ALTERACAO_SENHA_FALHA: 'Falha na alteração de senha',
+    PAPEL_ALTERADO: 'Papel alterado',
+    CONTA_DESATIVADA: 'Conta desativada',
+    CONTA_REATIVADA: 'Conta reativada',
+    USUARIO_EXCLUIDO: 'Usuário excluído',
     BACKUP_CRIADO: 'Backup gerado',
     BACKUP_RESTAURADO: 'Banco restaurado',
     BACKUP_BAIXADO: 'Backup baixado',
