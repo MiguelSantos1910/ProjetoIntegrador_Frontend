@@ -92,9 +92,16 @@ const props = defineProps({
     required: true
   },
 
+  // Uma cor para todas as barras ou uma lista (uma por fatia, no pie).
   color: {
-    type: String,
+    type: [String, Array],
     default: '#0D9F95'
+  },
+
+  // Nome da série exibido na legenda e no tooltip.
+  datasetLabel: {
+    type: String,
+    default: 'Ativos'
   }
 })
 
@@ -103,7 +110,7 @@ const chartData = computed(() => ({
 
   datasets: [
     {
-      label: 'Ativos',
+      label: props.datasetLabel,
       data: props.values,
 
       backgroundColor: props.color,
