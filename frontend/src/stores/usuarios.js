@@ -113,20 +113,30 @@ export const useUsuariosStore = defineStore('usuarios', {
       }
     },
 
-    async alterarSenha(id, password) {
+    // senhaAtual é obrigatória ao trocar a própria senha; o professor
+    // redefine a senha de outra pessoa sem ela. O back encerra todas as
+    // sessões da conta depois da troca.
+    async alterarSenha(id, password, senhaAtual = null) {
       this.carregando = true
       this.erro = null
 
       try {
-        await api.patch(
-          `/contas/usuarios/${id}/senha/`,
-          { password }
-        )
+        const dados = { password }
+
+        if (senhaAtual !== null) {
+          dados.senha_atual = senhaAtual
+        }
+
+        await api.patch(`/contas/usuarios/${id}/senha/`, dados)
 
         return true
       } catch (error) {
+        const resposta = error.response?.data
+
         this.erro =
-          error.response?.data?.detail ||
+          resposta?.senha_atual?.[0] ||
+          resposta?.password?.[0] ||
+          resposta?.detail ||
           'Erro ao alterar a senha.'
 
         return false
