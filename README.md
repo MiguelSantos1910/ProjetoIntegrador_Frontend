@@ -196,6 +196,16 @@ npm run build     # gera dist/
 npm run preview   # serve o dist/ localmente
 ```
 
+### 6. Publicar (Vercel)
+
+O painel é um site estático: pode ser publicado na **Vercel** (ou Netlify) de graça, com HTTPS.
+
+1. Na Vercel, importe este repositório com **Root Directory** `frontend` (o preset Vite é detectado sozinho).
+2. Em **Environment Variables**, defina `VITE_APP_API_URL` com a API publicada em **HTTPS** (ex.: `https://SEUUSUARIO.pythonanywhere.com/api`). Um painel em HTTPS não consegue chamar uma API em HTTP.
+3. Depois do deploy, libere o endereço do painel em `CORS_ALLOWED_ORIGINS` no `.env` da API.
+
+O [`frontend/vercel.json`](frontend/vercel.json) (Vercel) e o [`frontend/public/_redirects`](frontend/public/_redirects) (Netlify) fazem todas as rotas abrirem o `index.html`, para que recarregar `/ativos` não dê 404. O passo a passo completo, incluindo a API no PythonAnywhere, está no [`docs/deploy.md` do back-end](https://github.com/MiguelSantos1910/ProjetoIntegrador_Backend/blob/main/docs/deploy.md).
+
 ## Usuários de teste
 
 Use uma conta de cada papel. As mesmas contas valem para o app, desde que painel e app usem a mesma API.
