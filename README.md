@@ -4,6 +4,8 @@ Painel web do Easy Asset, o sistema de gestão de laboratórios e ativos do Proj
 
 O painel é o ambiente de administração: cadastro e consulta de ativos, inativação, ordens de manutenção, histórico, relatórios, perfis de usuário, auditoria e backup do banco. Ele não guarda regras de negócio nem acessa o banco: tudo passa pela API, que é quem decide as permissões.
 
+**Versão publicada (HTTPS):** painel em <https://projeto-integrador-frontend-beryl.vercel.app/> e API em <https://miguel1910.pythonanywhere.com/api/>.
+
 ## Sumário
 
 - [Tecnologias](#tecnologias)
@@ -176,7 +178,7 @@ cp .env.example .env
 VITE_APP_API_URL=http://127.0.0.1:8000/api
 
 # Mesma API usada pelo aplicativo mobile (servidor publicado)
-# VITE_APP_API_URL=http://54.20.29.135/api
+# VITE_APP_API_URL=https://miguel1910.pythonanywhere.com/api
 ```
 
 O `.env` não é versionado. Para o painel e o app mostrarem os mesmos dados, os dois precisam apontar para a mesma API. Sem a variável, o padrão é `http://127.0.0.1:8000/api`.
@@ -258,7 +260,7 @@ O workflow [`.github/workflows/build.yml`](.github/workflows/build.yml) instala 
 
 ## Aplicativo mobile e Realidade Aumentada
 
-O app Flutter fica em repositório separado ([pi4-mobile-lando](https://github.com/LANDOSOUZA/pi4-mobile-lando)) e usa a mesma API. Ele faz login, lê o QR Code do ativo e mostra os dados sobre a imagem da câmera (RA), tem consulta manual como alternativa e lista e edita ativos conforme o papel.
+O app Flutter fica em repositório separado ([ProjetoIntegrador_Mobile](https://github.com/MiguelSantos1910/ProjetoIntegrador_Mobile)) e usa a mesma API. Ele faz login, lê o QR Code do ativo e mostra os dados sobre a imagem da câmera (RA), tem a digitação do código como alternativa, consulta os ativos e, conforme o papel, abre e acompanha chamados (ordens de manutenção) e muda o ativo de sala.
 
 O QR Code mostrado no detalhe do ativo, neste painel, é o mesmo que o app lê: o app consulta `GET /api/ativos/?codigo_qr=<código>`. Para o app e o painel verem os mesmos ativos, configure `VITE_APP_API_URL` com a URL usada pelo app.
 
@@ -282,6 +284,6 @@ Os dados mostrados nas demonstrações são fictícios.
 |---|---|
 | Painel web (este) | https://github.com/MiguelSantos1910/ProjetoIntegrador_Frontend |
 | Back-end (API) | https://github.com/MiguelSantos1910/ProjetoIntegrador_Backend |
-| Aplicativo mobile | https://github.com/LANDOSOUZA/pi4-mobile-lando |
+| Aplicativo mobile | https://github.com/MiguelSantos1910/ProjetoIntegrador_Mobile |
 
 **Projeto:** Easy Asset, Projeto Integrador IV, ADS, SENAI Roberto Mange.
